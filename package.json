@@ -1,0 +1,13 @@
+{
+  "name": "kerygma-app",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Prototype de l'appli KERYGMA (plannings des ministères)",
+  "scripts": {
+    "build": "python3 outils/build.py",
+    "test": "node tests/test_accueil.js build/Accueil.dc.html && node tests/test_planning.js build/Planning.dc.html && node tests/test_phone.js site/index.html"
+  },
+  "devDependencies": {
+    "jsdom": "24.1.3"
+  }
+}

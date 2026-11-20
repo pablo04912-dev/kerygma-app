@@ -1,0 +1,779 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kerygma, espace de Hélène</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3730A3}a:hover{color:#1E1B4B}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F4EF; font-family: Inter, system-ui, sans-serif; color: #16181D; position: relative; overflow: hidden; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px 4px">
+<span style="font-family: 'Space Grotesk', Inter, sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 3px">KERYGMA</span>
+<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 18px; background: #16181D; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px">H</span>
+</div>
+<main style="flex: 1; overflow-y: auto; padding: 8px 20px 20px; display: flex; flex-direction: column; gap: 12px">
+<sc-if value="{{showLieux}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Bonjour Hélène</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<span style="font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">Ancienne · Saint-Maurice</span>
+<span style="font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">Responsable louange</span>
+</div>
+</div>
+<div role="group" aria-label="Type de réunion" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 14px; background: #ECE8DF">
+<sc-for list="{{types}}" as="t" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{t.on}}" onClick="{{t.pick}}" style="min-height: 44px; border-radius: 11px; border: 0; background: {{t.bg}}; color: {{t.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{t.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{showMinChips}}" hint-placeholder-val="{{true}}">
+<div role="group" aria-label="Ministère" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{mins}}" as="m" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{m.on}}" onClick="{{m.pick}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{m.border}}; background: {{m.bg}}; color: {{m.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{m.label}}</button>
+</sc-for>
+</div>
+</sc-if>
+<nav aria-label="Dates" style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<sc-for list="{{dates}}" as="d" hint-placeholder-count="5">
+<button type="button" aria-pressed="{{d.on}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 64px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 1px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer">
+<span style="font-size: 12px; font-weight: 500">{{d.jour}}</span>
+<span style="font-size: 15px; font-weight: 700">{{d.label}}</span>
+</button>
+</sc-for>
+</nav>
+<p style="margin: 0; font-size: 14px; font-weight: 600; color: {{aTraiterColor}}">{{aTraiter}}</p>
+<sc-for list="{{cartes}}" as="c" hint-placeholder-count="3">
+<button type="button" onClick="{{c.ouvrir}}" style="display: flex; flex-direction: column; gap: 8px; width: 100%; text-align: left; padding: 14px 16px; border-radius: 18px; border: 1px solid #E7E3DA; background: #FFFFFF; font-family: inherit; color: #16181D; cursor: pointer">
+<span style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; width: 100%">
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 18px; font-weight: 700">{{c.titre}}</span>
+<span style="font-size: 14px; color: #5B5F6B">{{c.sous}}</span>
+</span>
+<sc-if value="{{c.edit}}" hint-placeholder-val="{{true}}">
+<span style="flex: 0 0 auto; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; border: 1px solid {{accent}}; color: {{accent}}">Modifiable</span>
+</sc-if>
+<sc-if value="{{c.lecture}}" hint-placeholder-val="{{false}}">
+<span style="flex: 0 0 auto; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #F1EFEA; color: #5B5F6B">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+<span>Lecture seule</span>
+</span>
+</sc-if>
+</span>
+<sc-if value="{{c.aCompte}}" hint-placeholder-val="{{true}}">
+<span style="display: flex; align-items: center; gap: 10px; width: 100%">
+<span style="display: block; flex: 1; height: 6px; border-radius: 3px; background: #E7E3DA; overflow: hidden">
+<span style="display: block; height: 6px; border-radius: 3px; background: {{c.barColor}}; width: {{c.pct}}"></span>
+</span>
+<span style="font-size: 14px; font-weight: 600">{{c.compte}}</span>
+</span>
+</sc-if>
+<span style="font-size: 14px; line-height: 1.4; color: {{c.manqueColor}}">{{c.manque}}</span>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 600; color: {{accent}}">
+<span>Voir le planning</span>
+<span aria-hidden="true">→</span>
+</span>
+</button>
+</sc-for>
+</sc-if>
+<sc-if value="{{showDetail}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<button type="button" onClick="{{retour}}" style="align-self: flex-start; min-height: 44px; display: flex; align-items: center; gap: 6px; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; font-weight: 600; color: {{accent}}; cursor: pointer">
+<span aria-hidden="true">←</span>
+<span>Les 3 lieux</span>
+</button>
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">{{dTitre}}</h1>
+<p style="margin: 0; font-size: 15px; line-height: 1.4; color: #5B5F6B">{{dSous}}</p>
+</div>
+<nav aria-label="Dates" style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<sc-for list="{{dates}}" as="d" hint-placeholder-count="5">
+<button type="button" aria-pressed="{{d.on}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 64px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 1px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer">
+<span style="font-size: 12px; font-weight: 500">{{d.jour}}</span>
+<span style="font-size: 15px; font-weight: 700">{{d.label}}</span>
+</button>
+</sc-for>
+</nav>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<span style="font-size: 14px; font-weight: 600; color: {{dCompteColor}}">{{dCompte}}</span>
+<sc-if value="{{dEdit}}" hint-placeholder-val="{{true}}">
+<span style="flex: 0 0 auto; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; border: 1px solid {{accent}}; color: {{accent}}">Modifiable</span>
+</sc-if>
+<sc-if value="{{dLecture}}" hint-placeholder-val="{{false}}">
+<span style="flex: 0 0 auto; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #F1EFEA; color: #5B5F6B">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+<span>Lecture seule</span>
+</span>
+</sc-if>
+</div>
+<section aria-label="Postes" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 4px 0; display: flex; flex-direction: column">
+<sc-for list="{{lignes}}" as="l" hint-placeholder-count="6">
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 16px; min-height: 44px; border-bottom: 1px solid {{l.sep}}">
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-size: 13px; color: #5B5F6B; font-weight: 500">{{l.label}}</span>
+<sc-if value="{{l.rempli}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 17px; font-weight: 600">{{l.nom}}</span>
+</sc-if>
+<sc-if value="{{l.vide}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 17px; font-weight: 600; color: {{l.videColor}}">{{l.videTexte}}</span>
+</sc-if>
+<sc-if value="{{l.aSous}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 13px; font-weight: 500; color: {{l.sousColor}}">{{l.sous}}</span>
+</sc-if>
+<sc-if value="{{l.peutChoisirSous}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{l.ouvrir}}" style="align-self: flex-start; min-height: 44px; margin-top: 4px; padding: 0 14px; border-radius: 12px; border: 1.5px dashed {{accent}}; background: #FFFFFF; color: {{accent}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Choisir un nom</button>
+</sc-if>
+</div>
+<sc-if value="{{l.peutChoisir}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{l.ouvrir}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1.5px dashed {{accent}}; background: #FFFFFF; color: {{accent}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Choisir</button>
+</sc-if>
+<sc-if value="{{l.aToggle}}" hint-placeholder-val="{{false}}">
+<div role="group" aria-label="{{l.label}} ce dimanche" style="flex: 0 0 auto; align-self: flex-start; display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: #ECE8DF">
+<button type="button" aria-pressed="{{l.ouiOn}}" onClick="{{l.pickOui}}" style="min-width: 52px; min-height: 44px; border-radius: 10px; border: 0; background: {{l.ouiBg}}; color: {{l.ouiFg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Oui</button>
+<button type="button" aria-pressed="{{l.nonOn}}" onClick="{{l.pickNon}}" style="min-width: 52px; min-height: 44px; border-radius: 10px; border: 0; background: {{l.nonBg}}; color: {{l.nonFg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Non</button>
+</div>
+</sc-if>
+</div>
+</sc-for>
+</section>
+<sc-if value="{{dANote}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; font-size: 14px; line-height: 1.5; color: #5B5F6B">{{dNote}}</p>
+</sc-if>
+</sc-if>
+<sc-if value="{{showEquipe}}" hint-placeholder-val="{{false}}">
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Équipe</h1>
+<div role="group" aria-label="Ministère" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{mins}}" as="m" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{m.on}}" onClick="{{m.pick}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{m.border}}; background: {{m.bg}}; color: {{m.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{m.label}}</button>
+</sc-for>
+</div>
+<div role="group" aria-label="Affichage" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 14px; background: #ECE8DF">
+<sc-for list="{{vues}}" as="v" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="min-height: 44px; border-radius: 11px; border: 0; background: {{v.bg}}; color: {{v.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{v.label}}</button>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 14px; font-weight: 600; color: #5B5F6B">{{eqLegende}}</p>
+<sc-if value="{{eqDimanche}}" hint-placeholder-val="{{true}}">
+<sc-for list="{{groupes}}" as="g" hint-placeholder-count="3">
+<section aria-label="{{g.titre}}" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 16px; font-weight: 700">{{g.titre}}</span>
+<sc-for list="{{g.items}}" as="it" hint-placeholder-count="3">
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px">
+<span style="color: #5B5F6B">{{it.label}}</span>
+<span style="font-weight: 600; text-align: right">{{it.nom}}</span>
+</div>
+</sc-for>
+<sc-if value="{{g.vide}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 14px; color: #5B5F6B">{{g.videTexte}}</span>
+</sc-if>
+</section>
+</sc-for>
+</sc-if>
+<sc-if value="{{eqTous}}" hint-placeholder-val="{{false}}">
+<section aria-label="Toute l'équipe" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 4px 0; display: flex; flex-direction: column">
+<sc-for list="{{personnes}}" as="pz" hint-placeholder-count="6">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 10px 16px; border-bottom: 1px solid {{pz.sep}}">
+<span style="font-size: 16px; font-weight: 600">{{pz.nom}}</span>
+<span style="font-size: 14px; color: #5B5F6B; text-align: right">{{pz.detail}}</span>
+</div>
+</sc-for>
+</section>
+</sc-if>
+</sc-if>
+<sc-if value="{{showActus}}" hint-placeholder-val="{{false}}">
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Fil d'actualité</h1>
+<sc-for list="{{actus}}" as="a" hint-placeholder-count="4">
+<article style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 600; color: {{accent}}">{{a.tag}}</span>
+<span style="font-size: 17px; font-weight: 700">{{a.titre}}</span>
+<span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{a.texte}}</span>
+</article>
+</sc-for>
+</sc-if>
+<sc-if value="{{showMoi}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Hélène Moreau</h1>
+<p style="margin: 0; font-size: 15px; color: #5B5F6B">Mes rôles dans l'appli</p>
+</div>
+<section aria-label="Mes rôles" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 4px 0; display: flex; flex-direction: column">
+<sc-for list="{{roles}}" as="r" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 2px; padding: 12px 16px; border-bottom: 1px solid {{r.sep}}">
+<span style="font-size: 16px; font-weight: 600">{{r.label}}</span>
+<span style="font-size: 14px; line-height: 1.4; color: #5B5F6B">{{r.detail}}</span>
+</div>
+</sc-for>
+</section>
+<section aria-label="Mes données" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 16px; font-weight: 600">Mes données</span>
+<span style="font-size: 14px; line-height: 1.45; color: #5B5F6B">L'appli garde seulement ton prénom, ton nom et ton e-mail. Jamais d'adresse, de téléphone, de date ou de lieu de naissance, ni d'âge.</span>
+</section>
+<a href="Accueil.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 14px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; text-decoration: none; font-size: 15px; font-weight: 600">Se déconnecter</a>
+</sc-if>
+</main>
+<nav aria-label="Navigation principale" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 8px 8px 20px; background: #FFFFFF; border-top: 1px solid #E7E3DA">
+<button type="button" aria-current="{{nav.planning.current}}" onClick="{{nav.planning.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.planning.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+<span>Planning</span>
+</button>
+<button type="button" aria-current="{{nav.equipe.current}}" onClick="{{nav.equipe.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.equipe.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.1.7 3.5 2.8 3.5 5.7"></path></svg>
+<span>Équipe</span>
+</button>
+<button type="button" aria-current="{{nav.actus.current}}" onClick="{{nav.actus.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.actus.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M7.5 8.5h9M7.5 12h9M7.5 15.5h5"></path></svg>
+<span>Actus</span>
+</button>
+<button type="button" aria-current="{{nav.moi.current}}" onClick="{{nav.moi.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.moi.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+<span>Moi</span>
+</button>
+</nav>
+<sc-if value="{{aToast}}" hint-placeholder-val="{{false}}">
+<div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 92px; background: #16181D; color: #FFFFFF; border-radius: 14px; padding: 14px 16px; font-size: 15px; line-height: 1.4">{{toast}}</div>
+</sc-if>
+<sc-if value="{{sheetOuvert}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(22, 24, 29, 0.45); display: flex; flex-direction: column; justify-content: flex-end">
+<div role="dialog" aria-label="Choisir une personne" style="background: #FFFFFF; border-radius: 24px 24px 0 0; padding: 12px 20px 28px; display: flex; flex-direction: column; gap: 12px">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #D6D1C6"></span>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-family: 'Space Grotesk', Inter, sans-serif; font-size: 22px; font-weight: 700">{{sheetTitre}}</span>
+<span style="font-size: 14px; color: #5B5F6B">{{sheetSous}}</span>
+</div>
+<button type="button" onClick="{{fermer}}" style="min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #E7E3DA; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #16181D; cursor: pointer">Fermer</button>
+</div>
+<p style="margin: 0; font-size: 14px; color: #5B5F6B; line-height: 1.45">{{sheetNote}}</p>
+<sc-if value="{{sheetSaisie}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="nomLibre" style="font-size: 14px; font-weight: 600">Écrire un nom</label>
+<div style="display: flex; gap: 8px">
+<input id="nomLibre" type="text" value="{{texte}}" onChange="{{saisir}}" placeholder="Prénom et nom" style="flex: 1; min-width: 0; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+<button type="button" onClick="{{valider}}" style="flex: 0 0 auto; min-height: 48px; padding: 0 16px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Valider</button>
+</div>
+<sc-if value="{{aErreur}}" hint-placeholder-val="{{false}}">
+<span role="alert" style="font-size: 13px; font-weight: 600; color: #A12626">{{erreur}}</span>
+</sc-if>
+<span style="font-size: 13px; color: #5B5F6B">Ou choisis dans la liste :</span>
+</div>
+</sc-if>
+<div style="display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto">
+<sc-for list="{{candidats}}" as="k" hint-placeholder-count="4">
+<sc-if value="{{k.libre}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{k.choisir}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; flex: 0 0 auto; background: {{k.dot}}"></span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+<span style="font-size: 17px; font-weight: 600">{{k.nom}}</span>
+<span style="font-size: 14px; color: {{k.infoColor}}">{{k.info}}</span>
+</span>
+<span style="font-size: 14px; font-weight: 600; color: {{accent}}">Inviter</span>
+</button>
+</sc-if>
+<sc-if value="{{k.bloque}}" hint-placeholder-val="{{false}}">
+<button type="button" disabled="{{true}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border-radius: 14px; border: 1px solid #EFEBE3; background: #F6F4EF; text-align: left; font-family: inherit; color: #5B5F6B; cursor: not-allowed">
+<span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; flex: 0 0 auto; background: {{k.dot}}"></span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+<span style="font-size: 17px; font-weight: 600; text-decoration: line-through">{{k.nom}}</span>
+<span style="font-size: 14px; color: {{k.infoColor}}">{{k.info}}</span>
+</span>
+<span style="font-size: 13px; font-weight: 600; color: {{k.infoColor}}">Conflit</span>
+</button>
+</sc-if>
+</sc-for>
+</div>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#4338CA","options":["#4338CA","#0F766E","#C2410C"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var s = this.state || {};
+    var accent = this.props.accent ?? '#4338CA';
+    var DATA = __DATA__;
+
+    var tab = s.tab || 'planning';
+    var type = s.type || 'dimanche';
+    var min = s.min || 'louange';
+    var ecran = s.ecran || 'lieux';
+    var lieuId = s.lieu || 'stm';
+    var sheet = s.sheet || null;
+    var picks = s.picks || {};
+    var toast = s.toast || '';
+    var vue = s.vue || 'dimanche';
+    var dateDim = s.dateDim || '22/11';
+    var datePri = s.datePri || '26/11';
+    var ceneEtat = s.cene || {};
+    var texte = s.texte || '';
+    var erreur = s.erreur || '';
+
+    var MOIS = { '11': 'novembre', '12': 'décembre' };
+    var MOIS_C = { '11': 'nov', '12': 'déc' };
+    var DIMS = ['22/11', '29/11', '06/12', '13/12', '20/12', '27/12'];
+    var JEUS = ['26/11', '03/12', '10/12', '17/12', '24/12'];
+    function jourDe(d) { return parseInt(d.split('/')[0], 10); }
+    function court(d) { return jourDe(d) + ' ' + MOIS_C[d.split('/')[1]]; }
+    function long(d) { return jourDe(d) + ' ' + MOIS[d.split('/')[1]]; }
+    function veille(d) {
+      var j = jourDe(d) - 1;
+      return (j < 10 ? '0' + j : '' + j) + '/' + d.split('/')[1];
+    }
+
+    var LIEUX = [
+      { id: 'stm', nom: 'Saint-Maurice', heure: '10h30', creneau: 'matin', coord: 'Thomas', priJour: 'Jeudi', priVeille: false, priResp: 'Paula' },
+      { id: 'cha', nom: 'Champigny', heure: '10h30', creneau: 'matin', coord: 'Sylvie', priJour: 'Mercredi', priVeille: true, priResp: '' },
+      { id: 'bou', nom: 'Boulogne', heure: '15h30', creneau: 'aprem', coord: 'Marco', priJour: 'Mercredi', priVeille: true, priResp: '' }
+    ];
+    var PL = [
+      { id: 'direction', label: 'Direction', a: 'à la direction' },
+      { id: 'voix', label: 'Voix', a: 'aux voix' },
+      { id: 'gac', label: 'Guitare acoustique', a: 'à la guitare acoustique' },
+      { id: 'piano', label: 'Piano', a: 'au piano' },
+      { id: 'batterie', label: 'Batterie', a: 'à la batterie' },
+      { id: 'basse', label: 'Basse', a: 'à la basse' },
+      { id: 'gel', label: 'Guitare électrique', a: 'à la guitare électrique' }
+    ];
+    var PR = [
+      { id: 'priere', label: 'Prière / permanence' },
+      { id: 'louange', label: 'Louange (direction)' },
+      { id: 'annonces', label: 'Annonces' },
+      { id: 'cene', label: 'Sainte Cène', option: true },
+      { id: 'predication', label: 'Prédication' },
+      { id: 'traduction', label: 'Traduction' }
+    ];
+    var PP = [
+      { id: 'louange', label: 'Louange', a: 'à la louange', pool: DATA.pool.direction || [], note: 'Personnes qui dirigent déjà la louange le dimanche.' },
+      { id: 'projection', label: 'Projection', a: 'à la projection', pool: DATA.pool.projection || [], note: 'Personnes qui font déjà la projection.' },
+      { id: 'orateur', label: 'Orateur', a: 'comme orateur', pool: DATA.progPool.predication || [], note: 'Personnes qui ont déjà prêché à Saint-Maurice.' }
+    ];
+    var PASTEURS = [
+      { nom: 'Victor Garnier', info: 'Pasteur' },
+      { nom: 'Agnès Garnier', info: 'Pasteure' },
+      { nom: 'Hélène Moreau', info: 'Ancienne de Saint-Maurice' }
+    ];
+    var ROUGE = '#A12626', VERT = '#146C3A', GRIS = '#5B5F6B', AMBRE = '#8A5300';
+
+    function cle(t, d, l, m, p) { return t + '|' + d + '|' + l + '|' + m + '|' + p; }
+    function louangeDe(d, l) {
+      var base = (DATA.louange[d] && DATA.louange[d][l]) || {};
+      var out = {};
+      PL.forEach(function (p) {
+        var arr = (base[p.id] || []).slice();
+        var k = picks[cle('dimanche', d, l, 'louange', p.id)];
+        if (k) arr.push(k);
+        out[p.id] = arr;
+      });
+      return out;
+    }
+    function ceneOui(d) {
+      if (Object.prototype.hasOwnProperty.call(ceneEtat, d)) return ceneEtat[d];
+      return !!((DATA.programme[d] || {}).cene);
+    }
+    function programmeDe(d, l) {
+      if (l !== 'stm') return null;
+      var base = DATA.programme[d] || {};
+      var lou = louangeDe(d, 'stm');
+      var out = {};
+      PR.forEach(function (r) {
+        var v = base[r.id] || '';
+        var auto = false;
+        if (r.id === 'louange') { v = lou.direction[0] || ''; auto = !!v; }
+        var k = picks[cle('dimanche', d, l, 'programme', r.id)];
+        out[r.id] = { nom: k || v, invite: !!k, auto: auto && !k };
+      });
+      return out;
+    }
+    function priereDe(l) {
+      var out = {};
+      PP.forEach(function (p) { out[p.id] = picks[cle('priere', datePri, l, 'priere', p.id)] || ''; });
+      return out;
+    }
+    function datePriDe(L) { return L.priVeille ? veille(datePri) : datePri; }
+    function peutModifier(t, m, l) {
+      if (t === 'priere') return l === 'stm';
+      if (m === 'louange') return true;
+      return l === 'stm';
+    }
+    function liste(arr) { return arr.map(function (x) { return x.toLowerCase(); }).join(', '); }
+    function ligne(o) {
+      return Object.assign({
+        rempli: false, vide: true, nom: '', videTexte: 'À pourvoir', videColor: ROUGE,
+        aSous: false, sous: '', sousColor: GRIS, peutChoisir: false, peutChoisirSous: false, ouvrir: null,
+        aToggle: false, ouiOn: false, nonOn: false, ouiBg: 'transparent', ouiFg: '#3D4049', nonBg: 'transparent', nonFg: '#3D4049', pickOui: null, pickNon: null
+      }, o);
+    }
+    function ouvrirFeuille(id) { return function () { self.setState({ sheet: id, texte: '', erreur: '' }); }; }
+
+    var dates = (type === 'dimanche' ? DIMS : JEUS).map(function (d) {
+      var on = d === (type === 'dimanche' ? dateDim : datePri);
+      return {
+        jour: type === 'dimanche' ? 'dim.' : 'jeu.',
+        label: court(d),
+        on: on,
+        bg: on ? '#16181D' : '#FFFFFF',
+        fg: on ? '#FFFFFF' : '#16181D',
+        border: on ? '#16181D' : '#E7E3DA',
+        pick: function () { self.setState(type === 'dimanche' ? { dateDim: d, sheet: null } : { datePri: d, sheet: null }); }
+      };
+    });
+    var types = [
+      { id: 'dimanche', label: 'Culte du dimanche' },
+      { id: 'priere', label: 'Réunion de prière' }
+    ].map(function (t) {
+      var on = t.id === type;
+      return { label: t.label, on: on, bg: on ? '#FFFFFF' : 'transparent', fg: on ? '#16181D' : '#3D4049', pick: function () { self.setState({ type: t.id, ecran: 'lieux', sheet: null }); } };
+    });
+    var mins = [
+      { id: 'louange', label: 'Louange' },
+      { id: 'programme', label: 'Programme du culte' }
+    ].map(function (m) {
+      var on = m.id === min;
+      return { label: m.label, on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6', pick: function () { self.setState({ min: m.id, sheet: null }); } };
+    });
+
+    function resume(l) {
+      if (type === 'priere') {
+        var pq = priereDe(l);
+        var vp = PP.filter(function (p) { return !pq[p.id]; });
+        return { aCompte: true, n: PP.length - vp.length, total: PP.length, vides: vp.length, manque: vp.length ? 'Manque : ' + liste(vp.map(function (p) { return p.label; })) : 'Tous les postes sont pourvus', manqueColor: vp.length ? ROUGE : VERT };
+      }
+      if (min === 'louange') {
+        var lo = louangeDe(dateDim, l);
+        var vides = PL.filter(function (p) { return lo[p.id].length === 0; });
+        var n = PL.length - vides.length;
+        return { aCompte: true, n: n, total: PL.length, vides: vides.length, manque: vides.length ? 'Manque : ' + liste(vides.map(function (p) { return p.label; })) : 'Tous les postes sont pourvus', manqueColor: vides.length ? ROUGE : VERT };
+      }
+      var pr = programmeDe(dateDim, l);
+      if (!pr) return { aCompte: false, n: 0, total: 0, vides: 0, manque: 'Programme pas encore rempli dans le tableau', manqueColor: GRIS };
+      var req = PR.filter(function (r) { return !r.option || (r.id === 'cene' && ceneOui(dateDim)); });
+      var vr = req.filter(function (r) { return !pr[r.id].nom; });
+      return { aCompte: true, n: req.length - vr.length, total: req.length, vides: vr.length, manque: vr.length ? 'Manque : ' + liste(vr.map(function (r) { return r.label; })) : 'Tous les rôles sont pourvus', manqueColor: vr.length ? ROUGE : VERT };
+    }
+
+    var cartes = LIEUX.map(function (L) {
+      var edit = peutModifier(type, min, L.id);
+      var r = resume(L.id);
+      var titre, sous;
+      if (type === 'priere') {
+        titre = L.nom + ' · 20h';
+        sous = L.priJour + ' ' + long(datePriDe(L)) + ' · resp. ' + (L.priResp || 'à définir');
+      } else {
+        titre = L.nom + ' · ' + L.heure;
+        sous = min === 'louange' ? 'Coord. : ' + L.coord : (L.id === 'stm' ? 'Programme tenu par Hélène' : 'Programme du lieu');
+      }
+      return {
+        titre: titre,
+        sous: sous,
+        edit: edit,
+        lecture: !edit,
+        aCompte: r.aCompte,
+        compte: r.n + '/' + r.total,
+        pct: r.total ? Math.round(r.n / r.total * 100) + '%' : '0%',
+        barColor: r.vides ? accent : '#1F8A4C',
+        manque: r.manque,
+        manqueColor: r.manqueColor,
+        ouvrir: function () { self.setState({ ecran: 'detail', lieu: L.id, sheet: null }); }
+      };
+    });
+
+    var aTraiter, aTraiterColor = ROUGE;
+    if (type === 'priere') {
+      var rp = resume('stm');
+      aTraiter = 'Prière Saint-Maurice ' + court(datePri) + ' : ' + (rp.vides ? rp.vides + ' postes à pourvoir' : 'complet');
+      if (!rp.vides) aTraiterColor = VERT;
+    } else if (min === 'louange') {
+      var tv = LIEUX.reduce(function (acc, L) { return acc + resume(L.id).vides; }, 0);
+      aTraiter = tv ? 'Louange ' + court(dateDim) + ' : ' + tv + ' postes vides sur les 3 lieux' : 'Louange ' + court(dateDim) + ' : tout est pourvu';
+      if (!tv) aTraiterColor = VERT;
+    } else {
+      var rs = resume('stm');
+      aTraiter = rs.vides ? 'Programme Saint-Maurice ' + court(dateDim) + ' : ' + rs.vides + ' rôles à pourvoir' : 'Programme Saint-Maurice ' + court(dateDim) + ' : complet';
+      if (!rs.vides) aTraiterColor = VERT;
+    }
+
+    var L = LIEUX.find(function (x) { return x.id === lieuId; }) || LIEUX[0];
+    var dEdit = peutModifier(type, min, L.id);
+    var lignes = [];
+    var dSous, dNote = '';
+    var rd = resume(L.id);
+    if (type === 'priere') {
+      dSous = 'Réunion de prière · ' + L.priJour.toLowerCase() + ' ' + long(datePriDe(L)) + ' · 20h · resp. ' + (L.priResp || 'à définir');
+      var pq = priereDe(L.id);
+      lignes = PP.map(function (p) {
+        var nom = pq[p.id];
+        return ligne({
+          label: p.label, rempli: !!nom, vide: !nom, nom: nom,
+          videColor: dEdit ? ROUGE : GRIS,
+          aSous: !!nom, sous: nom ? 'Invitation envoyée' : '', sousColor: AMBRE,
+          peutChoisir: !nom && dEdit && p.pool.length > 0,
+          ouvrir: ouvrirFeuille(p.id)
+        });
+      });
+      if (!L.priResp) dNote = 'Responsable de la réunion de prière de ' + L.nom + ' à définir.';
+    } else if (min === 'louange') {
+      dSous = 'Louange · dimanche ' + long(dateDim) + ' · ' + L.heure + ' · coord. ' + L.coord;
+      var lo = louangeDe(dateDim, L.id);
+      lignes = PL.map(function (p) {
+        var arr = lo[p.id];
+        var invite = !!picks[cle('dimanche', dateDim, L.id, 'louange', p.id)];
+        return ligne({
+          label: p.label, rempli: arr.length > 0, vide: arr.length === 0, nom: arr.join(', '),
+          aSous: invite, sous: invite ? 'Invitation envoyée' : '', sousColor: AMBRE,
+          peutChoisir: arr.length === 0 && dEdit && (DATA.pool[p.id] || []).length > 0,
+          ouvrir: ouvrirFeuille(p.id)
+        });
+      });
+    } else {
+      dSous = 'Programme du culte · dimanche ' + long(dateDim) + ' · ' + L.heure;
+      var pr = programmeDe(dateDim, L.id);
+      lignes = PR.map(function (r) {
+        var v = pr ? pr[r.id] : { nom: '', invite: false, auto: false };
+        if (r.id === 'cene' && pr) {
+          var oui = ceneOui(dateDim);
+          var setCene = function (val) {
+            return function () {
+              var c = Object.assign({}, ceneEtat);
+              c[dateDim] = val;
+              self.setState({ cene: c, sheet: null });
+            };
+          };
+          return ligne({
+            label: r.label, rempli: oui && !!v.nom, vide: !(oui && v.nom), nom: v.nom,
+            videTexte: oui ? 'À pourvoir' : 'Pas ce dimanche', videColor: oui ? ROUGE : GRIS,
+            aSous: oui && v.invite, sous: 'Invitation envoyée', sousColor: AMBRE,
+            peutChoisirSous: oui && !v.nom && dEdit,
+            ouvrir: ouvrirFeuille('cene'),
+            aToggle: dEdit, ouiOn: oui, nonOn: !oui,
+            ouiBg: oui ? '#FFFFFF' : 'transparent', ouiFg: oui ? '#16181D' : '#3D4049',
+            nonBg: !oui ? '#FFFFFF' : 'transparent', nonFg: !oui ? '#16181D' : '#3D4049',
+            pickOui: setCene(true), pickNon: setCene(false)
+          });
+        }
+        var sous = v.invite ? 'Invitation envoyée' : (v.auto ? 'Repris du planning louange' : (r.id === 'louange' && !v.nom ? 'Se remplit avec le planning louange' : ''));
+        return ligne({
+          label: r.label, rempli: !!v.nom, vide: !v.nom, nom: v.nom,
+          videTexte: r.option ? 'Non renseignée' : 'À pourvoir', videColor: r.option || !pr ? GRIS : ROUGE,
+          aSous: !!sous, sous: sous, sousColor: v.invite ? AMBRE : GRIS,
+          peutChoisir: !v.nom && dEdit && r.id !== 'louange' && (DATA.progPool[r.id] || []).length > 0,
+          ouvrir: ouvrirFeuille(r.id)
+        });
+      });
+      if (!pr) dNote = 'Le programme de ' + L.nom + " n'est pas encore rempli dans le tableau actuel.";
+    }
+    lignes.forEach(function (l, i) { l.sep = i === lignes.length - 1 ? 'transparent' : '#EFEBE3'; });
+
+    var ETATS = {
+      libre: { dot: '#9A968C', info: GRIS, libre: true },
+      pasteur: { dot: '#1F8A4C', info: VERT, libre: true },
+      meme: { dot: '#C77700', info: AMBRE, libre: true },
+      compatible: { dot: '#C77700', info: AMBRE, libre: true },
+      conflit: { dot: '#C62828', info: ROUGE, libre: false }
+    };
+    var candidats = [];
+    var sheetTitre = '', sheetNote = '', sheetSous = '';
+    var sheetOuvert = !!sheet && tab === 'planning' && ecran === 'detail';
+    if (sheetOuvert && type === 'priere') {
+      var P0 = PP.find(function (p) { return p.id === sheet; });
+      sheetTitre = P0 ? P0.label : '';
+      sheetNote = P0 ? P0.note : '';
+      sheetSous = L.priJour + ' ' + long(datePriDe(L)) + ' · ' + L.nom + ' 20h';
+      var pqi = priereDe(L.id);
+      candidats = (P0 ? P0.pool : []).filter(function (n) { return pqi[sheet] !== n; }).map(function (n) {
+        var etat = 'libre', info = 'Dispos pas encore renseignées';
+        var autre = PP.filter(function (p) { return p.id !== sheet && pqi[p.id] === n; })[0];
+        if (autre) { etat = 'meme'; info = 'Déjà ' + autre.a + ' ici : possible'; }
+        LIEUX.forEach(function (L2) {
+          if (L2.id === L.id || L2.priJour !== L.priJour) return;
+          var pq2 = priereDe(L2.id);
+          var p2 = PP.filter(function (p) { return pq2[p.id] === n; })[0];
+          if (p2) { etat = 'conflit'; info = 'Déjà ' + p2.a + ' à ' + L2.nom + ' le même soir'; }
+        });
+        return { nom: n, etat: etat, info: info };
+      });
+    } else if (sheetOuvert && min === 'louange') {
+      var P = PL.find(function (p) { return p.id === sheet; });
+      sheetTitre = P ? P.label : '';
+      sheetNote = 'Les plannings des 3 lieux sont vérifiés : impossible de choisir quelqu’un qui sert ailleurs à la même heure.';
+      sheetSous = 'Dimanche ' + long(dateDim) + ' · ' + L.nom + ' ' + L.heure;
+      var ici = louangeDe(dateDim, L.id);
+      candidats = (DATA.pool[sheet] || []).filter(function (n) { return ici[sheet].indexOf(n) < 0; }).map(function (n) {
+        var etat = 'libre', info = 'Dispos pas encore renseignées';
+        var autres = PL.filter(function (p) { return p.id !== sheet && ici[p.id].indexOf(n) >= 0; });
+        if (autres.length) { etat = 'meme'; info = 'Déjà ' + autres[0].a + ' ici : possible'; }
+        LIEUX.forEach(function (L2) {
+          if (L2.id === L.id) return;
+          var lo2 = louangeDe(dateDim, L2.id);
+          var p2 = PL.filter(function (p) { return lo2[p.id].indexOf(n) >= 0; })[0];
+          if (!p2) return;
+          if (L2.creneau === L.creneau) { etat = 'conflit'; info = 'Déjà ' + p2.a + ' à ' + L2.nom + ' à ' + L2.heure; }
+          else if (etat !== 'conflit') { etat = 'compatible'; info = 'Aussi ' + p2.a + ' à ' + L2.nom + ' à ' + L2.heure + ' : compatible'; }
+        });
+        return { nom: n, etat: etat, info: info };
+      });
+    } else if (sheetOuvert) {
+      var R = PR.find(function (r) { return r.id === sheet; });
+      sheetTitre = R ? R.label : '';
+      sheetSous = 'Dimanche ' + long(dateDim) + ' · ' + L.nom + ' ' + L.heure;
+      var prc = programmeDe(dateDim, L.id) || {};
+      if (sheet === 'cene') {
+        sheetNote = 'Écris un nom, ou choisis un pasteur ou une personne en service ce dimanche.';
+        var vus = {};
+        var ajoute = function (nom, etat, info) {
+          var k = nom.toLowerCase();
+          if (!nom || vus[k]) return;
+          vus[k] = true;
+          candidats.push({ nom: nom, etat: etat, info: info });
+        };
+        PASTEURS.forEach(function (p) { ajoute(p.nom, 'pasteur', p.info); });
+        (DATA.progPool.cene || []).forEach(function (n) {
+          if (/victor|agnès/i.test(n)) return;
+          ajoute(n, 'libre', 'A déjà fait la Sainte Cène');
+        });
+        PR.forEach(function (r) {
+          if (r.id !== 'cene' && prc[r.id] && prc[r.id].nom) ajoute(prc[r.id].nom, 'meme', 'En service ce dimanche : ' + r.label.toLowerCase());
+        });
+      } else {
+        sheetNote = 'Personnes qui ont déjà tenu ce rôle à Saint-Maurice.';
+        candidats = (DATA.progPool[sheet] || []).map(function (n) {
+          var autre = PR.filter(function (r) { return r.id !== sheet && prc[r.id] && prc[r.id].nom === n; })[0];
+          return autre ? { nom: n, etat: 'meme', info: 'A déjà : ' + autre.label.toLowerCase() + ' (possible)' } : { nom: n, etat: 'libre', info: 'Dispos pas encore renseignées' };
+        });
+      }
+    }
+    var ordre = { pasteur: 0, compatible: 1, libre: 2, meme: 2, conflit: 3 };
+    candidats.sort(function (a, b) { return ordre[a.etat] - ordre[b.etat]; });
+    candidats = candidats.map(function (c) {
+      var e = ETATS[c.etat];
+      return { nom: c.nom, info: c.info, dot: e.dot, infoColor: e.info, libre: e.libre, bloque: !e.libre, choisir: function () { self.choisir(c.nom); } };
+    });
+
+    var groupes = LIEUX.map(function (G) {
+      var items = [];
+      if (min === 'louange') {
+        var lo = louangeDe(dateDim, G.id);
+        PL.forEach(function (p) { if (lo[p.id].length) items.push({ label: p.label, nom: lo[p.id].join(', ') }); });
+      } else {
+        var pr = programmeDe(dateDim, G.id);
+        if (pr) PR.forEach(function (r) {
+          if (r.id === 'cene' && !ceneOui(dateDim)) return;
+          if (pr[r.id].nom) items.push({ label: r.label, nom: pr[r.id].nom });
+        });
+      }
+      return { titre: G.nom + ' · ' + G.heure, items: items, vide: items.length === 0, videTexte: min === 'louange' ? 'Personne de prévu pour le moment' : 'Programme pas encore rempli' };
+    });
+    var agg = {};
+    if (min === 'louange') {
+      PL.forEach(function (p) { (DATA.pool[p.id] || []).forEach(function (n) { (agg[n] = agg[n] || []).push(p.label.toLowerCase()); }); });
+    } else {
+      PR.forEach(function (r) { (DATA.progPool[r.id] || []).forEach(function (n) { (agg[n] = agg[n] || []).push(r.label.toLowerCase()); }); });
+    }
+    var noms = Object.keys(agg).sort(function (a, b) { return a.localeCompare(b, 'fr'); });
+    var personnes = noms.map(function (n, i) {
+      var d = agg[n].join(', ');
+      return { nom: n, detail: d.charAt(0).toUpperCase() + d.slice(1), sep: i === noms.length - 1 ? 'transparent' : '#EFEBE3' };
+    });
+    var vues = [
+      { id: 'dimanche', label: 'Ce dimanche' },
+      { id: 'tous', label: "Toute l'équipe" }
+    ].map(function (v) {
+      var on = v.id === vue;
+      return { label: v.label, on: on, bg: on ? '#FFFFFF' : 'transparent', fg: on ? '#16181D' : '#3D4049', pick: function () { self.setState({ vue: v.id }); } };
+    });
+
+    var actus = [
+      { tag: 'Ce dimanche', titre: 'Cultes du dimanche', texte: 'Saint-Maurice et Champigny à 10h30, Boulogne à 15h30. En direct sur YouTube.' },
+      { tag: 'Vendredi 27 novembre', titre: 'Veillée générale', texte: 'À partir de 22h à Saint-Maurice, pour toute l’église.' },
+      { tag: 'Samedi 5 décembre', titre: 'Jeûne du mois', texte: 'À partir de 10h à Saint-Maurice.' },
+      { tag: 'Chaque semaine', titre: 'Prière générale', texte: 'Jeudi à 20h à Saint-Maurice, mercredi à 20h à Boulogne et Champigny.' },
+      { tag: 'Chaque samedi', titre: 'Ados et Jeunes', texte: 'Ados à 15h, Jeunes à 18h, à Saint-Maurice.' }
+    ];
+    var roles = [
+      { label: 'Ancienne · Saint-Maurice', detail: 'Tient le programme du culte de Saint-Maurice, voit Champigny et Boulogne.' },
+      { label: 'Responsable louange', detail: 'Modifie les plannings louange des 3 lieux.' }
+    ].map(function (r, i, a) { return Object.assign({}, r, { sep: i === a.length - 1 ? 'transparent' : '#EFEBE3' }); });
+
+    function navItem(id) {
+      var on = tab === id;
+      return { current: on ? 'page' : 'false', color: on ? accent : GRIS, pick: function () { self.setState({ tab: id, sheet: null }); } };
+    }
+
+    return {
+      accent: accent,
+      showLieux: tab === 'planning' && ecran === 'lieux',
+      showDetail: tab === 'planning' && ecran === 'detail',
+      showEquipe: tab === 'equipe',
+      showActus: tab === 'actus',
+      showMoi: tab === 'moi',
+      types: types,
+      mins: mins,
+      showMinChips: type === 'dimanche',
+      dates: dates,
+      aTraiter: aTraiter,
+      aTraiterColor: aTraiterColor,
+      cartes: cartes,
+      retour: function () { self.setState({ ecran: 'lieux', sheet: null }); },
+      dTitre: L.nom,
+      dSous: dSous,
+      dCompte: rd.aCompte ? rd.n + ' sur ' + rd.total + (type === 'dimanche' && min === 'programme' ? ' rôles pourvus' : ' postes pourvus') : 'Pas encore rempli',
+      dCompteColor: rd.aCompte ? (rd.vides ? ROUGE : VERT) : GRIS,
+      dEdit: dEdit,
+      dLecture: !dEdit,
+      lignes: lignes,
+      dANote: !!dNote,
+      dNote: dNote,
+      vues: vues,
+      eqDimanche: vue === 'dimanche',
+      eqTous: vue === 'tous',
+      eqLegende: vue === 'dimanche' ? 'Dimanche ' + long(dateDim) : personnes.length + ' personnes ont déjà servi' + (min === 'louange' ? ' à la louange' : ' au programme de Saint-Maurice'),
+      groupes: groupes,
+      personnes: personnes,
+      actus: actus,
+      roles: roles,
+      nav: { planning: navItem('planning'), equipe: navItem('equipe'), actus: navItem('actus'), moi: navItem('moi') },
+      aToast: !!toast,
+      toast: toast,
+      sheetOuvert: sheetOuvert,
+      sheetTitre: sheetTitre,
+      sheetSous: sheetSous,
+      sheetNote: sheetNote,
+      sheetSaisie: sheetOuvert && type === 'dimanche' && min === 'programme' && sheet === 'cene',
+      texte: texte,
+      saisir: function (e) { self.setState({ texte: e && e.target ? e.target.value : '', erreur: '' }); },
+      valider: function () {
+        var t = ((self.state && self.state.texte) || '').trim();
+        if (!t) self.setState({ erreur: 'Écris un nom d’abord.' });
+        else self.choisir(t);
+      },
+      aErreur: !!erreur,
+      erreur: erreur,
+      candidats: candidats,
+      fermer: function () { self.setState({ sheet: null, texte: '', erreur: '' }); }
+    };
+  }
+  choisir(nom) {
+    var s = this.state || {};
+    var type = s.type || 'dimanche';
+    var picks = Object.assign({}, s.picks || {});
+    var k = type === 'priere'
+      ? 'priere|' + (s.datePri || '26/11') + '|' + (s.lieu || 'stm') + '|priere|' + s.sheet
+      : 'dimanche|' + (s.dateDim || '22/11') + '|' + (s.lieu || 'stm') + '|' + (s.min || 'louange') + '|' + s.sheet;
+    picks[k] = nom;
+    this.setState({ picks: picks, sheet: null, texte: '', erreur: '', toast: 'Invitation envoyée à ' + nom + '. Rappel automatique la veille à 18h.' });
+    clearTimeout(this._t);
+    var self = this;
+    this._t = setTimeout(function () { self.setState({ toast: '' }); }, 3500);
+  }
+  componentWillUnmount() {
+    clearTimeout(this._t);
+  }
+}
+</script>
+</body>
+</html>

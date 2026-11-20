@@ -1,0 +1,361 @@
+{
+ "louange": {
+  "22/11": {
+   "stm": {
+    "direction": [
+     "Inès"
+    ],
+    "gac": [
+     "Inès"
+    ],
+    "batterie": [
+     "Bérénice"
+    ],
+    "voix": [
+     "Adrien"
+    ]
+   },
+   "cha": {
+    "direction": [
+     "Marco"
+    ],
+    "gac": [
+     "Marco",
+     "Ismaël"
+    ],
+    "batterie": [
+     "Thaïs"
+    ],
+    "voix": [
+     "Joëlle",
+     "Héloïse"
+    ]
+   },
+   "bou": {
+    "direction": [
+     "Kenza"
+    ],
+    "gac": [
+     "Damien"
+    ],
+    "voix": [
+     "Noé"
+    ]
+   }
+  },
+  "29/11": {
+   "stm": {
+    "direction": [
+     "Olivier"
+    ],
+    "gac": [
+     "Lucas"
+    ],
+    "piano": [
+     "Inès"
+    ]
+   },
+   "cha": {
+    "direction": [
+     "Marco"
+    ],
+    "gac": [
+     "Marco",
+     "Ismaël"
+    ],
+    "voix": [
+     "Emma",
+     "Héloïse",
+     "Joëlle"
+    ]
+   },
+   "bou": {
+    "direction": [
+     "Noé"
+    ],
+    "gac": [
+     "Damien"
+    ],
+    "piano": [
+     "Hugo"
+    ]
+   }
+  },
+  "06/12": {
+   "stm": {
+    "direction": [
+     "Marco"
+    ],
+    "gac": [
+     "Marco"
+    ],
+    "batterie": [
+     "Bérénice"
+    ],
+    "voix": [
+     "Adrien"
+    ]
+   },
+   "cha": {
+    "direction": [
+     "Inès"
+    ],
+    "gac": [
+     "Lucas"
+    ],
+    "piano": [
+     "Inès"
+    ]
+   },
+   "bou": {
+    "direction": [
+     "Hugo"
+    ],
+    "piano": [
+     "Hugo"
+    ]
+   }
+  },
+  "13/12": {
+   "stm": {
+    "direction": [
+     "Diego"
+    ],
+    "gac": [
+     "Lucas"
+    ],
+    "piano": [
+     "Hugo"
+    ]
+   },
+   "cha": {},
+   "bou": {
+    "direction": [
+     "Noé"
+    ],
+    "voix": [
+     "Emma"
+    ]
+   }
+  },
+  "20/12": {
+   "stm": {
+    "direction": [
+     "Olivier"
+    ],
+    "piano": [
+     "Inès"
+    ],
+    "voix": [
+     "Emma"
+    ]
+   },
+   "cha": {},
+   "bou": {
+    "direction": [
+     "Diego"
+    ],
+    "gac": [
+     "Damien"
+    ],
+    "piano": [
+     "Inès"
+    ],
+    "voix": [
+     "Emma"
+    ]
+   }
+  },
+  "27/12": {
+   "stm": {
+    "direction": [
+     "Hugo"
+    ],
+    "gac": [
+     "Lucas"
+    ],
+    "piano": [
+     "Hugo"
+    ],
+    "voix": [
+     "Adrien"
+    ]
+   },
+   "cha": {},
+   "bou": {
+    "direction": [
+     "Noé"
+    ],
+    "gac": [
+     "Damien"
+    ]
+   }
+  }
+ },
+ "pool": {
+  "direction": [
+   "Marco",
+   "Thomas",
+   "Hugo",
+   "Noé",
+   "Diego",
+   "Sylvie",
+   "Paula",
+   "Tania",
+   "Olivier",
+   "Kenza",
+   "Damien",
+   "Élise",
+   "Malik",
+   "Héloïse",
+   "Inès",
+   "Lucas"
+  ],
+  "gac": [
+   "Lucas",
+   "Damien",
+   "Marco",
+   "Thomas",
+   "Ismaël",
+   "Inès",
+   "Tania"
+  ],
+  "piano": [
+   "Hugo",
+   "Camille",
+   "Inès",
+   "Quentin",
+   "Malik",
+   "Félix",
+   "Lucas"
+  ],
+  "batterie": [
+   "Bérénice",
+   "Thaïs",
+   "Lucas"
+  ],
+  "voix": [
+   "Noé",
+   "Emma",
+   "Joëlle",
+   "Pierre",
+   "Kenza",
+   "Héloïse",
+   "Adrien",
+   "Ugo",
+   "Chloé",
+   "Marco",
+   "Élise",
+   "Mona",
+   "Rachel",
+   "Diego",
+   "Paula",
+   "Ismaël",
+   "Sylvie",
+   "Olivier",
+   "Malik",
+   "Damien",
+   "Lucas",
+   "Hugo",
+   "Thomas",
+   "Inès"
+  ],
+  "basse": [
+   "Yasmine"
+  ],
+  "sono": [
+   "Félix",
+   "Yasmine",
+   "Fabien",
+   "Bruno",
+   "Léa",
+   "Wendy"
+  ],
+  "projection": [
+   "Orane",
+   "Adrien",
+   "Lucas",
+   "Bruno"
+  ],
+  "gel": [
+   "Lucas"
+  ]
+ },
+ "programme": {
+  "22/11": {
+   "priere": "Girard",
+   "louange": "Inès",
+   "annonces": "Girard",
+   "predication": "Victor Garnier",
+   "traduction": "Amélie"
+  },
+  "29/11": {
+   "priere": "Moreau",
+   "louange": "Olivier Garnier",
+   "annonces": "Moreau",
+   "predication": "Karim Lefèvre",
+   "traduction": "Grace"
+  },
+  "06/12": {},
+  "13/12": {},
+  "20/12": {},
+  "27/12": {}
+ },
+ "progPool": {
+  "priere": [
+   "Rosa",
+   "Samir",
+   "Girard",
+   "William",
+   "Hélène",
+   "Antoine",
+   "Wendy",
+   "Moreau"
+  ],
+  "louange": [
+   "Diego",
+   "Hugo",
+   "Paula",
+   "Malik",
+   "Marco",
+   "Lucas",
+   "Inès",
+   "Olivier Garnier"
+  ],
+  "annonces": [
+   "Rosa",
+   "Gaëlle",
+   "Girard",
+   "Hélène",
+   "William",
+   "Wendy",
+   "Moreau"
+  ],
+  "predication": [
+   "Antoine Moreau",
+   "Agnès Garnier",
+   "Victor Garnier",
+   "Nora Bernard",
+   "Gaëlle Girard",
+   "William Laurent",
+   "Samir Girard",
+   "Pasteur Victor",
+   "William",
+   "Zoé Dubois",
+   "Karim Lefèvre"
+  ],
+  "traduction": [
+   "Malik",
+   "Simon",
+   "Amélie",
+   "Grace",
+   "Valérie"
+  ],
+  "cene": [
+   "Samir",
+   "Agnès",
+   "Pasteur Victor",
+   "Antoine"
+  ]
+ }
+}

@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kerygma, accueil</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3730A3}a:hover{color:#1E1B4B}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F4EF; font-family: Inter, system-ui, sans-serif; color: #16181D; position: relative; overflow: hidden; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 14px 16px 6px 12px">
+<button type="button" onClick="{{ouvrir}}" style="display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 0 14px 0 10px; border-radius: 999px; border: 1px solid #D6D1C6; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #16181D; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+<span>Espace membre</span>
+</button>
+<span style="font-family: 'Space Grotesk', Inter, sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 3px">KERYGMA</span>
+</div>
+<main style="flex: 1; overflow-y: auto; padding: 10px 20px 28px; display: flex; flex-direction: column; gap: 14px">
+<section aria-label="Bienvenue" style="background: #16181D; color: #FFFFFF; border-radius: 22px; padding: 22px 20px; display: flex; flex-direction: column; gap: 10px">
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 30px; line-height: 1.1; font-weight: 700; letter-spacing: -0.5px">Bienvenue chez Kerygma</h1>
+<p style="margin: 0; font-size: 16px; line-height: 1.5; color: #D9DBE0">Église franco-hispanique en Île-de-France. Louange, méditation, prière et partage.</p>
+<a href="#eglises" style="align-self: flex-start; display: flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 16px; border-radius: 12px; background: #FFFFFF; color: #16181D; text-decoration: none; font-size: 15px; font-weight: 600">
+<span>Horaires des cultes</span>
+<span aria-hidden="true">↓</span>
+</a>
+</section>
+<h2 style="margin: 6px 0 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 22px; font-weight: 700">Fil d'actualité</h2>
+<sc-for list="{{actus}}" as="a" hint-placeholder-count="5">
+<article style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 600; color: {{accent}}">{{a.tag}}</span>
+<span style="font-size: 17px; font-weight: 700">{{a.titre}}</span>
+<span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{a.texte}}</span>
+</article>
+</sc-for>
+<h2 id="eglises" style="margin: 6px 0 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 22px; font-weight: 700">Nos églises</h2>
+<sc-for list="{{eglises}}" as="e" hint-placeholder-count="3">
+<article style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 14px 16px; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 17px; font-weight: 700">{{e.nom}}</span>
+<span style="font-size: 14px; line-height: 1.4; color: #5B5F6B">{{e.adresse}}</span>
+</span>
+<span style="flex: 0 0 auto; font-size: 14px; font-weight: 600; padding: 6px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">{{e.horaire}}</span>
+</article>
+</sc-for>
+</main>
+<sc-if value="{{popup}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(22, 24, 29, 0.45); display: flex; flex-direction: column; justify-content: flex-end">
+<div role="dialog" aria-label="Espace membre" style="background: #FFFFFF; border-radius: 24px 24px 0 0; padding: 14px 20px 24px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100% - 40px); overflow-y: auto; box-sizing: border-box">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<span style="font-family: 'Space Grotesk', Inter, sans-serif; font-size: 24px; font-weight: 700">Espace membre</span>
+<button type="button" aria-label="Fermer" onClick="{{fermer}}" style="width: 44px; height: 44px; border-radius: 22px; border: 1px solid #E7E3DA; background: #FFFFFF; display: flex; align-items: center; justify-content: center; color: #16181D; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</button>
+</div>
+<sc-if value="{{showTabs}}" hint-placeholder-val="{{true}}">
+<div role="group" aria-label="Connexion ou création de compte" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 14px; background: #ECE8DF">
+<sc-for list="{{tabs}}" as="t" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{t.on}}" onClick="{{t.pick}}" style="min-height: 44px; border-radius: 11px; border: 0; background: {{t.bg}}; color: {{t.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{t.label}}</button>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{modeConnexion}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="email" style="font-size: 14px; font-weight: 600">E-mail</label>
+<input id="email" type="email" value="{{email}}" onChange="{{setEmail}}" placeholder="ton.adresse@mail.com" style="min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="mdp" style="font-size: 14px; font-weight: 600">Mot de passe</label>
+<input id="mdp" type="password" value="{{mdp}}" onChange="{{setMdp}}" style="min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+</div>
+<sc-if value="{{loginOk}}" hint-placeholder-val="{{false}}">
+<a href="Planning.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 14px; background: {{accent}}; color: #FFFFFF; text-decoration: none; font-size: 16px; font-weight: 600">Se connecter</a>
+</sc-if>
+<sc-if value="{{loginKo}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{verifierConnexion}}" style="min-height: 52px; border-radius: 14px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Se connecter</button>
+</sc-if>
+<button type="button" onClick="{{oubli}}" style="align-self: center; min-height: 44px; padding: 0 12px; border: 0; background: transparent; font-family: inherit; font-size: 15px; font-weight: 600; color: {{accent}}; cursor: pointer">Mot de passe oublié ?</button>
+</sc-if>
+<sc-if value="{{modeCreation}}" hint-placeholder-val="{{false}}">
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<label for="prenom" style="font-size: 14px; font-weight: 600">Prénom</label>
+<input id="prenom" type="text" value="{{prenom}}" onChange="{{setPrenom}}" style="min-width: 0; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px; min-width: 0">
+<label for="nom" style="font-size: 14px; font-weight: 600">Nom</label>
+<input id="nom" type="text" value="{{nom}}" onChange="{{setNom}}" style="min-width: 0; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+</div>
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="cemail" style="font-size: 14px; font-weight: 600">E-mail</label>
+<input id="cemail" type="email" value="{{cemail}}" onChange="{{setCemail}}" placeholder="ton.adresse@mail.com" style="min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="cmdp" style="font-size: 14px; font-weight: 600">Mot de passe (8 caractères minimum)</label>
+<input id="cmdp" type="password" value="{{cmdp}}" onChange="{{setCmdp}}" style="min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+</div>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="cmdp2" style="font-size: 14px; font-weight: 600">Confirmer le mot de passe</label>
+<input id="cmdp2" type="password" value="{{cmdp2}}" onChange="{{setCmdp2}}" style="min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+</div>
+<button type="button" onClick="{{creer}}" style="min-height: 52px; border-radius: 14px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Créer mon compte</button>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #5B5F6B">On garde seulement ton prénom, ton nom et ton e-mail. Ton mot de passe est protégé : personne ne peut le lire, même l'administrateur.</p>
+</sc-if>
+<sc-if value="{{modeCree}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 10px; padding: 6px 0">
+<span aria-hidden="true" style="width: 48px; height: 48px; border-radius: 24px; background: #E7F5EC; color: #146C3A; display: flex; align-items: center; justify-content: center">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+</span>
+<span role="status" style="font-size: 20px; font-weight: 700">{{creeTitre}}</span>
+<span style="font-size: 15px; line-height: 1.5; color: #3D4049">Ta demande est enregistrée. Un administrateur valide ton accès et te donne tes rôles (louange, accueil…). Tu recevras un e-mail à {{email}} dès que c'est fait.</span>
+<button type="button" onClick="{{retourConnexion}}" style="min-height: 52px; border-radius: 14px; border: 1px solid #D6D1C6; background: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; color: #16181D; cursor: pointer">Retour à la connexion</button>
+</div>
+</sc-if>
+<sc-if value="{{modeOubli}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; font-size: 15px; line-height: 1.45; color: #3D4049">Entre ton e-mail : tu recevras un lien pour choisir un nouveau mot de passe.</p>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="oemail" style="font-size: 14px; font-weight: 600">E-mail</label>
+<input id="oemail" type="email" value="{{oemail}}" onChange="{{setOemail}}" placeholder="ton.adresse@mail.com" style="min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+</div>
+<button type="button" onClick="{{envoyerLien}}" style="min-height: 52px; border-radius: 14px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Envoyer le lien</button>
+<button type="button" onClick="{{retourConnexion}}" style="min-height: 44px; border: 0; background: transparent; font-family: inherit; font-size: 15px; font-weight: 600; color: #3D4049; cursor: pointer">Retour à la connexion</button>
+</sc-if>
+<sc-if value="{{modeOubliEnvoye}}" hint-placeholder-val="{{false}}">
+<p role="status" style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #E7F5EC; color: #146C3A; font-size: 15px; line-height: 1.45; font-weight: 500">{{oubliTexte}}</p>
+<button type="button" onClick="{{retourConnexion}}" style="min-height: 52px; border-radius: 14px; border: 1px solid #D6D1C6; background: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; color: #16181D; cursor: pointer">Retour à la connexion</button>
+</sc-if>
+<sc-if value="{{aErreur}}" hint-placeholder-val="{{false}}">
+<p role="alert" style="margin: 0; font-size: 14px; font-weight: 600; color: #A12626">{{erreur}}</p>
+</sc-if>
+<sc-if value="{{continuerVisible}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{fermer}}" style="min-height: 44px; border: 0; background: transparent; font-family: inherit; font-size: 15px; font-weight: 600; color: #3D4049; cursor: pointer">Continuer sans compte</button>
+</sc-if>
+<p style="margin: 0; font-size: 13px; line-height: 1.4; color: #5B5F6B; text-align: center">Prototype : « Se connecter » ouvre directement le profil test de Hélène Moreau.</p>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#4338CA","options":["#4338CA","#0F766E","#C2410C"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  componentDidMount() {
+    var self = this;
+    this._t = setTimeout(function () {
+      if (!(self.state && self.state.vu)) self.setState({ popup: true, vu: true });
+    }, 800);
+  }
+  componentWillUnmount() {
+    clearTimeout(this._t);
+  }
+  renderVals() {
+    var self = this;
+    var s = this.state || {};
+    var accent = this.props.accent ?? '#4338CA';
+    var mode = s.mode || 'connexion';
+    var erreur = s.erreur || '';
+    var email = s.email || '', mdp = s.mdp || '';
+    var prenom = s.prenom || '', nom = s.nom || '', cemail = s.cemail || '', cmdp = s.cmdp || '', cmdp2 = s.cmdp2 || '';
+    var oemail = s.oemail || '';
+    function champ(cle) {
+      return function (e) {
+        var o = { erreur: '' };
+        o[cle] = e && e.target ? e.target.value : '';
+        self.setState(o);
+      };
+    }
+    function emailOk(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test((v || '').trim()); }
+    var PROTOTYPE = true;
+    var loginOk = PROTOTYPE || (emailOk(email) && mdp.length > 0);
+    var tabs = [
+      { id: 'connexion', label: 'Se connecter' },
+      { id: 'creation', label: 'Créer un compte' }
+    ].map(function (t) {
+      var on = t.id === mode;
+      return { label: t.label, on: on, bg: on ? '#FFFFFF' : 'transparent', fg: on ? '#16181D' : '#3D4049', pick: function () { self.setState({ mode: t.id, erreur: '' }); } };
+    });
+    return {
+      accent: accent,
+      popup: !!s.popup,
+      ouvrir: function () { self.setState({ popup: true, vu: true, mode: 'connexion', erreur: '' }); },
+      fermer: function () { self.setState({ popup: false, vu: true, erreur: '' }); },
+      showTabs: mode === 'connexion' || mode === 'creation',
+      tabs: tabs,
+      modeConnexion: mode === 'connexion',
+      modeCreation: mode === 'creation',
+      modeCree: mode === 'cree',
+      modeOubli: mode === 'oubli',
+      modeOubliEnvoye: mode === 'oubliEnvoye',
+      email: email,
+      mdp: mdp,
+      setEmail: champ('email'),
+      setMdp: champ('mdp'),
+      loginOk: loginOk,
+      loginKo: !loginOk,
+      verifierConnexion: function () {
+        self.setState({ erreur: !email.trim() || !mdp ? 'Entre ton e-mail et ton mot de passe.' : 'Cet e-mail ne semble pas valide.' });
+      },
+      oubli: function () { self.setState({ mode: 'oubli', erreur: '', oemail: email }); },
+      prenom: prenom, nom: nom, cemail: cemail, cmdp: cmdp, cmdp2: cmdp2,
+      setPrenom: champ('prenom'), setNom: champ('nom'), setCemail: champ('cemail'), setCmdp: champ('cmdp'), setCmdp2: champ('cmdp2'),
+      creer: function () {
+        var e = '';
+        if (!prenom.trim() || !nom.trim()) e = 'Indique ton prénom et ton nom.';
+        else if (!emailOk(cemail)) e = 'Cet e-mail ne semble pas valide.';
+        else if (cmdp.length < 8) e = 'Le mot de passe doit faire au moins 8 caractères.';
+        else if (cmdp !== cmdp2) e = 'Les deux mots de passe ne sont pas identiques.';
+        if (e) self.setState({ erreur: e });
+        else self.setState({ mode: 'cree', erreur: '', email: cemail.trim(), mdp: '', cmdp: '', cmdp2: '' });
+      },
+      creeTitre: 'Compte créé, ' + prenom.trim() + ' !',
+      retourConnexion: function () { self.setState({ mode: 'connexion', erreur: '' }); },
+      oemail: oemail,
+      setOemail: champ('oemail'),
+      envoyerLien: function () {
+        if (!emailOk(oemail)) self.setState({ erreur: 'Cet e-mail ne semble pas valide.' });
+        else self.setState({ mode: 'oubliEnvoye', erreur: '' });
+      },
+      oubliTexte: 'Si un compte existe pour ' + oemail.trim() + ', un lien pour choisir un nouveau mot de passe vient de partir par e-mail.',
+      aErreur: !!erreur,
+      erreur: erreur,
+      continuerVisible: mode === 'connexion' || mode === 'creation',
+      actus: [
+        { tag: 'Ce dimanche', titre: 'Cultes du dimanche', texte: 'Saint-Maurice et Champigny à 10h30, Boulogne à 15h30. En direct sur YouTube.' },
+        { tag: 'Vendredi 27 novembre', titre: 'Veillée générale', texte: 'À partir de 22h à Saint-Maurice, pour toute l’église.' },
+        { tag: 'Samedi 5 décembre', titre: 'Jeûne du mois', texte: 'À partir de 10h à Saint-Maurice.' },
+        { tag: 'Chaque semaine', titre: 'Prière générale', texte: 'Jeudi à 20h à Saint-Maurice, mercredi à 20h à Boulogne et Champigny.' },
+        { tag: 'Chaque samedi', titre: 'Ados et Jeunes', texte: 'Ados à 15h, Jeunes à 18h, à Saint-Maurice.' }
+      ],
+      eglises: [
+        { nom: 'Saint-Maurice', adresse: '23 bis rue du Maréchal Leclerc, 94410', horaire: 'Dim. 10h30' },
+        { nom: 'Champigny', adresse: '6 rue des Tilleuls, 94500', horaire: 'Dim. 10h30' },
+        { nom: 'Boulogne', adresse: '133 route de la Reine, 92100', horaire: 'Dim. 15h30' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
