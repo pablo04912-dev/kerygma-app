@@ -2,7 +2,7 @@
 
 Prototype de l'appli de l'église Kerygma (Paris) pour centraliser les plannings des ministères : qui sert quand, dans quel lieu, avec rappels.
 
-**Essayer le prototype sur téléphone :** https://LIEN-GITHUB-PAGES (mis à jour automatiquement après chaque envoi)
+**Essayer le prototype sur téléphone :** https://pablo04912-dev.github.io/kerygma-app/ (mis à jour automatiquement après chaque envoi)
 
 > Toutes les personnes dans ce prototype sont inventées. Aucune vraie donnée de l'église n'est dans ce dépôt.
 
