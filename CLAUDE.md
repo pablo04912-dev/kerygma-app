@@ -5,10 +5,21 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 ## 1. Début de séance (obligatoire, avant toute autre chose)
 
 1. `git pull` pour récupérer le travail de l'autre.
-2. Lis les dernières entrées de `JOURNAL.md` et `git log --since="<date de la dernière entrée de la personne avec qui tu parles>" --stat`.
-3. Fais un **résumé court de ce que l'autre a fait** depuis la dernière séance de ton interlocuteur : écrans touchés, décisions, ce qui reste à faire. Pas de jargon.
-4. `npm install` (si besoin), `npm run build`, `npm test` : signale tout de suite si quelque chose est cassé.
-5. Montre l'aperçu (voir section 4), puis demande sur quoi on travaille.
+2. Lis `MESSAGES.md` : montre d'abord les messages adressés à ton interlocuteur, puis déplace-les dans "Déjà lus" (envoyé avec le commit de fin de séance).
+3. Lis les dernières entrées de `JOURNAL.md` et `git log --since="<date de la dernière entrée de la personne avec qui tu parles>" --stat`.
+4. Fais un **résumé court de ce que l'autre a fait** depuis la dernière séance de ton interlocuteur : écrans touchés, décisions, ce qui reste à faire. Pas de jargon.
+5. `npm install` (si besoin), `npm run build`, `npm test` : signale tout de suite si quelque chose est cassé.
+6. Montre l'aperçu (voir section 4), puis demande sur quoi on travaille.
+
+## 1 bis. Pendant la séance : rester à jour
+
+- Avant chaque réponse qui touche au projet, fais `git pull`. Si l'autre a envoyé quelque chose entre-temps, dis-le en une phrase.
+- Si un écran a changé, `npm run build` puis republie l'aperçu (section 4).
+
+## 1 ter. Boîte à messages et résumé du soir
+
+- `MESSAGES.md` est le chat différé entre Pablo et Manuel. Si ton interlocuteur dit "dis à Manu…" ou "dis à Pablo…", écris le message en haut de la partie de l'autre (date + prénom), puis fais tout de suite un commit et un `git push`, sans attendre la fin de séance.
+- Chacun peut avoir un **résumé du soir** : une tâche programmée dans son propre Claude, qui ne prévient que si l'autre a changé quelque chose. Le texte à donner à son Claude est dans `docs/resume-du-soir.md`.
 
 ## 2. Fin de séance (obligatoire)
 
@@ -28,6 +39,7 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 
 - Après chaque modification : `npm run build`, puis publie `site/index.html` comme page dans la conversation (aperçu à droite), si ton outil le permet.
 - Le lien public se met à jour tout seul quelques minutes après chaque `git push` : voir le README.
+- L'aperçu à droite est une copie publiée depuis le compte de chacun : il ne change que quand ton Claude le republie (il ne peut pas suivre le lien public tout seul). Pour voir tout de suite le travail de l'autre, utilise le lien public.
 
 ## 5. Comment le projet est construit
 
