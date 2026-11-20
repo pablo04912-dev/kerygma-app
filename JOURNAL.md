@@ -8,6 +8,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 - Manuel a accepté l'invitation : il est collaborateur du dépôt.
 - `MESSAGES.md` : boîte à messages entre Pablo et Manuel (le Claude de chacun montre les messages en début de séance).
 - `docs/suivi-automatique.md` : texte d'une tâche programmée qui vérifie toutes les heures (9h-23h) et prévient seulement si l'autre a changé quelque chose.
+- `docs/idees-autres-applis.md` : tour des autres applis (Planning Center, ChurchTools, Elvanto, Teams Shifts, Slack, WhatsApp…) et idées à reprendre.
 - Nouvelle règle : envoi au fil de l'eau, dès qu'une modification est finie et testée (plus seulement en fin de séance).
 - `CLAUDE.md` : lecture de la boîte à messages en début de séance, `git pull` avant chaque réponse pendant la séance, explication de l'aperçu à droite.
 
@@ -17,6 +18,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 
 **Reste à faire**
 - Manuel : première séance, test visuel (actu "Test d'envoi réussi"), mise en place de son suivi automatique (voir `MESSAGES.md`).
+- Décider quelles idées de `docs/idees-autres-applis.md` on intègre (points 1 à 5 proposés), et si un remplacement doit être validé par le coordinateur.
 - Écran coordinateur : en attente des réponses de Pablo (voir les autres lieux ? validation par la responsable ? plusieurs commissions ?).
 
 ## 2026-11-20 · Pablo (avec Claude) · création du dépôt
