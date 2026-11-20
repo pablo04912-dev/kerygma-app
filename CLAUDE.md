@@ -7,7 +7,7 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 1. `git pull` pour récupérer le travail de l'autre.
 2. Lis `MESSAGES.md` : montre d'abord les messages adressés à ton interlocuteur, puis déplace-les dans "Déjà lus" (envoyé avec le commit de fin de séance).
 3. Lis les dernières entrées de `JOURNAL.md` et `git log --since="<date de la dernière entrée de la personne avec qui tu parles>" --stat`.
-4. Fais un **résumé court de ce que l'autre a fait** depuis la dernière séance de ton interlocuteur : écrans touchés, décisions, ce qui reste à faire. Pas de jargon.
+4. Fais un **résumé court de ce que l'autre a fait sur l'appli** depuis la dernière séance de ton interlocuteur : écrans touchés, décisions, événements techniques, ce qui reste à faire. Pas de jargon.
 5. `npm install` (si besoin), `npm run build`, `npm test` : signale tout de suite si quelque chose est cassé.
 6. Montre l'aperçu (voir section 4), puis demande sur quoi on travaille.
 
@@ -18,7 +18,10 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 - **Envoie au fil de l'eau** : dès qu'une modification est terminée et que `npm run build` et `npm test` sont verts, fais tout de suite un commit et un envoi (`git pull --rebase` puis `git push`). N'attends pas la fin de séance : l'autre doit voir ton travail dans les minutes qui suivent. Ne laisse jamais de travail fini non envoyé.
 - Un travail pas fini ou des tests rouges ne s'envoient pas : termine ou annule d'abord.
 
-## 1 ter. Boîte à messages et suivi automatique
+## 1 ter. Ce qu'on partage, boîte à messages et suivi automatique
+
+- **On ne partage que ce qui concerne l'appli** : changements d'écrans, de données ou de règles, décisions communes, événements techniques (base de données branchée, mise en ligne, compte créé, etc.). C'est ça qui va dans le dépôt, le journal, les messages et les notifications.
+- **Les recherches, explorations et idées de chacun restent privées**, dans son propre projet Claude, pas dans le dépôt. Elles n'y entrent que si ton interlocuteur le demande, ou quand une idée devient une décision ou un changement de l'appli.
 
 - `MESSAGES.md` est le chat différé entre Pablo et Manuel. Si ton interlocuteur dit "dis à Manu…" ou "dis à Pablo…", écris le message en haut de la partie de l'autre (date + prénom), puis fais tout de suite un commit et un `git push`.
 - Chacun peut avoir un **suivi automatique** : une tâche programmée dans son propre Claude, toutes les heures de 9h à 23h, qui ne prévient que si l'autre a changé quelque chose. Le texte à donner à son Claude est dans `docs/suivi-automatique.md`.
