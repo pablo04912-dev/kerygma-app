@@ -12,6 +12,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 - Tests : 270 vérifications (logique des deux écrans + parcours complet sur la page téléphone), tous verts.
 - Mise en ligne automatique sur GitHub Pages à chaque envoi : https://pablo04912-dev.github.io/kerygma-app/ (vérifié dans Chrome, connexion directe au profil test OK).
 - Appli GitHub "Claude" installée sur le compte de Pablo, avec accès au seul dépôt kerygma-app.
+- Drive "Kerygma App" rangé : 01 Cadrage (document de cadrage complet, avec les vrais noms), 02 Données, 03 Retours des commissions, 04 Visuels, 05 Sauvegardes.
 
 **Décisions**
 - Travail à deux sur ce dépôt, chacun avec son Claude ; pas de validation croisée ; résumé du travail de l'autre en début de séance.
@@ -19,6 +20,5 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 
 **Reste à faire**
 - Manuel : envoyer son nom d'utilisateur GitHub à Pablo (pour l'invitation), puis suivre le kit de démarrage (fichier privé envoyé par Pablo).
-- Ranger le Drive "Kerygma App" (dossiers 01 à 05).
 - Prochains écrans : espace coordinateur, puis serviteur.
 - Questions ouvertes : responsables de la réunion de prière à Champigny et Boulogne ; qui valide les nouveaux comptes.
