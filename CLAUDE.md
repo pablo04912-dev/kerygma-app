@@ -11,21 +11,23 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 5. `npm install` (si besoin), `npm run build`, `npm test` : signale tout de suite si quelque chose est cassé.
 6. Montre l'aperçu (voir section 4), puis demande sur quoi on travaille.
 
-## 1 bis. Pendant la séance : rester à jour
+## 1 bis. Pendant la séance : rester à jour et envoyer au fil de l'eau
 
 - Avant chaque réponse qui touche au projet, fais `git pull`. Si l'autre a envoyé quelque chose entre-temps, dis-le en une phrase.
 - Si un écran a changé, `npm run build` puis republie l'aperçu (section 4).
+- **Envoie au fil de l'eau** : dès qu'une modification est terminée et que `npm run build` et `npm test` sont verts, fais tout de suite un commit et un envoi (`git pull --rebase` puis `git push`). N'attends pas la fin de séance : l'autre doit voir ton travail dans les minutes qui suivent. Ne laisse jamais de travail fini non envoyé.
+- Un travail pas fini ou des tests rouges ne s'envoient pas : termine ou annule d'abord.
 
-## 1 ter. Boîte à messages et résumé du soir
+## 1 ter. Boîte à messages et suivi automatique
 
-- `MESSAGES.md` est le chat différé entre Pablo et Manuel. Si ton interlocuteur dit "dis à Manu…" ou "dis à Pablo…", écris le message en haut de la partie de l'autre (date + prénom), puis fais tout de suite un commit et un `git push`, sans attendre la fin de séance.
-- Chacun peut avoir un **résumé du soir** : une tâche programmée dans son propre Claude, qui ne prévient que si l'autre a changé quelque chose. Le texte à donner à son Claude est dans `docs/resume-du-soir.md`.
+- `MESSAGES.md` est le chat différé entre Pablo et Manuel. Si ton interlocuteur dit "dis à Manu…" ou "dis à Pablo…", écris le message en haut de la partie de l'autre (date + prénom), puis fais tout de suite un commit et un `git push`.
+- Chacun peut avoir un **suivi automatique** : une tâche programmée dans son propre Claude, toutes les heures de 9h à 23h, qui ne prévient que si l'autre a changé quelque chose. Le texte à donner à son Claude est dans `docs/suivi-automatique.md`.
 
 ## 2. Fin de séance (obligatoire)
 
 1. `npm run build` puis `npm test` : tout doit être vert. Sinon, corrige ou annule avant d'envoyer.
 2. Ajoute une entrée **en haut** de `JOURNAL.md` : date, qui, ce qui a été fait, décisions, ce qui reste à faire.
-3. Un commit clair en français, puis `git push` sur `main`. Pas de validation croisée : chacun envoie directement.
+3. Un commit clair en français, puis `git push` sur `main` (le gros du travail est déjà envoyé au fil de l'eau). Pas de validation croisée : chacun envoie directement.
 4. Si `git push` est refusé parce que l'autre a envoyé entre-temps : `git pull --rebase`, relance les tests, puis renvoie.
 
 ## 3. Règles sur les données (non négociables)
