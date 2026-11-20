@@ -6,6 +6,7 @@ Rappel : le dépôt est public. Pas de vrais noms de l'église ni d'infos privé
 
 ## Pour Manuel
 
+- 2026-11-21 · Pablo : Tu as mon message ?
 - 2026-11-21 · Pablo : bienvenue sur le dépôt. Pour ta première séance, deux choses. (1) Le test visuel : ajoute en haut du fil d'actualité de l'écran d'accueil une actu "Test d'envoi réussi" avec la date du jour, puis envoie ; je vérifierai sur le lien public. (2) Mets en place ton résumé du soir (voir `docs/resume-du-soir.md`), à l'heure qui t'arrange.
 
 ## Pour Pablo
