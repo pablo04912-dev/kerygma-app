@@ -385,17 +385,17 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <sc-if value="{{crTresBon}}" hint-placeholder-val="{{false}}">
 <span style="font-size: 14px; line-height: 1.45; color: #5B5F6B">{{crMerciNote}}</span>
 <button type="button" aria-expanded="{{pretsOuvert}}" onClick="{{togglePrets}}" style="display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 44px; width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer">
-<span>Choisir un message tout prêt</span>
+<span>Choisir un début de message</span>
 <span aria-hidden="true" style="font-size: 16px; color: #5B5F6B">{{pretsFleche}}</span>
 </button>
 <sc-if value="{{pretsOuvert}}" hint-placeholder-val="{{false}}">
-<div role="group" aria-label="Messages tout prêts" style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+<div role="group" aria-label="Débuts de message" style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
 <sc-for list="{{prets}}" as="pr" hint-placeholder-count="6">
 <button type="button" onClick="{{pr.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 12px; border: 1px solid #E7E3DA; background: #F7F6F2; color: #16181D; font-family: inherit; font-size: 15px; line-height: 1.35; text-align: left; cursor: pointer">{{pr.texte}}</button>
 </sc-for>
 </div>
 </sc-if>
-<label for="crMsgT" style="margin-top: 2px; font-size: 14px; font-weight: 600">Message (tu peux le changer)</label>
+<label for="crMsgT" style="margin-top: 2px; font-size: 14px; font-weight: 600">Message (choisis un début, puis écris la suite)</label>
 <textarea id="crMsgT" rows="2" value="{{crMsgT}}" onChange="{{saisirMsgT}}" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
 </sc-if>
 </section>
@@ -465,17 +465,17 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </div>
 </sc-if>
 <button type="button" aria-expanded="{{pretsHOuvert}}" onClick="{{togglePretsH}}" style="display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 44px; width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer">
-<span>Choisir un message tout prêt</span>
+<span>Choisir un début de message</span>
 <span aria-hidden="true" style="font-size: 16px; color: #5B5F6B">{{pretsHFleche}}</span>
 </button>
 <sc-if value="{{pretsHOuvert}}" hint-placeholder-val="{{false}}">
-<div role="group" aria-label="Messages tout prêts" style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+<div role="group" aria-label="Débuts de message" style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
 <sc-for list="{{pretsH}}" as="ph" hint-placeholder-count="6">
 <button type="button" onClick="{{ph.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 12px; border: 1px solid #E7E3DA; background: #F7F6F2; color: #16181D; font-family: inherit; font-size: 15px; line-height: 1.35; text-align: left; cursor: pointer">{{ph.texte}}</button>
 </sc-for>
 </div>
 </sc-if>
-<label for="crMsg" style="font-size: 14px; font-weight: 600">Message (tu peux le changer)</label>
+<label for="crMsg" style="font-size: 14px; font-weight: 600">Message (choisis un début, puis écris la suite)</label>
 <textarea id="crMsg" rows="2" value="{{crMsg}}" onChange="{{saisirMsg}}" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
 <sc-if value="{{aErreurMsg}}" hint-placeholder-val="{{false}}">
 <span role="alert" style="font-size: 13px; font-weight: 600; color: #A12626">{{erreurMsg}}</span>
@@ -1082,18 +1082,22 @@ class Component extends DCLogic {
     });
     var nbPresents = crPersonnes.filter(function (c) { return c.present === 'true'; }).length;
     var crTresBon = !!s.crTresBon;
-    var MSG_PRETS = [
-      'Très bon service dimanche, merci à tous !',
-      'Quelle belle louange dimanche, merci pour votre préparation !',
-      'Merci pour votre engagement, on a senti l’unité dans l’équipe !',
-      'Bravo et merci, vous avez servi avec excellence !',
-      'Merci pour votre fidélité, que Dieu vous bénisse !',
-      'Merci à chacun, c’était un vrai moment de louange !'
+    // Trois débuts de message : on en choisit un, puis on écrit la suite
+    var DEBUTS = [
+      'Merci à toute l’équipe pour dimanche !',
+      'Quel beau service dimanche !',
+      'Bravo à chacun pour votre engagement !'
     ];
-    var prets = MSG_PRETS.map(function (t) { return { texte: t, pick: function () { self.setState({ crMsgT: t, pretsOuvert: false }); } }; });
-    var pretsH = MSG_PRETS.map(function (t) { return { texte: t, pick: function () { self.setState({ crMsg: t, pretsHOuvert: false, erreurMsg: '' }); } }; });
+    function avecDebut(debut, texte) {
+      var suite = texte || '';
+      DEBUTS.forEach(function (d) { if (suite.indexOf(d) === 0) suite = suite.slice(d.length); });
+      suite = suite.replace(/^\s+/, '');
+      return debut + ' ' + suite;
+    }
+    var prets = DEBUTS.map(function (t) { return { texte: t, pick: function () { var st = self.state || {}; self.setState({ crMsgT: avecDebut(t, st.crMsgT != null ? st.crMsgT : defautMsgT), pretsOuvert: false }); } }; });
+    var pretsH = DEBUTS.map(function (t) { return { texte: t, pick: function () { var st = self.state || {}; self.setState({ crMsg: avecDebut(t, st.crMsg != null ? st.crMsg : DEBUTS[0] + ' '), pretsHOuvert: false, erreurMsg: '' }); } }; });
     var CR_CLE = CR_DATE + '|' + LC.id + '|louange';
-    var defautMsgT = MSG_PRETS[0];
+    var defautMsgT = DEBUTS[0] + ' ';
     var crComsListe = (S.commentaires[CR_CLE] || []);
     var crComs = crComsListe.map(function (c) { return { de: c.de === 'Hélène' && !coord ? 'Toi (Hélène)' : c.de + ', ' + c.role, texte: c.texte }; });
     var comsAutres = crComsListe.filter(function (c) { return c.de !== 'Thomas'; });
@@ -1574,7 +1578,7 @@ class Component extends DCLogic {
       msgModes: msgModes,
       msgChoix: msgMode === 'choix',
       msgPersonnes: msgPersonnes,
-      crMsg: s.crMsg != null ? s.crMsg : 'Très bon service dimanche, merci pour votre engagement !',
+      crMsg: s.crMsg != null ? s.crMsg : 'Merci à toute l’équipe pour dimanche ! ',
       saisirMsg: function (e) { self.setState({ crMsg: e && e.target ? e.target.value : '', erreurMsg: '' }); },
       aErreurMsg: !!s.erreurMsg,
       erreurMsg: s.erreurMsg || '',
@@ -1744,7 +1748,7 @@ class Component extends DCLogic {
     var s = this.state || {};
     var mode = s.msgMode || 'equipe';
     var noms = mode === 'equipe' ? prevus.slice() : prevus.filter(function (n) { return (s.msgChoisis || {})[n]; });
-    var t = (s.crMsg != null ? s.crMsg : 'Très bon service dimanche, merci pour votre engagement !').trim();
+    var t = (s.crMsg != null ? s.crMsg : 'Merci à toute l’équipe pour dimanche ! ').trim();
     if (!noms.length) { this.setState({ erreurMsg: 'Choisis au moins une personne.' }); return; }
     if (!t) { this.setState({ erreurMsg: 'Écris un message.' }); return; }
     partage().mercis.push({ date: date, lieu: L.id, de: 'Hélène', noms: noms, mode: mode === 'equipe' ? 'equipe' : 'prive', texte: t });
@@ -1760,7 +1764,7 @@ class Component extends DCLogic {
       date: date, lieu: lieu, par: 'Thomas', absents: abs,
       bien: (s.crBien || '').trim(), problemes: (s.crProb || '').trim(), ameliorer: (s.crAmel || '').trim(), merci: merci
     };
-    var texte = ((s.crMsgT != null ? s.crMsgT : defautMsg) || '').trim() || defautMsg;
+    var texte = ((s.crMsgT != null ? s.crMsgT : defautMsg) || '').trim() || defautMsg.trim();
     if (merci) S.mercis.push({ date: date, lieu: lieu, de: 'Thomas', noms: presents, mode: merci, texte: texte });
     var toast = 'Compte rendu envoyé à Hélène.' + (merci ? ' Merci envoyé à toute l’équipe.' : '');
     this.flash({ ecran: 'detail' }, toast);

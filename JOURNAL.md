@@ -2,6 +2,14 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-22 · Pablo (avec Claude) · débuts de message
+
+**Décision**
+- Les messages tout prêts servent de **début** au message personnalisé : 3 débuts au choix (« Merci à toute l'équipe pour dimanche ! », « Quel beau service dimanche ! », « Bravo à chacun pour votre engagement ! »), puis on écrit la suite.
+
+**Fait**
+- Thomas (« Très bon service ») et Hélène (« Envoyer un message ») : « Choisir un début de message ». Changer de début garde la suite déjà écrite ; choisir un début devant un texte libre le place en tête.
+
 ## 2026-11-21 (après-midi) · Pablo (avec Claude) · compte rendu : messages
 
 **Décisions**
