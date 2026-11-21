@@ -5,7 +5,7 @@
   "description": "Prototype de l'appli KERYGMA (plannings des ministères)",
   "scripts": {
     "build": "python3 outils/build.py",
-    "test": "node tests/test_accueil.js build/Accueil.dc.html && node tests/test_planning.js build/Planning.dc.html && node tests/test_coordinateur.js build/Coordinateur.dc.html build/Planning.dc.html && node tests/test_serviteur.js build/Serviteur.dc.html && node tests/test_phone.js site/index.html && node tests/test_pages_profils.js site"
+    "test": "node tests/test_accueil.js build/Accueil.dc.html && node tests/test_planning.js build/Planning.dc.html && node tests/test_coordinateur.js build/Coordinateur.dc.html build/Planning.dc.html && node tests/test_serviteur.js build/Serviteur.dc.html && node tests/test_phone.js site/index.html && node tests/test_pages_profils.js site && node tests/test_tailles.js site/index.html"
   },
   "devDependencies": {
     "jsdom": "24.1.3"

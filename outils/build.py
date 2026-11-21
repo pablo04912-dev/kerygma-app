@@ -40,6 +40,19 @@ def ecran_dc(source):
     return gabarit, script
 
 
+def tailles_relatives(gabarit):
+    """Page téléphone : tailles de texte en rem (1rem = 17px au réglage normal), pour suivre
+    la taille de texte réglée dans le téléphone. Les éléments marqués data-taille-fixe gardent
+    leurs pixels (en-tête, barre du bas)."""
+    def balise(m):
+        t = m.group(0)
+        if "data-taille-fixe" in t:
+            return t
+        return re.sub(r"font-size:\s*(\d+(?:\.\d+)?)px",
+                      lambda f: "font-size: " + ("%.4f" % (float(f.group(1)) / 17)).rstrip("0").rstrip(".") + "rem", t)
+    return re.sub(r"<[a-zA-Z][^>]*>", balise, gabarit)
+
+
 def main():
     donnees = json.loads(lire("data/exemple.json"))
     accueil = lire("src/accueil.dc.html")
@@ -70,6 +83,7 @@ def main():
     a_gab, a_js = ecran_dc(accueil)
     p_gab, p_js = ecran_dc(responsable)
     s_gab, s_js = ecran_dc(serviteur)
+    a_gab, p_gab, s_gab = tailles_relatives(a_gab), tailles_relatives(p_gab), tailles_relatives(s_gab)
     moteur = lire("src/runtime.js").replace(
         "/*__COMPONENTS__*/",
         "const AccueilComponent = (function () {\n" + a_js + "\nreturn Component;\n})();\n"

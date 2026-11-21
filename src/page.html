@@ -13,12 +13,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
 <style>
 :root{color-scheme:light}
+html{font-size:106.25%}
+@supports (font:-apple-system-body) and (-webkit-touch-callout:none){html{font:-apple-system-body}}
 html,body{margin:0;height:100%;background:#F6F4EF;touch-action:pan-x pan-y;overscroll-behavior:none;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent}
 #app{position:fixed;top:0;bottom:0;left:0;right:0;margin:0 auto;max-width:520px;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);box-sizing:border-box;background:#F6F4EF;overflow:hidden}
 @media (min-width:560px){#app{border-left:1px solid #E7E3DA;border-right:1px solid #E7E3DA}}
 a{color:#3730A3}
 button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #4338CA;outline-offset:2px}
-input:focus{outline:2px solid #4338CA;outline-offset:1px}
+input:focus,textarea:focus{outline:2px solid #4338CA;outline-offset:1px}
+button,a,span{overflow-wrap:break-word}
 </style>
 </head>
 <body>
