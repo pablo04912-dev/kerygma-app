@@ -211,6 +211,21 @@ function propre(label) {
   await click($$('section[aria-label="Comptes rendus"] button')[0], 'ouvrir compte rendu');
   assert(/Rempli par Thomas/.test(txt()) && /Belle louange/.test(txt()) && /Chloé/.test(txt()), 'Hélène lit le compte rendu');
   propre('lecture compte rendu');
+  // Hélène commente le service pour Thomas et écrit à Lucas
+  const tc = $('#crCom'); tc.focus(); tc.value = 'Belle louange, bravo pour la préparation';
+  tc.dispatchEvent(new window.Event('input', { bubbles: true }));
+  await tick();
+  assert(doc.activeElement.id === 'crCom', 'focus gardé dans le commentaire d’Hélène');
+  await click(btn('Envoyer à Thomas'), 'envoyer le commentaire');
+  assert(/Commentaire envoyé à Thomas/.test(txt()) && /Commentaires sur le service/.test(txt()), 'commentaire envoyé');
+  await click(btn('Certaines personnes'), 'certaines personnes');
+  await click(btn('Lucas', $('[role=group][aria-label="Destinataires"]')), 'Lucas');
+  const tm = $('#crMsg'); tm.value = 'Merci Lucas, très belle guitare dimanche !';
+  tm.dispatchEvent(new window.Event('input', { bubbles: true }));
+  await tick();
+  await click(btn('Envoyer le message'), 'envoyer le message');
+  assert(/Message envoyé à Lucas/.test(txt()) && /Envoyé à Lucas : « Merci Lucas, très belle guitare dimanche ! »/.test(txt()), 'message personnalisé envoyé à Lucas');
+  propre('message d’Hélène');
   await click($$('main button').find(b => /Les 3 lieux/.test(b.textContent)), 'retour 3 lieux');
   assert(/Bonjour Hélène/.test(txt()), 'retour aux 3 lieux après le compte rendu');
   await sortir();
@@ -221,7 +236,8 @@ function propre(label) {
   const demande = $('[data-demande="20/12|stm|batterie"]');
   assert(!!demande && /Dimanche 20 décembre/.test(demande.textContent) && /Présence 9h · fin vers 13h/.test(demande.textContent), 'Lucas reçoit la demande validée');
   propre('espace Lucas');
-  assert(!!$('section[aria-label="Merci"]') && /Merci, Lucas !/.test(txt()), 'Lucas reçoit le merci de Thomas');
+  const mercisL = $$('section[aria-label="Merci"]').map(x => x.textContent.replace(/\s+/g, ' '));
+  assert(mercisL.length === 2 && /Message de Thomas.*Très bon service dimanche, merci pour ton service !/.test(mercisL[0]) && /Message d’Hélène.*Merci Lucas, très belle guitare dimanche !/.test(mercisL[1]), 'Lucas reçoit le merci de Thomas et le message d’Hélène : ' + mercisL.join(' | '));
   await click(btn('Dispo', demande), 'Lucas dispo');
   assert(!$('[data-demande="20/12|stm|batterie"]') && /C’est confirmé/.test(txt()), 'Lucas confirme');
   await click(btn('Garder les deux'), 'garder les deux');
@@ -245,6 +261,7 @@ function propre(label) {
   propre('échange accepté');
   await sortir();
   await entrer('coordinateur');
+  assert(/Hélène a commenté le service : « Belle louange, bravo pour la préparation »/.test($('section[aria-label="Compte rendu à remplir"]').textContent), 'Thomas voit le commentaire d’Hélène');
   const exAdrien = $$('section[aria-label="Échange à valider"]').find(x => /Adrien/.test(x.textContent));
   assert(!!exAdrien && /Lucas a accepté/.test(exAdrien.textContent), 'Thomas voit l’échange à valider');
   await click(btn('Oui, valider', exAdrien), 'valider l’échange');

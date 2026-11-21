@@ -2,6 +2,22 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-21 (matin) · Pablo (avec Claude) · commentaires et messages des responsables
+
+**Décision**
+- Le coordinateur du lieu remplit le compte rendu (confirmé).
+- Tous ceux qui sont au-dessus de lui (responsables, parfois pasteurs, et pasteurs principaux) peuvent laisser un commentaire général sur le service, que le coordinateur voit.
+- Ils peuvent aussi envoyer un message personnalisé (« très bon service » ou autre) à n'importe quel serviteur : une ou plusieurs personnes, ou toute l'équipe.
+
+**Fait**
+- Hélène, sur chaque compte rendu (même pas encore rempli) : « Commentaire pour Thomas » et « Envoyer un message » (toute l'équipe ou certaines personnes, texte modifiable). Elle voit ce qu'elle a envoyé.
+- Thomas voit le commentaire sur sa carte de compte rendu et dans le compte rendu ; il peut aussi modifier le texte de son merci.
+- Lucas voit chaque message (« Message de Thomas », « Message d'Hélène à toute l'équipe ») avec le texte et le culte concerné.
+- Tests mis à jour, chaîne complète dans `test_phone.js`.
+
+**Reste à faire**
+- Profil test « pasteur principal » (mêmes droits qu'Hélène, sur tous les ministères) si on veut le montrer.
+
 ## 2026-11-21 (nuit) · Pablo (Claude en autonomie, à sa demande) · compte rendu, outils du coordinateur, contrôle qualité
 
 **Fait**
@@ -23,7 +39,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 - Tests : 689 vérifications, toutes vertes ; CI verte sur GitHub.
 
 **Choix faits en l'absence de Pablo (à confirmer)**
-- C'est le coordinateur du lieu (Thomas) qui remplit le compte rendu ; le responsable (Hélène) le reçoit.
+- C'est le coordinateur du lieu (Thomas) qui remplit le compte rendu ; le responsable (Hélène) le reçoit. (Confirmé le matin même.)
 - Les serviteurs ne voient que le merci, pas le commentaire.
 - La collecte des dispos est lancée par le coordinateur, pour son lieu ; l'équipe, ce sont ceux qui ont servi à ce lieu ces dernières semaines.
 

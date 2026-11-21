@@ -130,18 +130,19 @@ globalThis.__kerygmaPartage.invitations['dimanche|20/12|bou|louange|gac'] = { no
 x = L.v('Lucas après invitation');
 assert(x.demandes.length === avant + 1 && x.demandes.some(d => d.cle === '20/12|bou|gac' && d.horaire === 'Présence 14h · fin vers 18h'), 'nouvelle demande reçue (Boulogne 20 déc)');
 
-// 10. Merci après un très bon service
+// 10. Messages après le culte (merci de Thomas, message personnalisé d'Hélène)
 globalThis.__kerygmaPartage = undefined;
 L = ouvrir();
 x = L.v('sans merci');
-assert(x.mercis.length === 0, 'pas de merci au départ');
-globalThis.__kerygmaPartage.mercis.push({ date: '15/11', lieu: 'stm', de: 'Thomas', noms: ['Inès', 'Lucas'], mode: 'prive' });
-globalThis.__kerygmaPartage.mercis.push({ date: '15/11', lieu: 'cha', de: 'Sylvie', noms: ['Marco'], mode: 'equipe' });
+assert(x.mercis.length === 0, 'pas de message au départ');
+globalThis.__kerygmaPartage.mercis.push({ date: '15/11', lieu: 'stm', de: 'Thomas', noms: ['Inès', 'Lucas'], mode: 'prive', texte: 'Merci Lucas, super guitare !' });
+globalThis.__kerygmaPartage.mercis.push({ date: '15/11', lieu: 'cha', de: 'Sylvie', noms: ['Marco'], mode: 'equipe', texte: 'Merci à tous' });
 x = L.v('merci reçu');
-assert(x.mercis.length === 1 && x.mercis[0].titre === 'Merci, Lucas !' && /Thomas te remercie pour ton service du dimanche 15 novembre à Saint-Maurice/.test(x.mercis[0].texte), 'merci privé reçu, pas celui de Champigny');
-globalThis.__kerygmaPartage.mercis[0].mode = 'equipe';
-x = L.v('merci équipe');
-assert(x.mercis[0].titre === 'Merci à toute l’équipe !' && /l’équipe louange de Saint-Maurice/.test(x.mercis[0].texte), 'merci à l’équipe');
+assert(x.mercis.length === 1 && x.mercis[0].tag === 'Message de Thomas' && x.mercis[0].texte === '« Merci Lucas, super guitare ! »', 'message privé de Thomas, pas celui de Champigny : ' + JSON.stringify(x.mercis[0]));
+assert(x.mercis[0].contexte === 'Après le culte du dimanche 15 novembre à Saint-Maurice', 'contexte : ' + x.mercis[0].contexte);
+globalThis.__kerygmaPartage.mercis.push({ date: '15/11', lieu: 'stm', de: 'Hélène', noms: ['Inès', 'Lucas', 'Chloé'], mode: 'equipe', texte: 'Très belle louange, merci à toute l’équipe' });
+x = L.v('message d’Hélène');
+assert(x.mercis.length === 2 && x.mercis[1].tag === 'Message d’Hélène à toute l’équipe' && /Très belle louange/.test(x.mercis[1].texte), 'message d’Hélène à l’équipe');
 
 // 11. Demande d'échange reçue (Adrien demande à Lucas de prendre sa place)
 globalThis.__kerygmaPartage = undefined;

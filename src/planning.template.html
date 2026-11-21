@@ -135,6 +135,9 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <span style="font-size: 13px; font-weight: 700; color: {{crCarteTagColor}}">{{crCarteTag}}</span>
 <span style="font-size: 17px; font-weight: 700">{{crCarteTitre}}</span>
 <span style="font-size: 14px; line-height: 1.45; color: #3D4049">{{crCarteTexte}}</span>
+<sc-if value="{{aCRComsCarte}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 14px; line-height: 1.45; font-weight: 600; color: #3730A3">{{crComsCarte}}</span>
+</sc-if>
 <button type="button" onClick="{{ouvrirCR}}" style="align-self: flex-start; min-height: 44px; margin-top: 2px; padding: 0 16px; border-radius: 12px; border: {{crCarteBtnBorder}}; background: {{crCarteBtnBg}}; color: {{crCarteBtnFg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{crCarteBouton}}</button>
 </section>
 </sc-if>
@@ -266,6 +269,8 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-for>
 </div>
 <span style="font-size: 14px; line-height: 1.45; color: #5B5F6B">{{crMerciNote}}</span>
+<label for="crMsgT" style="margin-top: 2px; font-size: 14px; font-weight: 600">Message (tu peux le changer)</label>
+<textarea id="crMsgT" rows="2" value="{{crMsgT}}" onChange="{{saisirMsgT}}" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
 </sc-if>
 </section>
 <button type="button" onClick="{{envoyerCR}}" style="min-height: 48px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Envoyer le compte rendu à Hélène</button>
@@ -292,6 +297,57 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <sc-if value="{{crAMerci}}" hint-placeholder-val="{{false}}">
 <p style="margin: 0; padding: 12px 14px; border-radius: 14px; background: #E7F5EC; color: #146C3A; font-size: 14px; line-height: 1.45; font-weight: 600">{{crMerciTexte}}</p>
 </sc-if>
+</sc-if>
+<sc-if value="{{crEnAttente}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; padding: 12px 14px; border-radius: 14px; background: #FDF0DC; color: #8A5300; font-size: 14px; line-height: 1.45; font-weight: 600">{{crAttenteTexte}}</p>
+</sc-if>
+<sc-if value="{{aCRComs}}" hint-placeholder-val="{{false}}">
+<section aria-label="Commentaires sur le service" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 16px; font-weight: 700">Commentaires sur le service</span>
+<sc-for list="{{crComs}}" as="cm" hint-placeholder-count="1">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 13px; font-weight: 700; color: #3730A3">{{cm.de}}</span>
+<span style="font-size: 15px; line-height: 1.45">{{cm.texte}}</span>
+</div>
+</sc-for>
+</section>
+</sc-if>
+<sc-if value="{{crPeutCommenter}}" hint-placeholder-val="{{false}}">
+<section aria-label="Commentaire pour le coordinateur" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 16px; font-weight: 700">{{crComTitre}}</span>
+<span style="font-size: 14px; line-height: 1.45; color: #5B5F6B">{{crComNote}}</span>
+<label for="crCom" style="margin-top: 4px; font-size: 14px; font-weight: 600">Ton commentaire</label>
+<textarea id="crCom" rows="3" value="{{crCom}}" onChange="{{saisirCom}}" placeholder="Ce que tu as vu, ce qui est à garder ou à revoir…" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
+<sc-if value="{{aErreurCom}}" hint-placeholder-val="{{false}}">
+<span role="alert" style="font-size: 13px; font-weight: 600; color: #A12626">{{erreurCom}}</span>
+</sc-if>
+<button type="button" onClick="{{envoyerCom}}" style="align-self: flex-start; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{crComBouton}}</button>
+</section>
+<section aria-label="Envoyer un message" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 16px; font-weight: 700">Envoyer un message</span>
+<span style="font-size: 14px; line-height: 1.45; color: #5B5F6B">Un merci pour un très bon service, ou un mot personnel. À toute l’équipe ou à certaines personnes.</span>
+<div role="group" aria-label="À qui" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{msgModes}}" as="mm" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{mm.on}}" onClick="{{mm.pick}}" style="min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid {{mm.border}}; background: {{mm.bg}}; color: {{mm.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{mm.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{msgChoix}}" hint-placeholder-val="{{false}}">
+<div role="group" aria-label="Destinataires" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{msgPersonnes}}" as="mp" hint-placeholder-count="5">
+<button type="button" aria-pressed="{{mp.on}}" onClick="{{mp.pick}}" style="min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid {{mp.border}}; background: {{mp.bg}}; color: {{mp.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{mp.label}}</button>
+</sc-for>
+</div>
+</sc-if>
+<label for="crMsg" style="font-size: 14px; font-weight: 600">Message</label>
+<textarea id="crMsg" rows="2" value="{{crMsg}}" onChange="{{saisirMsg}}" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
+<sc-if value="{{aErreurMsg}}" hint-placeholder-val="{{false}}">
+<span role="alert" style="font-size: 13px; font-weight: 600; color: #A12626">{{erreurMsg}}</span>
+</sc-if>
+<button type="button" onClick="{{envoyerMsg}}" style="align-self: flex-start; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Envoyer le message</button>
+<sc-for list="{{msgEnvoyes}}" as="me" hint-placeholder-count="1">
+<p style="margin: 0; padding: 10px 12px; border-radius: 12px; background: #E7F5EC; color: #146C3A; font-size: 14px; line-height: 1.45; font-weight: 600">{{me.texte}}</p>
+</sc-for>
+</section>
 </sc-if>
 </sc-if>
 <sc-if value="{{showEquipe}}" hint-placeholder-val="{{false}}">
@@ -812,8 +868,7 @@ class Component extends DCLogic {
         detailColor: cr && nbAbs(cr) ? ROUGE : GRIS,
         statut: cr ? 'Reçu' : 'En attente',
         bg: cr ? '#E7F5EC' : '#FDF0DC', fg: cr ? VERT : AMBRE,
-        ouvrir: cr ? function () { self.setState({ ecran: 'cr', crLieu: L2.id, sheet: null }); }
-          : function () { self.flash({}, L2.coord + ' n’a pas encore rempli le compte rendu. Il l’a reçu en notification après le culte.'); },
+        ouvrir: function () { self.setState({ ecran: 'cr', crLieu: L2.id, sheet: null, crCom: '', erreurCom: '', msgChoisis: {}, erreurMsg: '' }); },
         sep: i === LIEUX.length - 1 ? 'transparent' : '#EFEBE3'
       };
     });
@@ -841,6 +896,31 @@ class Component extends DCLogic {
     var crMercis = [{ id: 'prive', label: 'Merci en privé' }, { id: 'equipe', label: 'Merci à toute l’équipe' }].map(function (m) {
       var on = m.id === crMerci;
       return { label: m.label, on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6', pick: function () { self.setState({ crMerci: m.id }); } };
+    });
+    var CR_CLE = CR_DATE + '|' + LC.id + '|louange';
+    var defautMsgT = crMerci === 'equipe' ? 'Très bon service dimanche, merci à tous !' : 'Très bon service dimanche, merci pour ton service !';
+    var crComsListe = (S.commentaires[CR_CLE] || []);
+    var crComs = crComsListe.map(function (c) { return { de: c.de === 'Hélène' && !coord ? 'Toi (Hélène)' : c.de + ', ' + c.role, texte: c.texte }; });
+    var comsAutres = crComsListe.filter(function (c) { return c.de !== 'Thomas'; });
+    var msgMode = s.msgMode || 'equipe';
+    var msgChoisis = s.msgChoisis || {};
+    var msgModes = [{ id: 'equipe', label: 'Toute l’équipe' }, { id: 'choix', label: 'Certaines personnes' }].map(function (m) {
+      var on = m.id === msgMode;
+      return { label: m.label, on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6', pick: function () { self.setState({ msgMode: m.id, erreurMsg: '' }); } };
+    });
+    var msgPersonnes = crPrevu.map(function (pp) {
+      var on = !!msgChoisis[pp.nom];
+      return {
+        label: pp.nom, on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6',
+        pick: function () {
+          var c = Object.assign({}, (self.state && self.state.msgChoisis) || {});
+          if (c[pp.nom]) delete c[pp.nom]; else c[pp.nom] = true;
+          self.setState({ msgChoisis: c, erreurMsg: '' });
+        }
+      };
+    });
+    var msgEnvoyes = (S.mercis || []).filter(function (m) { return m.de === 'Hélène' && m.date === CR_DATE && m.lieu === LC.id; }).map(function (m) {
+      return { texte: 'Envoyé ' + (m.mode === 'equipe' ? 'à toute l’équipe' : 'à ' + m.noms.join(', ')) + ' : « ' + m.texte + ' »' };
     });
     var crTextes = crVu ? [
       { titre: 'Ce qui s’est bien passé', texte: crVu.bien, color: VERT },
@@ -1136,7 +1216,7 @@ class Component extends DCLogic {
       retourCR: function () { self.setState({ ecran: coord ? 'detail' : 'lieux' }); },
       crRetourLabel: coord ? 'Planning' : 'Les 3 lieux',
       crSous: 'Louange · ' + LC.nom + ' · dimanche ' + long(CR_DATE) + ' · ' + LC.heure,
-      crForm: !crVu,
+      crForm: coord && !crVu,
       crLecture: !!crVu,
       crPersonnes: crPersonnes,
       crCompte: nbPresents + ' présent' + (nbPresents > 1 ? 's' : '') + ' sur ' + crPersonnes.length + ' prévus',
@@ -1153,7 +1233,33 @@ class Component extends DCLogic {
       toggleTresBon: function () { self.setState({ crTresBon: !(self.state && self.state.crTresBon) }); },
       crMercis: crMercis,
       crMerciNote: crMerci === 'prive' ? 'Chaque serviteur présent reçoit un merci personnel de ta part.' : 'Un message de merci est envoyé à toute l’équipe louange de ' + LC.nom + '.',
-      envoyerCR: function () { self.envoyerCR(CR_DATE, LC.id, crPrevu.map(function (pp) { return pp.nom; })); },
+      crMsgT: s.crMsgT != null ? s.crMsgT : defautMsgT,
+      saisirMsgT: function (e) { self.setState({ crMsgT: e && e.target ? e.target.value : '' }); },
+      envoyerCR: function () { self.envoyerCR(CR_DATE, LC.id, crPrevu.map(function (pp) { return pp.nom; }), defautMsgT); },
+      aCRComsCarte: coord && comsAutres.length > 0,
+      crComsCarte: comsAutres.length ? comsAutres[comsAutres.length - 1].de + ' a commenté le service : « ' + comsAutres[comsAutres.length - 1].texte + ' »' : '',
+      crEnAttente: !coord && !crVu,
+      crAttenteTexte: LC.coord + ' n’a pas encore rempli le compte rendu (présences et commentaire). Tu peux déjà laisser un commentaire ou envoyer un message.',
+      aCRComs: crComs.length > 0 && (coord ? !!crVu : true),
+      crComs: crComs,
+      crPeutCommenter: !coord,
+      crComTitre: 'Commentaire pour ' + LC.coord,
+      crComNote: 'Un avis général sur le service. ' + LC.coord + ', coordinateur de ' + LC.nom + ', le verra.',
+      crCom: s.crCom || '',
+      saisirCom: function (e) { self.setState({ crCom: e && e.target ? e.target.value : '', erreurCom: '' }); },
+      aErreurCom: !!s.erreurCom,
+      erreurCom: s.erreurCom || '',
+      crComBouton: 'Envoyer à ' + LC.coord,
+      envoyerCom: function () { self.envoyerCom(CR_CLE, LC.coord); },
+      msgModes: msgModes,
+      msgChoix: msgMode === 'choix',
+      msgPersonnes: msgPersonnes,
+      crMsg: s.crMsg != null ? s.crMsg : 'Très bon service dimanche, merci pour votre engagement !',
+      saisirMsg: function (e) { self.setState({ crMsg: e && e.target ? e.target.value : '', erreurMsg: '' }); },
+      aErreurMsg: !!s.erreurMsg,
+      erreurMsg: s.erreurMsg || '',
+      envoyerMsg: function () { self.envoyerMsg(CR_DATE, LC, crPrevu.map(function (pp) { return pp.nom; })); },
+      msgEnvoyes: msgEnvoyes,
       crPar: crVu ? 'Rempli par ' + crVu.par + ', coordinateur de ' + LC.nom : '',
       crPresentsTexte: crPresentsNoms.length ? crPresentsNoms.join(', ') : 'Personne',
       crAbsentsTexte: crVu && nbAbs(crVu) ? crVu.absents.join(', ') : 'Aucun',
@@ -1282,7 +1388,25 @@ class Component extends DCLogic {
     if (S.collecte['12']) S.collecte['12'].relances = (S.collecte['12'].relances || 0) + 1;
     this.flash({}, 'Rappel envoyé aux ' + n + ' personnes qui n’ont pas répondu.');
   }
-  envoyerCR(date, lieu, prevus) {
+  envoyerCom(cle, coordNom) {
+    var s = this.state || {};
+    var t = (s.crCom || '').trim();
+    if (!t) { this.setState({ erreurCom: 'Écris ton commentaire d’abord.' }); return; }
+    var S = partage();
+    (S.commentaires[cle] = S.commentaires[cle] || []).push({ de: 'Hélène', role: 'responsable louange', texte: t });
+    this.flash({ crCom: '', erreurCom: '' }, 'Commentaire envoyé à ' + coordNom + '.');
+  }
+  envoyerMsg(date, L, prevus) {
+    var s = this.state || {};
+    var mode = s.msgMode || 'equipe';
+    var noms = mode === 'equipe' ? prevus.slice() : prevus.filter(function (n) { return (s.msgChoisis || {})[n]; });
+    var t = (s.crMsg != null ? s.crMsg : 'Très bon service dimanche, merci pour votre engagement !').trim();
+    if (!noms.length) { this.setState({ erreurMsg: 'Choisis au moins une personne.' }); return; }
+    if (!t) { this.setState({ erreurMsg: 'Écris un message.' }); return; }
+    partage().mercis.push({ date: date, lieu: L.id, de: 'Hélène', noms: noms, mode: mode === 'equipe' ? 'equipe' : 'prive', texte: t });
+    this.flash({ msgChoisis: {}, erreurMsg: '' }, 'Message envoyé ' + (mode === 'equipe' ? 'à toute l’équipe de ' + L.nom : 'à ' + noms.join(', ')) + '.');
+  }
+  envoyerCR(date, lieu, prevus, defautMsg) {
     var s = this.state || {};
     var S = partage();
     var abs = prevus.filter(function (n) { return (s.crAbs || {})[n]; });
@@ -1292,7 +1416,8 @@ class Component extends DCLogic {
       date: date, lieu: lieu, par: 'Thomas', absents: abs,
       bien: (s.crBien || '').trim(), problemes: (s.crProb || '').trim(), ameliorer: (s.crAmel || '').trim(), merci: merci
     };
-    if (merci) S.mercis.push({ date: date, lieu: lieu, de: 'Thomas', noms: presents, mode: merci });
+    var texte = ((s.crMsgT != null ? s.crMsgT : defautMsg) || '').trim() || defautMsg;
+    if (merci) S.mercis.push({ date: date, lieu: lieu, de: 'Thomas', noms: presents, mode: merci, texte: texte });
     var toast = 'Compte rendu envoyé à Hélène.' + (merci ? ' Merci envoyé ' + (merci === 'equipe' ? 'à toute l’équipe.' : 'en privé à ' + presents.length + ' serviteurs.') : '');
     this.flash({ ecran: 'detail' }, toast);
   }
@@ -1335,6 +1460,7 @@ function partage(DATA) {
     ((DATA && DATA.comptesRendus) || []).forEach(function (c) { S.comptesRendus[c.date + '|' + c.lieu + '|louange'] = Object.assign({}, c); });
   }
   if (!S.mercis) S.mercis = [];
+  if (!S.commentaires) S.commentaires = {};
   if (!S.echanges) {
     S.echanges = {};
     ((DATA && DATA.echanges) || []).forEach(function (e) { S.echanges[e.date + '|' + e.lieu + '|' + e.poste] = Object.assign({}, e); });

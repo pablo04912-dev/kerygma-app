@@ -33,9 +33,9 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </div>
 <sc-for list="{{mercis}}" as="mc" hint-placeholder-count="1">
 <section aria-label="Merci" style="background: #F1F8F3; border: 1px solid #BFE0CB; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
-<span style="font-size: 13px; font-weight: 700; color: #146C3A">Très bon service</span>
-<span style="font-size: 17px; font-weight: 700">{{mc.titre}}</span>
-<span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{mc.texte}}</span>
+<span style="font-size: 13px; font-weight: 700; color: #146C3A">{{mc.tag}}</span>
+<span style="font-size: 17px; font-weight: 600; line-height: 1.4">{{mc.texte}}</span>
+<span style="font-size: 14px; color: #5B5F6B">{{mc.contexte}}</span>
 </section>
 </sc-for>
 <sc-for list="{{demandesEchange}}" as="de" hint-placeholder-count="1">
@@ -476,9 +476,11 @@ class Component extends DCLogic {
     var LIEU_NOM = { stm: 'Saint-Maurice', cha: 'Champigny', bou: 'Boulogne' };
     var mercis = (S.mercis || []).filter(function (m) { return m.noms.indexOf(NOM) >= 0; }).map(function (m) {
       var lieuNom = LIEU_NOM[m.lieu] || m.lieu;
-      return m.mode === 'equipe'
-        ? { titre: 'Merci à toute l’équipe !', texte: 'Message de ' + m.de + ' à l’équipe louange de ' + lieuNom + ' : très bon service dimanche ' + long(m.date) + ', merci à tous.' }
-        : { titre: 'Merci, ' + NOM + ' !', texte: m.de + ' te remercie pour ton service du dimanche ' + long(m.date) + ' à ' + lieuNom + ' : très bon service.' };
+      return {
+        tag: 'Message ' + (/^[AEIOUYÂÉÈÊÎÔH]/i.test(m.de) ? 'd’' : 'de ') + m.de + (m.mode === 'equipe' ? ' à toute l’équipe' : ''),
+        texte: '« ' + (m.texte || 'Très bon service, merci !') + ' »',
+        contexte: 'Après le culte du dimanche ' + long(m.date) + ' à ' + lieuNom
+      };
     });
 
     var equipes = tous.filter(actif).map(function (sv) {
@@ -658,6 +660,7 @@ function partage(DATA) {
     ((DATA && DATA.comptesRendus) || []).forEach(function (c) { S.comptesRendus[c.date + '|' + c.lieu + '|louange'] = Object.assign({}, c); });
   }
   if (!S.mercis) S.mercis = [];
+  if (!S.commentaires) S.commentaires = {};
   if (!S.echanges) {
     S.echanges = {};
     ((DATA && DATA.echanges) || []).forEach(function (e) { S.echanges[e.date + '|' + e.lieu + '|' + e.poste] = Object.assign({}, e); });
