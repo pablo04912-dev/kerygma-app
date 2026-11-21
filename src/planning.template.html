@@ -330,16 +330,36 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <sc-if value="{{crForm}}" hint-placeholder-val="{{true}}">
 <section aria-label="Présents" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 0 4px; display: flex; flex-direction: column">
 <span style="padding: 0 16px; font-size: 16px; font-weight: 700">Qui était là ?</span>
-<span style="padding: 2px 16px 6px; font-size: 14px; line-height: 1.4; color: #5B5F6B">Touche une personne absente pour la décocher.</span>
+<span style="padding: 2px 16px 6px; font-size: 14px; line-height: 1.4; color: #5B5F6B">Touche une personne absente pour la décocher. « Message » écrit à une seule personne.</span>
 <sc-for list="{{crPersonnes}}" as="cp" hint-placeholder-count="5">
-<button type="button" role="checkbox" aria-checked="{{cp.present}}" onClick="{{cp.toggle}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; width: 100%; padding: 8px 16px; border: 0; border-top: 1px solid #EFEBE3; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<div style="display: flex; flex-direction: column; border-top: 1px solid #EFEBE3">
+<div style="display: flex; align-items: center; gap: 8px; padding: 4px 12px 4px 0">
+<button type="button" role="checkbox" aria-checked="{{cp.present}}" onClick="{{cp.toggle}}" style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; min-height: 52px; padding: 4px 0 4px 16px; border: 0; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
 <span aria-hidden="true" style="flex: 0 0 auto; width: 24px; height: 24px; border-radius: 7px; border: 2px solid {{cp.boxBorder}}; background: {{cp.boxBg}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; box-sizing: border-box">{{cp.coche}}</span>
 <span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
 <span style="font-size: 16px; font-weight: 600">{{cp.nom}}</span>
-<span style="font-size: 13px; color: #5B5F6B">{{cp.postes}}</span>
+<span style="font-size: 13px; font-weight: {{cp.sousPoids}}; color: {{cp.sousColor}}">{{cp.sous}}</span>
 </span>
-<span style="flex: 0 0 auto; font-size: 13px; font-weight: 600; padding: 4px 9px; border-radius: 8px; background: {{cp.etatBg}}; color: {{cp.etatFg}}">{{cp.etat}}</span>
 </button>
+<button type="button" aria-label="{{cp.msgAria}}" aria-expanded="{{cp.msgOuvert}}" onClick="{{cp.ouvrirMsg}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid {{cp.msgBord}}; background: {{cp.msgFond}}; color: {{accent}}; font-family: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5h16v10H9l-5 4z"></path></svg>
+<span>Message</span>
+</button>
+</div>
+<sc-if value="{{cp.aEnvoye}}" hint-placeholder-val="{{false}}">
+<span style="padding: 0 16px 8px 52px; font-size: 13px; font-weight: 600; color: #146C3A">{{cp.envoyeTexte}}</span>
+</sc-if>
+<sc-if value="{{cp.ouvert}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 8px; padding: 0 16px 12px">
+<label for="crMsgP" style="font-size: 14px; font-weight: 600">{{cp.msgLabel}}</label>
+<textarea id="crMsgP" rows="2" value="{{crMsgP}}" onChange="{{saisirMsgP}}" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
+<span style="display: flex; gap: 8px">
+<button type="button" onClick="{{cp.envoyerMsg}}" style="flex: 1; min-height: 44px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{cp.envoyerLabel}}</button>
+<button type="button" onClick="{{fermerMsgP}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #3D4049; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Annuler</button>
+</span>
+</div>
+</sc-if>
+</div>
 </sc-for>
 <span style="padding: 8px 16px 10px; border-top: 1px solid #EFEBE3; font-size: 14px; font-weight: 600; color: {{crCompteColor}}">{{crCompte}}</span>
 </section>
@@ -356,25 +376,31 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <button type="button" role="switch" aria-checked="{{crTresBon}}" onClick="{{toggleTresBon}}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 52px; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
 <span style="display: flex; flex-direction: column; gap: 2px">
 <span style="font-size: 16px; font-weight: 700">Très bon service</span>
-<span style="font-size: 14px; color: #5B5F6B">Envoie un merci aux serviteurs présents</span>
+<span style="font-size: 14px; color: #5B5F6B">Envoie un merci à toute l’équipe présente</span>
 </span>
 <span aria-hidden="true" style="flex: 0 0 auto; width: 50px; height: 30px; border-radius: 15px; background: {{crSwitchBg}}; display: flex; align-items: center; justify-content: {{crSwitchPos}}; padding: 3px; box-sizing: border-box">
 <span style="width: 24px; height: 24px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25)"></span>
 </span>
 </button>
 <sc-if value="{{crTresBon}}" hint-placeholder-val="{{false}}">
-<div role="group" aria-label="À qui envoyer le merci" style="display: flex; flex-wrap: wrap; gap: 8px">
-<sc-for list="{{crMercis}}" as="mc" hint-placeholder-count="2">
-<button type="button" aria-pressed="{{mc.on}}" onClick="{{mc.pick}}" style="min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid {{mc.border}}; background: {{mc.bg}}; color: {{mc.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{mc.label}}</button>
+<span style="font-size: 14px; line-height: 1.45; color: #5B5F6B">{{crMerciNote}}</span>
+<button type="button" aria-expanded="{{pretsOuvert}}" onClick="{{togglePrets}}" style="display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 44px; width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer">
+<span>Choisir un message tout prêt</span>
+<span aria-hidden="true" style="font-size: 16px; color: #5B5F6B">{{pretsFleche}}</span>
+</button>
+<sc-if value="{{pretsOuvert}}" hint-placeholder-val="{{false}}">
+<div role="group" aria-label="Messages tout prêts" style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+<sc-for list="{{prets}}" as="pr" hint-placeholder-count="6">
+<button type="button" onClick="{{pr.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 12px; border: 1px solid #E7E3DA; background: #F7F6F2; color: #16181D; font-family: inherit; font-size: 15px; line-height: 1.35; text-align: left; cursor: pointer">{{pr.texte}}</button>
 </sc-for>
 </div>
-<span style="font-size: 14px; line-height: 1.45; color: #5B5F6B">{{crMerciNote}}</span>
+</sc-if>
 <label for="crMsgT" style="margin-top: 2px; font-size: 14px; font-weight: 600">Message (tu peux le changer)</label>
 <textarea id="crMsgT" rows="2" value="{{crMsgT}}" onChange="{{saisirMsgT}}" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
 </sc-if>
 </section>
 <button type="button" onClick="{{envoyerCR}}" style="min-height: 48px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Envoyer le compte rendu à Hélène</button>
-<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #5B5F6B">Le compte rendu remonte à Hélène, responsable louange. Les serviteurs ne voient que le merci.</p>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #5B5F6B">Le compte rendu remonte à Hélène, responsable louange. Les serviteurs ne voient que les messages.</p>
 </sc-if>
 <sc-if value="{{crLecture}}" hint-placeholder-val="{{false}}">
 <section aria-label="Présences" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
@@ -438,7 +464,18 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-for>
 </div>
 </sc-if>
-<label for="crMsg" style="font-size: 14px; font-weight: 600">Message</label>
+<button type="button" aria-expanded="{{pretsHOuvert}}" onClick="{{togglePretsH}}" style="display: flex; justify-content: space-between; align-items: center; gap: 8px; min-height: 44px; width: 100%; padding: 0 14px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer">
+<span>Choisir un message tout prêt</span>
+<span aria-hidden="true" style="font-size: 16px; color: #5B5F6B">{{pretsHFleche}}</span>
+</button>
+<sc-if value="{{pretsHOuvert}}" hint-placeholder-val="{{false}}">
+<div role="group" aria-label="Messages tout prêts" style="display: flex; flex-direction: column; gap: 6px; flex-shrink: 0">
+<sc-for list="{{pretsH}}" as="ph" hint-placeholder-count="6">
+<button type="button" onClick="{{ph.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 12px; border: 1px solid #E7E3DA; background: #F7F6F2; color: #16181D; font-family: inherit; font-size: 15px; line-height: 1.35; text-align: left; cursor: pointer">{{ph.texte}}</button>
+</sc-for>
+</div>
+</sc-if>
+<label for="crMsg" style="font-size: 14px; font-weight: 600">Message (tu peux le changer)</label>
 <textarea id="crMsg" rows="2" value="{{crMsg}}" onChange="{{saisirMsg}}" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
 <sc-if value="{{aErreurMsg}}" hint-placeholder-val="{{false}}">
 <span role="alert" style="font-size: 13px; font-weight: 600; color: #A12626">{{erreurMsg}}</span>
@@ -1019,12 +1056,23 @@ class Component extends DCLogic {
     var crVu = crDe(LC.id);
     var crAbs = s.crAbs || {};
     var crPrevu = prevuCR(LC.id);
+    var msgP = s.msgP || null;
+    function msgPDefaut(nom, present) { return present ? 'Merci ' + nom + ' pour ton service dimanche !' : 'Tu nous as manqué dimanche, ' + nom + '. On pense à toi !'; }
     var crPersonnes = crPrevu.map(function (pp) {
       var present = !crAbs[pp.nom];
+      var poste = pp.postes.charAt(0).toUpperCase() + pp.postes.slice(1);
+      var envoyes = (S.mercis || []).filter(function (m) { return m.de === MOI && m.mode === 'prive' && m.date === CR_DATE && m.lieu === LC.id && m.noms.indexOf(pp.nom) >= 0; });
+      var ouvert = msgP === pp.nom;
       return {
-        nom: pp.nom, postes: pp.postes.charAt(0).toUpperCase() + pp.postes.slice(1), present: present ? 'true' : 'false',
+        nom: pp.nom, postes: poste, present: present ? 'true' : 'false',
+        sous: present ? poste : poste + ' · absent', sousColor: present ? GRIS : ROUGE, sousPoids: present ? '400' : '600',
         coche: present ? '✓' : '', boxBg: present ? VERT : '#FFFFFF', boxBorder: present ? VERT : '#B9B3A6',
-        etat: present ? 'Présent' : 'Absent', etatBg: present ? '#E7F5EC' : '#FBE7E7', etatFg: present ? VERT : ROUGE,
+        msgAria: 'Écrire un message à ' + pp.nom, msgOuvert: ouvert ? 'true' : 'false', ouvert: ouvert,
+        msgFond: ouvert ? '#EEF0FF' : '#FFFFFF', msgBord: ouvert ? accent : '#D6D1C6',
+        ouvrirMsg: function () { self.setState({ msgP: ouvert ? null : pp.nom, crMsgP: null }); },
+        msgLabel: 'Message à ' + pp.nom, envoyerLabel: 'Envoyer à ' + pp.nom,
+        envoyerMsg: function () { self.envoyerMsgP(pp.nom, CR_DATE, LC.id, msgPDefaut(pp.nom, present)); },
+        aEnvoye: envoyes.length > 0, envoyeTexte: envoyes.length ? 'Message envoyé ✓ « ' + envoyes[envoyes.length - 1].texte + ' »' : '',
         toggle: function () {
           var a = Object.assign({}, (self.state && self.state.crAbs) || {});
           if (a[pp.nom]) delete a[pp.nom]; else a[pp.nom] = true;
@@ -1034,13 +1082,18 @@ class Component extends DCLogic {
     });
     var nbPresents = crPersonnes.filter(function (c) { return c.present === 'true'; }).length;
     var crTresBon = !!s.crTresBon;
-    var crMerci = s.crMerci || 'prive';
-    var crMercis = [{ id: 'prive', label: 'Merci en privé' }, { id: 'equipe', label: 'Merci à toute l’équipe' }].map(function (m) {
-      var on = m.id === crMerci;
-      return { label: m.label, on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6', pick: function () { self.setState({ crMerci: m.id }); } };
-    });
+    var MSG_PRETS = [
+      'Très bon service dimanche, merci à tous !',
+      'Quelle belle louange dimanche, merci pour votre préparation !',
+      'Merci pour votre engagement, on a senti l’unité dans l’équipe !',
+      'Bravo et merci, vous avez servi avec excellence !',
+      'Merci pour votre fidélité, que Dieu vous bénisse !',
+      'Merci à chacun, c’était un vrai moment de louange !'
+    ];
+    var prets = MSG_PRETS.map(function (t) { return { texte: t, pick: function () { self.setState({ crMsgT: t, pretsOuvert: false }); } }; });
+    var pretsH = MSG_PRETS.map(function (t) { return { texte: t, pick: function () { self.setState({ crMsg: t, pretsHOuvert: false, erreurMsg: '' }); } }; });
     var CR_CLE = CR_DATE + '|' + LC.id + '|louange';
-    var defautMsgT = crMerci === 'equipe' ? 'Très bon service dimanche, merci à tous !' : 'Très bon service dimanche, merci pour ton service !';
+    var defautMsgT = MSG_PRETS[0];
     var crComsListe = (S.commentaires[CR_CLE] || []);
     var crComs = crComsListe.map(function (c) { return { de: c.de === 'Hélène' && !coord ? 'Toi (Hélène)' : c.de + ', ' + c.role, texte: c.texte }; });
     var comsAutres = crComsListe.filter(function (c) { return c.de !== 'Thomas'; });
@@ -1064,6 +1117,8 @@ class Component extends DCLogic {
     var msgEnvoyes = (S.mercis || []).filter(function (m) { return m.de === 'Hélène' && m.date === CR_DATE && m.lieu === LC.id; }).map(function (m) {
       return { texte: 'Envoyé ' + (m.mode === 'equipe' ? 'à toute l’équipe' : 'à ' + m.noms.join(', ')) + ' : « ' + m.texte + ' »' };
     });
+    var msgsPrivesCR = [];
+    (S.mercis || []).forEach(function (m) { if (crVu && m.de === crVu.par && m.mode === 'prive' && m.date === CR_DATE && m.lieu === LC.id) m.noms.forEach(function (n) { if (msgsPrivesCR.indexOf(n) < 0) msgsPrivesCR.push(n); }); });
     var crTextes = crVu ? [
       { titre: 'Ce qui s’est bien passé', texte: crVu.bien, color: VERT },
       { titre: 'Problèmes', texte: crVu.problemes, color: ROUGE },
@@ -1486,8 +1541,18 @@ class Component extends DCLogic {
       crSwitchBg: crTresBon ? VERT : '#D6D1C6',
       crSwitchPos: crTresBon ? 'flex-end' : 'flex-start',
       toggleTresBon: function () { self.setState({ crTresBon: !(self.state && self.state.crTresBon) }); },
-      crMercis: crMercis,
-      crMerciNote: crMerci === 'prive' ? 'Chaque serviteur présent reçoit un merci personnel de ta part.' : 'Un message de merci est envoyé à toute l’équipe louange de ' + LC.nom + '.',
+      crMerciNote: 'Envoyé à toute l’équipe louange de ' + LC.nom + ' avec le compte rendu.',
+      pretsOuvert: !!s.pretsOuvert,
+      pretsFleche: s.pretsOuvert ? '▴' : '▾',
+      togglePrets: function () { self.setState({ pretsOuvert: !(self.state && self.state.pretsOuvert) }); },
+      prets: prets,
+      pretsHOuvert: !!s.pretsHOuvert,
+      pretsHFleche: s.pretsHOuvert ? '▴' : '▾',
+      togglePretsH: function () { self.setState({ pretsHOuvert: !(self.state && self.state.pretsHOuvert) }); },
+      pretsH: pretsH,
+      crMsgP: s.crMsgP != null ? s.crMsgP : (msgP ? msgPDefaut(msgP, !crAbs[msgP]) : ''),
+      saisirMsgP: function (e) { self.setState({ crMsgP: e && e.target ? e.target.value : '' }); },
+      fermerMsgP: function () { self.setState({ msgP: null, crMsgP: null }); },
       crMsgT: s.crMsgT != null ? s.crMsgT : defautMsgT,
       saisirMsgT: function (e) { self.setState({ crMsgT: e && e.target ? e.target.value : '' }); },
       envoyerCR: function () { self.envoyerCR(CR_DATE, LC.id, crPrevu.map(function (pp) { return pp.nom; }), defautMsgT); },
@@ -1520,8 +1585,8 @@ class Component extends DCLogic {
       crAbsentsTexte: crVu && nbAbs(crVu) ? crVu.absents.join(', ') : 'Aucun',
       crAbsentsColor: crVu && nbAbs(crVu) ? ROUGE : VERT,
       crTextes: crTextes,
-      crAMerci: !!(crVu && crVu.merci),
-      crMerciTexte: crVu && crVu.merci ? 'Très bon service : ' + (crVu.merci === 'equipe' ? 'merci envoyé à toute l’équipe.' : 'merci envoyé en privé à chaque serviteur présent.') : '',
+      crAMerci: !!crVu && (!!crVu.merci || msgsPrivesCR.length > 0),
+      crMerciTexte: crVu ? ((crVu.merci ? 'Très bon service : merci envoyé à toute l’équipe.' : '') + (msgsPrivesCR.length ? (crVu.merci ? ' ' : '') + crVu.par + ' a aussi écrit à ' + msgsPrivesCR.join(', ') + '.' : '')) : '',
       showEquipe: tab === 'equipe',
       showActus: tab === 'actus',
       showMoi: tab === 'moi',
@@ -1646,6 +1711,13 @@ class Component extends DCLogic {
     if (S.collecte['12']) S.collecte['12'].relances = (S.collecte['12'].relances || 0) + 1;
     this.flash({}, 'Rappel envoyé aux ' + n + ' personnes qui n’ont pas répondu.');
   }
+  envoyerMsgP(nom, date, lieu, defaut) {
+    var s = this.state || {};
+    var t = ((s.crMsgP != null ? s.crMsgP : defaut) || '').trim();
+    if (!t) return;
+    partage().mercis.push({ date: date, lieu: lieu, de: this._coord ? 'Thomas' : 'Hélène', noms: [nom], mode: 'prive', texte: t });
+    this.flash({ msgP: null, crMsgP: null }, 'Message envoyé à ' + nom + '.');
+  }
   envoyerTache(titreType, defaut) {
     var s = this.state || {};
     var t = s.tache;
@@ -1683,14 +1755,14 @@ class Component extends DCLogic {
     var S = partage();
     var abs = prevus.filter(function (n) { return (s.crAbs || {})[n]; });
     var presents = prevus.filter(function (n) { return abs.indexOf(n) < 0; });
-    var merci = s.crTresBon ? (s.crMerci || 'prive') : '';
+    var merci = s.crTresBon ? 'equipe' : '';
     S.comptesRendus[date + '|' + lieu + '|louange'] = {
       date: date, lieu: lieu, par: 'Thomas', absents: abs,
       bien: (s.crBien || '').trim(), problemes: (s.crProb || '').trim(), ameliorer: (s.crAmel || '').trim(), merci: merci
     };
     var texte = ((s.crMsgT != null ? s.crMsgT : defautMsg) || '').trim() || defautMsg;
     if (merci) S.mercis.push({ date: date, lieu: lieu, de: 'Thomas', noms: presents, mode: merci, texte: texte });
-    var toast = 'Compte rendu envoyé à Hélène.' + (merci ? ' Merci envoyé ' + (merci === 'equipe' ? 'à toute l’équipe.' : 'en privé à ' + presents.length + ' serviteurs.') : '');
+    var toast = 'Compte rendu envoyé à Hélène.' + (merci ? ' Merci envoyé à toute l’équipe.' : '');
     this.flash({ ecran: 'detail' }, toast);
   }
   flash(patch, msg) {

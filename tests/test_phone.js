@@ -211,8 +211,23 @@ function propre(label) {
   ta.dispatchEvent(new window.Event('input', { bubbles: true }));
   await tick();
   assert(doc.activeElement.id === 'crBien' && $('#crBien').value === 'Belle louange', 'focus et texte gardés dans le commentaire');
+  // Message à Lucas seul, depuis la liste « Qui était là ? »
+  await click($('button[aria-label="Écrire un message à Lucas"]'), 'message à Lucas');
+  assert(!!$('#crMsgP') && $('#crMsgP').value === 'Merci Lucas pour ton service dimanche !', 'message à une personne ouvert');
+  const tp = $('#crMsgP'); tp.focus(); tp.value = 'Super guitare dimanche, merci Lucas !';
+  tp.dispatchEvent(new window.Event('input', { bubbles: true }));
+  await tick();
+  assert(doc.activeElement.id === 'crMsgP', 'focus gardé dans le message à Lucas');
+  await click(btn('Envoyer à Lucas'), 'envoyer à Lucas');
+  assert(/Message envoyé à Lucas/.test(txt()) && /Message envoyé ✓ « Super guitare dimanche, merci Lucas ! »/.test(txt()) && !$('#crMsgP'), 'message à Lucas envoyé');
   await click($('[role=switch]'), 'très bon service');
-  assert($('[role=switch]').getAttribute('aria-checked') === 'true' && !!btn('Merci en privé'), 'Très bon service activé');
+  assert($('[role=switch]').getAttribute('aria-checked') === 'true' && !btn('Merci en privé') && $('#crMsgT').value === 'Très bon service dimanche, merci à tous !', 'Très bon service activé, message à toute l’équipe');
+  await click($$('button[aria-expanded]').find(b => /Choisir un message tout prêt/.test(b.textContent)), 'messages tout prêts');
+  const pretsG = $('[role=group][aria-label="Messages tout prêts"]');
+  assert(!!pretsG && pretsG.querySelectorAll('button').length === 6, 'six messages tout prêts');
+  propre('messages tout prêts');
+  await click(btn('Quelle belle louange dimanche, merci pour votre préparation !', pretsG), 'choisir une phrase');
+  assert($('#crMsgT').value === 'Quelle belle louange dimanche, merci pour votre préparation !' && !$('[role=group][aria-label="Messages tout prêts"]'), 'phrase choisie, liste refermée');
   await click(btn('Envoyer le compte rendu à Hélène'), 'envoyer compte rendu');
   assert(/Compte rendu envoyé à Hélène/.test(txt()) && /Compte rendu envoyé/.test($('section[aria-label="Compte rendu à remplir"]').textContent), 'compte rendu envoyé');
   propre('après compte rendu');
@@ -269,7 +284,7 @@ function propre(label) {
   propre('calendrier Lucas');
   await click(btn('Réduire', $('section[aria-label="Calendrier du mois"]')), 'réduire Lucas');
   const mercisL = $$('section[aria-label="Merci"]').map(x => x.textContent.replace(/\s+/g, ' '));
-  assert(mercisL.length === 2 && /Message de Thomas.*Très bon service dimanche, merci pour ton service !/.test(mercisL[0]) && /Message d’Hélène.*Merci Lucas, très belle guitare dimanche !/.test(mercisL[1]), 'Lucas reçoit le merci de Thomas et le message d’Hélène : ' + mercisL.join(' | '));
+  assert(mercisL.length === 3 && /Message de Thomas « Super guitare dimanche, merci Lucas ! »/.test(mercisL[0]) && /Message de Thomas à toute l’équipe « Quelle belle louange dimanche, merci pour votre préparation ! »/.test(mercisL[1]) && /Message d’Hélène.*Merci Lucas, très belle guitare dimanche !/.test(mercisL[2]), 'Lucas reçoit les messages de Thomas et d’Hélène : ' + mercisL.join(' | '));
   await click(btn('Dispo', demande), 'Lucas dispo');
   assert(!$('[data-demande="20/12|stm|batterie"]') && /C’est confirmé/.test(txt()), 'Lucas confirme');
   await click(btn('Garder les deux'), 'garder les deux');

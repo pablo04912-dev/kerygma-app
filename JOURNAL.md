@@ -2,6 +2,18 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-21 (après-midi) · Pablo (avec Claude) · compte rendu : messages
+
+**Décisions**
+- Dans « Qui était là ? », un bouton « Message » sur chaque personne pour lui écrire seule (texte par défaut modifiable ; pour un absent : « Tu nous as manqué… »).
+- « Très bon service » envoie un merci à toute l'équipe présente ; l'option « Merci en privé » est retirée.
+- Le texte du merci se choisit dans une liste de messages tout prêts qui se déplie, puis reste modifiable.
+
+**Fait**
+- Thomas : bouton « Message » par personne, avec « Message envoyé ✓ » sur la ligne ; « Très bon service » avec « Choisir un message tout prêt » (6 phrases).
+- Hélène : la même liste de messages tout prêts dans « Envoyer un message » ; dans le compte rendu, elle lit « Thomas a aussi écrit à Lucas ».
+- Tests à jour (chaîne complète : message à Lucas, merci à l'équipe, Lucas reçoit les deux).
+
 ## 2026-11-21 (midi) · Pablo (avec Claude) · tâches et calendrier du mois
 
 **Décisions**
