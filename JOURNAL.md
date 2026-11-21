@@ -2,6 +2,37 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-21 (nuit) · Pablo (Claude en autonomie, à sa demande) · compte rendu, outils du coordinateur, contrôle qualité
+
+**Fait**
+- **Compte rendu de service** (dernier dimanche, 15 nov) :
+  - Thomas reçoit une notification après le culte. Il coche les présents et les absents sur la liste prévue, remplit le commentaire (bien passé, problèmes, à améliorer) et peut activer « Très bon service », avec un merci en privé ou à toute l'équipe.
+  - Hélène voit les comptes rendus des 3 lieux (reçu / en attente) et les lit.
+  - Lucas reçoit le merci s'il était présent.
+- **Échanges** :
+  - Lucas reçoit une demande (Adrien lui demande de prendre sa place) et accepte ou refuse.
+  - Ses propres demandes sont suivies : pas encore de réponse, accepté, validé, refusé.
+  - Thomas valide par Oui / Non. Le planning affiche alors « Échange : X → Y (X pas dispo) », chez Thomas comme chez Hélène.
+- **Collecte des dispos de décembre** (onglet Équipe de Thomas) :
+  - Thomas lance la collecte et voit les réponses (pas dispo, si besoin, dispo tous les dimanches), puis relance ceux qui n'ont pas répondu.
+  - La grille de Lucas arrive chez Thomas, et les dispos reçues apparaissent dans la liste « Choisir » (« Si besoin seulement », « Indisponible ce jour-là »).
+- **Contrôle qualité** : tous les écrans des 3 profils ont été parcourus à 320 px, 390 px et sur ordinateur, avec un texte normal, x1,5 et x2.
+  - L'appli suit maintenant la taille de texte réglée dans le téléphone.
+  - Corrigé : en-tête et pastilles qui débordaient, feuilles du bas qui ne défilaient pas (le bouton Fermer devenait inaccessible), liste « Choisir » qui s'écrasait, lignes nom / poste.
+  - Outil `outils/controle_qualite.py` (à lancer à la main) et test `test_tailles.js`.
+- Tests : 689 vérifications, toutes vertes ; CI verte sur GitHub.
+
+**Choix faits en l'absence de Pablo (à confirmer)**
+- C'est le coordinateur du lieu (Thomas) qui remplit le compte rendu ; le responsable (Hélène) le reçoit.
+- Les serviteurs ne voient que le merci, pas le commentaire.
+- La collecte des dispos est lancée par le coordinateur, pour son lieu ; l'équipe, ce sont ceux qui ont servi à ce lieu ces dernières semaines.
+
+**Reste à faire**
+- Chez Thomas, les notifications (compte rendu, échanges, propositions) s'empilent au-dessus du planning. Il faudra peut-être les regrouper dans un seul bloc « À traiter ».
+- Tester la taille de texte sur un vrai iPhone : Réglages, Luminosité et affichage, Taille du texte.
+- Durée des réunions de prière dans les agendas (2h par défaut en attendant).
+- WhatsApp : réponse de Manuel attendue.
+
 ## 2026-11-21 · Pablo (avec Claude) · boîte à messages et suivi automatique
 
 **Fait**
