@@ -181,6 +181,22 @@ function propre(label) {
   await click(btn('Proposer', lucasRow), 'proposer Lucas');
   assert(/Proposition enregistrée : Lucas/.test(txt()) && /1 proposition en attente de validation par Hélène \(20 déc\)/.test(txt()), 'proposition de Thomas enregistrée');
   propre('après proposition');
+  // Compte rendu du dernier dimanche
+  await click(btn('Remplir le compte rendu'), 'remplir le compte rendu');
+  assert(/Qui était là/.test(txt()) && $$('[role=checkbox]').length === 6, 'formulaire du compte rendu, 6 personnes prévues');
+  propre('compte rendu');
+  const chloe = $$('[role=checkbox]').find(b => /Chloé/.test(b.textContent));
+  await click(chloe, 'Chloé absente');
+  assert($$('[role=checkbox]').find(b => /Chloé/.test(b.textContent)).getAttribute('aria-checked') === 'false' && /5 présents sur 6 prévus/.test(txt()), 'case décochée');
+  const ta = $('#crBien'); ta.focus(); ta.value = 'Belle louange';
+  ta.dispatchEvent(new window.Event('input', { bubbles: true }));
+  await tick();
+  assert(doc.activeElement.id === 'crBien' && $('#crBien').value === 'Belle louange', 'focus et texte gardés dans le commentaire');
+  await click($('[role=switch]'), 'très bon service');
+  assert($('[role=switch]').getAttribute('aria-checked') === 'true' && !!btn('Merci en privé'), 'Très bon service activé');
+  await click(btn('Envoyer le compte rendu à Hélène'), 'envoyer compte rendu');
+  assert(/Compte rendu envoyé à Hélène/.test(txt()) && /Compte rendu envoyé/.test($('section[aria-label="Compte rendu à remplir"]').textContent), 'compte rendu envoyé');
+  propre('après compte rendu');
   await sortir();
 
   await entrer('responsable');
@@ -190,6 +206,13 @@ function propre(label) {
   propre('À valider');
   await click(groupe20 && btn('Valider', groupe20), 'valider');
   assert(/Planning validé/.test(txt()), 'Hélène valide');
+  const blocCR = $('section[aria-label="Comptes rendus"]');
+  assert(!!blocCR && /Saint-Maurice · 10h30\s*Thomas · 1 absent\s*Reçu/.test(blocCR.textContent.replace(/\s+/g, ' ')), 'Hélène reçoit le compte rendu de Thomas');
+  await click($$('section[aria-label="Comptes rendus"] button')[0], 'ouvrir compte rendu');
+  assert(/Rempli par Thomas/.test(txt()) && /Belle louange/.test(txt()) && /Chloé/.test(txt()), 'Hélène lit le compte rendu');
+  propre('lecture compte rendu');
+  await click($$('main button').find(b => /Les 3 lieux/.test(b.textContent)), 'retour 3 lieux');
+  assert(/Bonjour Hélène/.test(txt()), 'retour aux 3 lieux après le compte rendu');
   await sortir();
 
   await entrer('serviteur');
@@ -198,6 +221,7 @@ function propre(label) {
   const demande = $('[data-demande="20/12|stm|batterie"]');
   assert(!!demande && /Dimanche 20 décembre/.test(demande.textContent) && /Présence 9h · fin vers 13h/.test(demande.textContent), 'Lucas reçoit la demande validée');
   propre('espace Lucas');
+  assert(!!$('section[aria-label="Merci"]') && /Merci, Lucas !/.test(txt()), 'Lucas reçoit le merci de Thomas');
   await click(btn('Dispo', demande), 'Lucas dispo');
   assert(!$('[data-demande="20/12|stm|batterie"]') && /C’est confirmé/.test(txt()), 'Lucas confirme');
   await click(btn('Garder les deux'), 'garder les deux');

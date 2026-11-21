@@ -505,6 +505,9 @@
     ],
     "piano": [
      "Camille"
+    ],
+    "gac": [
+     "Lucas"
     ]
    },
    "cha": {
@@ -584,5 +587,19 @@
    "nom": "Inès",
    "lien": "sœur"
   }
- }
+ },
+ "comptesRendus": [
+  {
+   "date": "15/11",
+   "lieu": "cha",
+   "par": "Sylvie",
+   "absents": [
+    "Pierre"
+   ],
+   "bien": "Belle unité dans l'équipe, le nouveau chant a bien pris.",
+   "problemes": "Retour de scène en panne pendant dix minutes.",
+   "ameliorer": "Arriver un quart d'heure plus tôt pour les balances.",
+   "merci": "equipe"
+  }
+ ]
 }

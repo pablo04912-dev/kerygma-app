@@ -66,6 +66,20 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <span style="font-size: 13px; line-height: 1.4; color: #5B5F6B">Valider envoie les demandes aux serviteurs et ajoute les services dans leurs agendas.</span>
 </section>
 </sc-for>
+<sc-if value="{{aCRs}}" hint-placeholder-val="{{true}}">
+<section aria-label="Comptes rendus" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 4px 0; display: flex; flex-direction: column">
+<span style="padding: 12px 16px 4px; font-size: 16px; font-weight: 700">{{crListeTitre}}</span>
+<sc-for list="{{crListe}}" as="cr" hint-placeholder-count="3">
+<button type="button" onClick="{{cr.ouvrir}}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 56px; width: 100%; padding: 8px 16px; border: 0; border-bottom: 1px solid {{cr.sep}}; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-size: 16px; font-weight: 600">{{cr.lieu}}</span>
+<span style="font-size: 14px; color: {{cr.detailColor}}">{{cr.detail}}</span>
+</span>
+<span style="flex: 0 0 auto; font-size: 13px; font-weight: 600; padding: 4px 9px; border-radius: 8px; background: {{cr.bg}}; color: {{cr.fg}}">{{cr.statut}}</span>
+</button>
+</sc-for>
+</section>
+</sc-if>
 <p style="margin: 0; font-size: 14px; font-weight: 600; color: {{aTraiterColor}}">{{aTraiter}}</p>
 <sc-for list="{{cartes}}" as="c" hint-placeholder-count="3">
 <button type="button" onClick="{{c.ouvrir}}" style="display: flex; flex-direction: column; gap: 8px; width: 100%; text-align: left; padding: 14px 16px; border-radius: 18px; border: 1px solid #E7E3DA; background: #FFFFFF; font-family: inherit; color: #16181D; cursor: pointer">
@@ -116,6 +130,14 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-if>
 <p style="margin: 0; font-size: 15px; line-height: 1.4; color: #5B5F6B">{{dSous}}</p>
 </div>
+<sc-if value="{{aCRCarte}}" hint-placeholder-val="{{false}}">
+<section aria-label="Compte rendu à remplir" style="background: {{crCarteBg}}; border: 1px solid {{crCarteBorder}}; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; color: {{crCarteTagColor}}">{{crCarteTag}}</span>
+<span style="font-size: 17px; font-weight: 700">{{crCarteTitre}}</span>
+<span style="font-size: 14px; line-height: 1.45; color: #3D4049">{{crCarteTexte}}</span>
+<button type="button" onClick="{{ouvrirCR}}" style="align-self: flex-start; min-height: 44px; margin-top: 2px; padding: 0 16px; border-radius: 12px; border: {{crCarteBtnBorder}}; background: {{crCarteBtnBg}}; color: {{crCarteBtnFg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{crCarteBouton}}</button>
+</section>
+</sc-if>
 <sc-if value="{{aPropAttente}}" hint-placeholder-val="{{false}}">
 <p role="status" style="margin: 0; padding: 12px 14px; border-radius: 14px; background: #FFF8EC; border: 1px solid #F0D9B0; color: #8A5300; font-size: 14px; line-height: 1.45; font-weight: 600">{{propAttente}}</p>
 </sc-if>
@@ -176,6 +198,85 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </section>
 <sc-if value="{{dANote}}" hint-placeholder-val="{{false}}">
 <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #5B5F6B">{{dNote}}</p>
+</sc-if>
+</sc-if>
+<sc-if value="{{showCR}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<button type="button" onClick="{{retourCR}}" style="align-self: flex-start; min-height: 44px; display: flex; align-items: center; gap: 6px; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; font-weight: 600; color: {{accent}}; cursor: pointer">
+<span aria-hidden="true">←</span>
+<span>{{crRetourLabel}}</span>
+</button>
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Compte rendu</h1>
+<p style="margin: 0; font-size: 15px; line-height: 1.4; color: #5B5F6B">{{crSous}}</p>
+</div>
+<sc-if value="{{crForm}}" hint-placeholder-val="{{true}}">
+<section aria-label="Présents" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 0 4px; display: flex; flex-direction: column">
+<span style="padding: 0 16px; font-size: 16px; font-weight: 700">Qui était là ?</span>
+<span style="padding: 2px 16px 6px; font-size: 14px; line-height: 1.4; color: #5B5F6B">Touche une personne absente pour la décocher.</span>
+<sc-for list="{{crPersonnes}}" as="cp" hint-placeholder-count="5">
+<button type="button" role="checkbox" aria-checked="{{cp.present}}" onClick="{{cp.toggle}}" style="display: flex; align-items: center; gap: 12px; min-height: 56px; width: 100%; padding: 8px 16px; border: 0; border-top: 1px solid #EFEBE3; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<span aria-hidden="true" style="flex: 0 0 auto; width: 24px; height: 24px; border-radius: 7px; border: 2px solid {{cp.boxBorder}}; background: {{cp.boxBg}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 15px; font-weight: 700; box-sizing: border-box">{{cp.coche}}</span>
+<span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+<span style="font-size: 16px; font-weight: 600">{{cp.nom}}</span>
+<span style="font-size: 13px; color: #5B5F6B">{{cp.postes}}</span>
+</span>
+<span style="flex: 0 0 auto; font-size: 13px; font-weight: 600; padding: 4px 9px; border-radius: 8px; background: {{cp.etatBg}}; color: {{cp.etatFg}}">{{cp.etat}}</span>
+</button>
+</sc-for>
+<span style="padding: 8px 16px 10px; border-top: 1px solid #EFEBE3; font-size: 14px; font-weight: 600; color: {{crCompteColor}}">{{crCompte}}</span>
+</section>
+<section aria-label="Commentaire" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 16px; font-weight: 700">Commentaire</span>
+<label for="crBien" style="margin-top: 4px; font-size: 14px; font-weight: 600">Ce qui s'est bien passé</label>
+<textarea id="crBien" rows="2" value="{{crBien}}" onChange="{{saisirBien}}" placeholder="L'unité, un chant, l'accueil…" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
+<label for="crProb" style="margin-top: 6px; font-size: 14px; font-weight: 600">Problèmes</label>
+<textarea id="crProb" rows="2" value="{{crProb}}" onChange="{{saisirProb}}" placeholder="Matériel, retard, absence…" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
+<label for="crAmel" style="margin-top: 6px; font-size: 14px; font-weight: 600">À améliorer</label>
+<textarea id="crAmel" rows="2" value="{{crAmel}}" onChange="{{saisirAmel}}" placeholder="Ce qu'on fera mieux la prochaine fois" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
+</section>
+<section aria-label="Très bon service" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 6px 16px 12px; display: flex; flex-direction: column; gap: 8px">
+<button type="button" role="switch" aria-checked="{{crTresBon}}" onClick="{{toggleTresBon}}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 52px; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; font-weight: 700">Très bon service</span>
+<span style="font-size: 14px; color: #5B5F6B">Envoie un merci aux serviteurs présents</span>
+</span>
+<span aria-hidden="true" style="flex: 0 0 auto; width: 50px; height: 30px; border-radius: 15px; background: {{crSwitchBg}}; display: flex; align-items: center; justify-content: {{crSwitchPos}}; padding: 3px; box-sizing: border-box">
+<span style="width: 24px; height: 24px; border-radius: 12px; background: #FFFFFF; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25)"></span>
+</span>
+</button>
+<sc-if value="{{crTresBon}}" hint-placeholder-val="{{false}}">
+<div role="group" aria-label="À qui envoyer le merci" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{crMercis}}" as="mc" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{mc.on}}" onClick="{{mc.pick}}" style="min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid {{mc.border}}; background: {{mc.bg}}; color: {{mc.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{mc.label}}</button>
+</sc-for>
+</div>
+<span style="font-size: 14px; line-height: 1.45; color: #5B5F6B">{{crMerciNote}}</span>
+</sc-if>
+</section>
+<button type="button" onClick="{{envoyerCR}}" style="min-height: 48px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Envoyer le compte rendu à Hélène</button>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #5B5F6B">Le compte rendu remonte à Hélène, responsable louange. Les serviteurs ne voient que le merci.</p>
+</sc-if>
+<sc-if value="{{crLecture}}" hint-placeholder-val="{{false}}">
+<section aria-label="Présences" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 14px; color: #5B5F6B">{{crPar}}</span>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px">
+<span style="color: #5B5F6B">Présents</span>
+<span style="font-weight: 600; text-align: right">{{crPresentsTexte}}</span>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px">
+<span style="color: #5B5F6B">Absents</span>
+<span style="font-weight: 600; text-align: right; color: {{crAbsentsColor}}">{{crAbsentsTexte}}</span>
+</div>
+</section>
+<sc-for list="{{crTextes}}" as="ct" hint-placeholder-count="3">
+<section aria-label="{{ct.titre}}" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; font-weight: 700; color: {{ct.color}}">{{ct.titre}}</span>
+<span style="font-size: 15px; line-height: 1.45; color: #16181D">{{ct.texte}}</span>
+</section>
+</sc-for>
+<sc-if value="{{crAMerci}}" hint-placeholder-val="{{false}}">
+<p style="margin: 0; padding: 12px 14px; border-radius: 14px; background: #E7F5EC; color: #146C3A; font-size: 14px; line-height: 1.45; font-weight: 600">{{crMerciTexte}}</p>
+</sc-if>
 </sc-if>
 </sc-if>
 <sc-if value="{{showEquipe}}" hint-placeholder-val="{{false}}">
@@ -351,7 +452,7 @@ class Component extends DCLogic {
     var tab = s.tab || 'planning';
     var type = coord ? 'dimanche' : (s.type || 'dimanche');
     var min = coord ? 'louange' : (s.min || 'louange');
-    var ecran = coord ? 'detail' : (s.ecran || 'lieux');
+    var ecran = coord ? (s.ecran === 'cr' ? 'cr' : 'detail') : (s.ecran || 'lieux');
     var lieuId = coord ? 'stm' : (s.lieu || 'stm');
     var sheet = s.sheet || null;
     var picks = s.picks || {};
@@ -463,6 +564,7 @@ class Component extends DCLogic {
     var FREQMAX = DATA.freqMax || {};
     function dateNum(d) { var p = d.split('/'); return Date.UTC(2026, parseInt(p[1], 10) - 1, parseInt(p[0], 10)); }
     var TOUS_DIMS = Object.keys(HIST).concat(DIMS).sort(function (a, b) { return dateNum(a) - dateNum(b); });
+    var CR_DATE = Object.keys(HIST).sort(function (a, b) { return dateNum(a) - dateNum(b); }).pop() || '15/11';
     function equipeDim(d, l) { return HIST[d] ? (HIST[d][l] || {}) : louangeDe(d, l); }
     function sertLe(n, d) {
       return LIEUX.some(function (L2) {
@@ -604,6 +706,66 @@ class Component extends DCLogic {
         refuser: function () { self.decider(g.cles, 'refusee'); }
       };
     });
+
+    // Compte rendu de service (dernier dimanche passé)
+    function prevuCR(l) {
+      var e = (HIST[CR_DATE] || {})[l] || {};
+      var noms = [];
+      var postes = {};
+      PL.forEach(function (p) {
+        (e[p.id] || []).forEach(function (n) {
+          if (noms.indexOf(n) < 0) { noms.push(n); postes[n] = []; }
+          postes[n].push(p.label.toLowerCase());
+        });
+      });
+      return noms.map(function (n) { return { nom: n, postes: postes[n].join(', ') }; });
+    }
+    function crDe(l) { return S.comptesRendus[CR_DATE + '|' + l + '|louange'] || null; }
+    function nbAbs(cr) { return (cr.absents || []).length; }
+    var crListe = LIEUX.map(function (L2, i) {
+      var cr = crDe(L2.id);
+      return {
+        lieu: L2.nom + ' · ' + L2.heure,
+        detail: cr ? cr.par + (nbAbs(cr) ? ' · ' + nbAbs(cr) + (nbAbs(cr) > 1 ? ' absents' : ' absent') : ' · tout le monde était là') : 'En attente de ' + L2.coord,
+        detailColor: cr && nbAbs(cr) ? ROUGE : GRIS,
+        statut: cr ? 'Reçu' : 'En attente',
+        bg: cr ? '#E7F5EC' : '#FDF0DC', fg: cr ? VERT : AMBRE,
+        ouvrir: cr ? function () { self.setState({ ecran: 'cr', crLieu: L2.id, sheet: null }); }
+          : function () { self.flash({}, L2.coord + ' n’a pas encore rempli le compte rendu. Il l’a reçu en notification après le culte.'); },
+        sep: i === LIEUX.length - 1 ? 'transparent' : '#EFEBE3'
+      };
+    });
+    var crLieuId = coord ? 'stm' : (s.crLieu || 'stm');
+    var LC = LIEUX.find(function (x) { return x.id === crLieuId; }) || LIEUX[0];
+    var crVu = crDe(LC.id);
+    var crAbs = s.crAbs || {};
+    var crPrevu = prevuCR(LC.id);
+    var crPersonnes = crPrevu.map(function (pp) {
+      var present = !crAbs[pp.nom];
+      return {
+        nom: pp.nom, postes: pp.postes.charAt(0).toUpperCase() + pp.postes.slice(1), present: present ? 'true' : 'false',
+        coche: present ? '✓' : '', boxBg: present ? VERT : '#FFFFFF', boxBorder: present ? VERT : '#B9B3A6',
+        etat: present ? 'Présent' : 'Absent', etatBg: present ? '#E7F5EC' : '#FBE7E7', etatFg: present ? VERT : ROUGE,
+        toggle: function () {
+          var a = Object.assign({}, (self.state && self.state.crAbs) || {});
+          if (a[pp.nom]) delete a[pp.nom]; else a[pp.nom] = true;
+          self.setState({ crAbs: a });
+        }
+      };
+    });
+    var nbPresents = crPersonnes.filter(function (c) { return c.present === 'true'; }).length;
+    var crTresBon = !!s.crTresBon;
+    var crMerci = s.crMerci || 'prive';
+    var crMercis = [{ id: 'prive', label: 'Merci en privé' }, { id: 'equipe', label: 'Merci à toute l’équipe' }].map(function (m) {
+      var on = m.id === crMerci;
+      return { label: m.label, on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6', pick: function () { self.setState({ crMerci: m.id }); } };
+    });
+    var crTextes = crVu ? [
+      { titre: 'Ce qui s’est bien passé', texte: crVu.bien, color: VERT },
+      { titre: 'Problèmes', texte: crVu.problemes, color: ROUGE },
+      { titre: 'À améliorer', texte: crVu.ameliorer, color: AMBRE }
+    ].filter(function (t) { return t.texte; }) : [];
+    var crPresentsNoms = crVu ? prevuCR(LC.id).map(function (pp) { return pp.nom; }).filter(function (n) { return (crVu.absents || []).indexOf(n) < 0; }) : [];
 
     var L = LIEUX.find(function (x) { return x.id === lieuId; }) || LIEUX[0];
     var dEdit = peutModifier(type, min, L.id);
@@ -852,6 +1014,50 @@ class Component extends DCLogic {
       accent: accent,
       showLieux: tab === 'planning' && ecran === 'lieux',
       showDetail: tab === 'planning' && ecran === 'detail',
+      showCR: tab === 'planning' && ecran === 'cr',
+      aCRs: !coord && type === 'dimanche' && min === 'louange',
+      crListeTitre: 'Comptes rendus · dimanche ' + long(CR_DATE),
+      crListe: crListe,
+      aCRCarte: coord,
+      crCarteTag: crVu ? 'Compte rendu envoyé' : 'Après le culte',
+      crCarteTagColor: crVu ? VERT : AMBRE,
+      crCarteBg: crVu ? '#F1F8F3' : '#FFF8EC',
+      crCarteBorder: crVu ? '#BFE0CB' : '#F0D9B0',
+      crCarteTitre: 'Compte rendu du dimanche ' + long(CR_DATE),
+      crCarteTexte: crVu ? 'Envoyé à Hélène · ' + crPresentsNoms.length + ' présents' + (nbAbs(crVu) ? ', ' + nbAbs(crVu) + (nbAbs(crVu) > 1 ? ' absents' : ' absent') : '') + (crVu.merci ? ' · merci envoyé' : '') + '.' : 'Qui était là, ce qui s’est passé, et un merci si c’était un très bon service. Une minute.',
+      crCarteBouton: crVu ? 'Revoir' : 'Remplir le compte rendu',
+      crCarteBtnBg: crVu ? '#FFFFFF' : accent,
+      crCarteBtnFg: crVu ? '#16181D' : '#FFFFFF',
+      crCarteBtnBorder: crVu ? '1px solid #D6D1C6' : '0',
+      ouvrirCR: function () { self.setState({ ecran: 'cr', sheet: null }); },
+      retourCR: function () { self.setState({ ecran: coord ? 'detail' : 'lieux' }); },
+      crRetourLabel: coord ? 'Planning' : 'Les 3 lieux',
+      crSous: 'Louange · ' + LC.nom + ' · dimanche ' + long(CR_DATE) + ' · ' + LC.heure,
+      crForm: !crVu,
+      crLecture: !!crVu,
+      crPersonnes: crPersonnes,
+      crCompte: nbPresents + ' présent' + (nbPresents > 1 ? 's' : '') + ' sur ' + crPersonnes.length + ' prévus',
+      crCompteColor: nbPresents < crPersonnes.length ? ROUGE : VERT,
+      crBien: s.crBien || '',
+      crProb: s.crProb || '',
+      crAmel: s.crAmel || '',
+      saisirBien: function (e) { self.setState({ crBien: e && e.target ? e.target.value : '' }); },
+      saisirProb: function (e) { self.setState({ crProb: e && e.target ? e.target.value : '' }); },
+      saisirAmel: function (e) { self.setState({ crAmel: e && e.target ? e.target.value : '' }); },
+      crTresBon: crTresBon,
+      crSwitchBg: crTresBon ? VERT : '#D6D1C6',
+      crSwitchPos: crTresBon ? 'flex-end' : 'flex-start',
+      toggleTresBon: function () { self.setState({ crTresBon: !(self.state && self.state.crTresBon) }); },
+      crMercis: crMercis,
+      crMerciNote: crMerci === 'prive' ? 'Chaque serviteur présent reçoit un merci personnel de ta part.' : 'Un message de merci est envoyé à toute l’équipe louange de ' + LC.nom + '.',
+      envoyerCR: function () { self.envoyerCR(CR_DATE, LC.id, crPrevu.map(function (pp) { return pp.nom; })); },
+      crPar: crVu ? 'Rempli par ' + crVu.par + ', coordinateur de ' + LC.nom : '',
+      crPresentsTexte: crPresentsNoms.length ? crPresentsNoms.join(', ') : 'Personne',
+      crAbsentsTexte: crVu && nbAbs(crVu) ? crVu.absents.join(', ') : 'Aucun',
+      crAbsentsColor: crVu && nbAbs(crVu) ? ROUGE : VERT,
+      crTextes: crTextes,
+      crAMerci: !!(crVu && crVu.merci),
+      crMerciTexte: crVu && crVu.merci ? 'Très bon service : ' + (crVu.merci === 'equipe' ? 'merci envoyé à toute l’équipe.' : 'merci envoyé en privé à chaque serviteur présent.') : '',
       showEquipe: tab === 'equipe',
       showActus: tab === 'actus',
       showMoi: tab === 'moi',
@@ -952,6 +1158,26 @@ class Component extends DCLogic {
     var self = this;
     this._t = setTimeout(function () { self.setState({ toast: '' }); }, 3500);
   }
+  envoyerCR(date, lieu, prevus) {
+    var s = this.state || {};
+    var S = partage();
+    var abs = prevus.filter(function (n) { return (s.crAbs || {})[n]; });
+    var presents = prevus.filter(function (n) { return abs.indexOf(n) < 0; });
+    var merci = s.crTresBon ? (s.crMerci || 'prive') : '';
+    S.comptesRendus[date + '|' + lieu + '|louange'] = {
+      date: date, lieu: lieu, par: 'Thomas', absents: abs,
+      bien: (s.crBien || '').trim(), problemes: (s.crProb || '').trim(), ameliorer: (s.crAmel || '').trim(), merci: merci
+    };
+    if (merci) S.mercis.push({ date: date, lieu: lieu, de: 'Thomas', noms: presents, mode: merci });
+    var toast = 'Compte rendu envoyé à Hélène.' + (merci ? ' Merci envoyé ' + (merci === 'equipe' ? 'à toute l’équipe.' : 'en privé à ' + presents.length + ' serviteurs.') : '');
+    this.flash({ ecran: 'detail' }, toast);
+  }
+  flash(patch, msg) {
+    this.setState(Object.assign({}, patch, { toast: msg, maj: ((this.state || {}).maj || 0) + 1 }));
+    clearTimeout(this._t);
+    var self = this;
+    this._t = setTimeout(function () { self.setState({ toast: '' }); }, 3500);
+  }
   decider(cles, decision) {
     var S = partage();
     cles.forEach(function (k) {
@@ -980,6 +1206,12 @@ function partage(DATA) {
     });
   }
   if (!S.propositions) S.propositions = {};
+  if (!S.comptesRendus) {
+    S.comptesRendus = {};
+    ((DATA && DATA.comptesRendus) || []).forEach(function (c) { S.comptesRendus[c.date + '|' + c.lieu + '|louange'] = Object.assign({}, c); });
+  }
+  if (!S.mercis) S.mercis = [];
+  if (!S.reponses) S.reponses = {};
   return S;
 }
 </script>

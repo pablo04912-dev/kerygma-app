@@ -31,6 +31,13 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <span style="font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">Serviteur · Louange</span>
 </div>
 </div>
+<sc-for list="{{mercis}}" as="mc" hint-placeholder-count="1">
+<section aria-label="Merci" style="background: #F1F8F3; border: 1px solid #BFE0CB; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 700; color: #146C3A">Très bon service</span>
+<span style="font-size: 17px; font-weight: 700">{{mc.titre}}</span>
+<span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{mc.texte}}</span>
+</section>
+</sc-for>
 <sc-if value="{{aRepondre}}" hint-placeholder-val="{{true}}">
 <h2 style="margin: 6px 0 0; font-size: 17px; font-weight: 700">{{repondreTitre}}</h2>
 <sc-for list="{{demandes}}" as="dm" hint-placeholder-count="2">
@@ -411,6 +418,14 @@ class Component extends DCLogic {
       };
     });
 
+    var LIEU_NOM = { stm: 'Saint-Maurice', cha: 'Champigny', bou: 'Boulogne' };
+    var mercis = (S.mercis || []).filter(function (m) { return m.noms.indexOf(NOM) >= 0; }).map(function (m) {
+      var lieuNom = LIEU_NOM[m.lieu] || m.lieu;
+      return m.mode === 'equipe'
+        ? { titre: 'Merci à toute l’équipe !', texte: 'Message de ' + m.de + ' à l’équipe louange de ' + lieuNom + ' : très bon service dimanche ' + long(m.date) + ', merci à tous.' }
+        : { titre: 'Merci, ' + NOM + ' !', texte: m.de + ' te remercie pour ton service du dimanche ' + long(m.date) + ' à ' + lieuNom + ' : très bon service.' };
+    });
+
     var equipes = tous.filter(actif).map(function (sv) {
       var eq = equipeCulteDe(sv)[0];
       return { titre: 'Dim. ' + court(sv.date) + ' · ' + sv.lieu.nom, items: eq.items };
@@ -472,6 +487,7 @@ class Component extends DCLogic {
       repondreTitre: 'À répondre (' + demandes.length + ')',
       demandes: demandes,
       services: services,
+      mercis: mercis,
       dispoTexte: s.dispoEnvoyees ? 'Envoyées. Tu peux encore les modifier.' : 'Pas encore envoyées : Thomas prépare le planning de décembre.',
       dispoColor: s.dispoEnvoyees ? '#146C3A' : '#8A5300',
       dispoBouton: s.dispoEnvoyees ? 'Modifier mes dispos' : 'Remplir mes dispos',
@@ -566,6 +582,11 @@ function partage(DATA) {
     });
   }
   if (!S.propositions) S.propositions = {};
+  if (!S.comptesRendus) {
+    S.comptesRendus = {};
+    ((DATA && DATA.comptesRendus) || []).forEach(function (c) { S.comptesRendus[c.date + '|' + c.lieu + '|louange'] = Object.assign({}, c); });
+  }
+  if (!S.mercis) S.mercis = [];
   if (!S.reponses) S.reponses = {};
   return S;
 }
