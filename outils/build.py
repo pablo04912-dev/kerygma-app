@@ -4,6 +4,7 @@ Produit :
   build/Accueil.dc.html, build/Planning.dc.html (Hélène, responsable), build/Coordinateur.dc.html (Thomas)
   et build/Serviteur.dc.html (Lucas) : les écrans au format du canevas Claude Design
   site/index.html : la version téléphone (mise en ligne sur GitHub Pages)
+  site/responsable.html, site/coordinateur.html, site/serviteur.html : la même page, ouverte directement sur un profil test
 
 Usage : python3 outils/build.py
 """
@@ -71,8 +72,17 @@ def main():
     page = lire("src/page.html")
     page = (page.replace("<!--ACCUEIL-->", a_gab).replace("<!--PLANNING-->", p_gab)
             .replace("<!--SERVITEUR-->", s_gab).replace("/*MOTEUR*/", moteur))
-    ecrire("site/index.html", page)
-    print("build/ et site/index.html à jour")
+    assert page.count("'__DEPART__'") == 1 and page.count("<title>Kerygma prototype</title>") == 1
+    # Page complète (accueil + connexion) et une page par profil test, qui s'ouvre directement sur ce profil
+    for fichier, depart, titre in [
+        ("index.html", "Accueil.dc.html", "Kerygma prototype"),
+        ("responsable.html", "Planning.dc.html", "Prototype responsable"),
+        ("coordinateur.html", "Coordinateur.dc.html", "Prototype coordinateur"),
+        ("serviteur.html", "Serviteur.dc.html", "Prototype serviteur"),
+    ]:
+        ecrire("site/" + fichier, page.replace("'__DEPART__'", "'" + depart + "'")
+               .replace("<title>Kerygma prototype</title>", "<title>" + titre + "</title>"))
+    print("build/ et site/ (index, responsable, coordinateur, serviteur) à jour")
 
 
 if __name__ == "__main__":

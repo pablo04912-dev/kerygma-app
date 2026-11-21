@@ -4,6 +4,11 @@ Prototype de l'appli de l'église Kerygma (Paris) pour centraliser les plannings
 
 **Essayer le prototype sur téléphone :** https://pablo04912-dev.github.io/kerygma-app/ (mis à jour automatiquement après chaque envoi)
 
+Directement sur un profil test :
+- Prototype responsable (Hélène) : https://pablo04912-dev.github.io/kerygma-app/responsable.html
+- Prototype coordinateur (Thomas) : https://pablo04912-dev.github.io/kerygma-app/coordinateur.html
+- Prototype serviteur (Lucas) : https://pablo04912-dev.github.io/kerygma-app/serviteur.html
+
 > Toutes les personnes dans ce prototype sont inventées. Aucune vraie donnée de l'église n'est dans ce dépôt.
 
 ## Travailler sur le projet

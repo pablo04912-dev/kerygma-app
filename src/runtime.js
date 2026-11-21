@@ -155,5 +155,6 @@
   document.addEventListener('gesturestart', e => e.preventDefault(), { passive: false });
   document.addEventListener('touchmove', e => { if (e.touches && e.touches.length > 1) e.preventDefault(); }, { passive: false });
   window.__kerygma = { mount: mount };
-  mount('accueil');
+  const DEPART = '__DEPART__';
+  if (ROUTES[DEPART]) mount(ROUTES[DEPART][0], ROUTES[DEPART][1]); else mount('accueil');
 }

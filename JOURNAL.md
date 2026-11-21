@@ -21,6 +21,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
   - **Lucas**, serviteur louange : demandes à répondre (Dispo / Pas dispo, heure de présence et fin du culte), conflit signalé avec "Me faire remplacer ici" ou "Garder les deux" (explication envoyée à Hélène), proposer un remplaçant, ses prochains services avec statut, "Qui sert ce culte" (son culte seulement), grille des dispos de décembre (dispo / si besoin / pas dispo, "Je n'ai pas d'indispo"), fréquence max, servir ensemble (Inès, sa sœur), connexion de l'agenda (simulée).
   - Les 3 profils partagent les mêmes données pendant la visite : ce que Thomas propose arrive chez Hélène, ce qu'Hélène valide arrive chez Lucas. Rien n'est enregistré (tout revient à zéro en rechargeant la page).
 - Étiquette en haut de chaque espace connecté : « Prototype responsable », « Prototype coordinateur », « Prototype serviteur » (et titres des pages assortis).
+- Une page par profil, qui s'ouvre directement dessus : `responsable.html`, `coordinateur.html`, `serviteur.html` (liens dans le README). Chez Pablo, 3 onglets d'aperçu du même nom.
 - Correction : la bande des dates ne s'écrase plus quand la page est longue.
 - Tests : `test_coordinateur.js`, `test_serviteur.js`, et la chaîne Thomas → Hélène → Lucas dans `test_phone.js`. 486 vérifications, toutes vertes.
 

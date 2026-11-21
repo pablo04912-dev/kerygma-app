@@ -42,7 +42,7 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 
 ## 4. Aperçu
 
-- Après chaque modification : `npm run build`, puis publie `site/index.html` comme page dans la conversation (aperçu à droite), si ton outil le permet.
+- Après chaque modification : `npm run build`, puis publie `site/index.html` comme page dans la conversation (aperçu à droite), si ton outil le permet. Les pages `site/responsable.html`, `site/coordinateur.html` et `site/serviteur.html` s'ouvrent directement sur un profil test : chacun peut les publier en plus, en onglets nommés « Prototype responsable », « Prototype coordinateur », « Prototype serviteur ».
 - Le lien public se met à jour tout seul quelques minutes après chaque `git push` : voir le README.
 - L'aperçu à droite est une copie publiée depuis le compte de chacun : il ne change que quand ton Claude le republie (il ne peut pas suivre le lien public tout seul). Pour voir tout de suite le travail de l'autre, utilise le lien public.
 
