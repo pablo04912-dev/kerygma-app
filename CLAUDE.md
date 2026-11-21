@@ -66,8 +66,14 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 - Sainte Cène une fois sur deux : bouton Oui/Non. Le rôle "Louange" du programme est repris de la direction du planning louange.
 - Barre du bas (Planning, Équipe, Actus, Moi) sur tous les écrans connectés. Boutons d'au moins 44 px, lisibles par tous les âges.
 - **Prototype** : "Se connecter" ouvre directement le profil test. À retirer avant la vraie appli.
-- Contrôle des conflits entre lieux conservé (règles d'affichage précises à valider).
-- Liste "Choisir" (quand le coordinateur remplit un poste) : ceux qui ont **le moins servi en premier**, avec en petit "n'a pas servi depuis X jours", pour ne pas toujours prendre les mêmes. Les personnes impossibles à placer (déjà ailleurs à la même heure) sont grisées en bas.
+- Contrôle des conflits entre lieux, règles validées : rouge = déjà ailleurs à la même heure (ou prière le même soir ailleurs) ; orange = même jour à un horaire compatible, ou fréquence max atteinte ; rouge clair = indispo déclarée ; gris = déjà sur un autre poste du même culte.
+- Liste "Choisir" (quand on remplit un poste) : ceux qui ont **le moins servi en premier**. En petit : "2 dimanches de suite", "3 dimanches de suite"… pour ceux qui enchaînent ; "2 semaines sans service"… pour les autres (compté en semaines, pas en jours).
+- Personnes déjà ailleurs à la même heure : grisées en bas **avec la raison** ("Sert à Champigny à 10h30"), mais on peut quand même les inviter ("Inviter quand même", utile en cas d'erreur de planning). Le serviteur choisit alors : se faire remplacer sur l'un des deux, ou garder les deux exceptionnellement en justifiant au responsable.
+- Collecte des dispos du mois : grille façon Doodle, chaque toucher change l'état de la date : **dispo** (vert), **si besoin** (orange), **pas dispo** (rouge) ; bouton "Je n'ai pas d'indispo".
+- Périmètre de chaque responsable ou coordinateur : une liste de couples (ministère, lieu), par exemple sono à Champigny et à Boulogne, mais pas à Saint-Maurice. Il voit et gère exactement ce périmètre. Une personne peut coordonner plusieurs ministères.
+- Les modifications d'un coordinateur sont **validées par le responsable au-dessus** avant d'être envoyées aux serviteurs.
+- Un serviteur, dans le culte où il sert, voit la liste de **tous ceux qui servent ce culte-là** (tous ministères) ; il ne voit pas les autres lieux.
+- **Compte rendu de service** : après le culte, notification au responsable de chaque service pour remplir un compte rendu : présents / absents (cases à cocher sur la liste prévue), commentaire (ce qui s'est bien passé, problèmes, à améliorer), et option "Très bon service" qui envoie un merci aux serviteurs, en privé ou à toute l'équipe. Le compte rendu remonte aux responsables au-dessus.
 - "À traiter" (postes vides, absences, conflits) : visible par le coordinateur du ministère concerné et par les responsables au-dessus de lui.
 - Servir ensemble ou séparément : réglage pour couples, familles, frères et sœurs qui vivent ensemble (même culte ou même jour, ou au contraire jamais le même jour).
 - Tout doit pouvoir se faire sur téléphone **et** sur ordinateur, y compris remplir un planning.

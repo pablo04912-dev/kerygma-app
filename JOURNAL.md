@@ -10,6 +10,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 - `docs/suivi-automatique.md` : texte d'une tâche programmée qui vérifie toutes les heures (9h-23h) et prévient seulement si l'autre a changé quelque chose.
 - Décisions de Pablo pour les espaces serviteur et coordinateur (3 états de réponse, indispos, échange validé par le coordinateur, fréquence max, planning proposé, espace louange) : ajoutées dans `CLAUDE.md`, section 6.
 - Autres décisions de Pablo (liste "Choisir" triée par ceux qui ont le moins servi, "À traiter" visible par le coordinateur et les responsables au-dessus, servir ensemble ou séparément, tout faisable sur téléphone et ordinateur, taille de texte du téléphone, notifications iPhone, jauge, bilan annuel) : `CLAUDE.md`, section 6. Question WhatsApp posée à Manuel dans `MESSAGES.md`.
+- Décisions validées par Pablo (cette nuit) : règles des conflits, liste "Choisir" en dimanches de suite / semaines sans service, "Inviter quand même" avec justification du serviteur, grille des dispos à 3 états, périmètre par (ministère, lieu), validation des modifications par le responsable au-dessus, compte rendu de service après le culte : `CLAUDE.md`, section 6.
 - Nouvelle règle : envoi au fil de l'eau, dès qu'une modification est finie et testée (plus seulement en fin de séance).
 - `CLAUDE.md` : lecture de la boîte à messages en début de séance, `git pull` avant chaque réponse pendant la séance, explication de l'aperçu à droite.
 
@@ -20,9 +21,8 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 
 **Reste à faire**
 - Manuel : répondre à la question WhatsApp (`MESSAGES.md`).
-- Pablo : valider les règles d'affichage des conflits et la grille des dispos.
 - Manuel : première séance, test visuel (actu "Test d'envoi réussi"), mise en place de son suivi automatique (voir `MESSAGES.md`).
-- Écran coordinateur : en attente des réponses de Pablo (voir les autres lieux ? validation par la responsable ? plusieurs commissions ?).
+- Écran coordinateur : toutes les réponses sont là, prêt à construire.
 
 ## 2026-11-20 · Pablo (avec Claude) · création du dépôt
 
