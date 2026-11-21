@@ -1,0 +1,571 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Kerygma, espace de Lucas</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+body{margin:0}
+a{color:#3730A3}a:hover{color:#1E1B4B}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F4EF; font-family: Inter, system-ui, sans-serif; color: #16181D; position: relative; overflow: hidden; display: flex; flex-direction: column">
+<div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px 4px">
+<span style="font-family: 'Space Grotesk', Inter, sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 3px">KERYGMA</span>
+<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 18px; background: #16181D; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px">L</span>
+</div>
+<main style="flex: 1; overflow-y: auto; padding: 8px 20px 20px; display: flex; flex-direction: column; gap: 12px">
+<sc-if value="{{showAccueil}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Bonjour Lucas</h1>
+<div style="display: flex; flex-wrap: wrap; gap: 6px">
+<span style="font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">Serviteur · Louange</span>
+</div>
+</div>
+<sc-if value="{{aRepondre}}" hint-placeholder-val="{{true}}">
+<h2 style="margin: 6px 0 0; font-size: 17px; font-weight: 700">{{repondreTitre}}</h2>
+<sc-for list="{{demandes}}" as="dm" hint-placeholder-count="2">
+<article data-demande="{{dm.cle}}" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 18px; font-weight: 700">{{dm.titre}}</span>
+<span style="font-size: 15px; color: #3D4049">{{dm.sous}}</span>
+<span style="font-size: 14px; color: #5B5F6B">{{dm.horaire}}</span>
+<sc-if value="{{dm.conflit}}" hint-placeholder-val="{{false}}">
+<span style="margin-top: 4px; padding: 10px 12px; border-radius: 12px; background: #FBE7E7; color: #A12626; font-size: 14px; line-height: 1.45; font-weight: 600">{{dm.conflitTexte}}</span>
+<span style="display: flex; gap: 8px; margin-top: 4px">
+<button type="button" onClick="{{dm.remplacer}}" style="flex: 1; min-height: 44px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Me faire remplacer ici</button>
+<button type="button" onClick="{{dm.garder}}" style="flex: 1; min-height: 44px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Garder les deux</button>
+</span>
+</sc-if>
+<sc-if value="{{dm.normal}}" hint-placeholder-val="{{true}}">
+<span style="display: flex; gap: 8px; margin-top: 4px">
+<button type="button" onClick="{{dm.dispo}}" style="flex: 1; min-height: 48px; border-radius: 12px; border: 0; background: #146C3A; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Dispo</button>
+<button type="button" onClick="{{dm.pasDispo}}" style="flex: 1; min-height: 48px; border-radius: 12px; border: 1px solid #E3B4B4; background: #FFFFFF; color: #A12626; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Pas dispo</button>
+</span>
+</sc-if>
+</article>
+</sc-for>
+</sc-if>
+<h2 style="margin: 6px 0 0; font-size: 17px; font-weight: 700">Mes prochains services</h2>
+<section aria-label="Mes services" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 4px 0; display: flex; flex-direction: column">
+<sc-for list="{{services}}" as="sv" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 6px; padding: 10px 16px; border-bottom: 1px solid {{sv.sep}}">
+<button type="button" onClick="{{sv.ouvrir}}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; padding: 0; border: 0; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-size: 16px; font-weight: 600">{{sv.titre}}</span>
+<span style="font-size: 14px; color: #5B5F6B">{{sv.sous}}</span>
+</span>
+<span style="flex: 0 0 auto; font-size: 13px; font-weight: 600; padding: 4px 9px; border-radius: 8px; background: {{sv.statutBg}}; color: {{sv.statutFg}}">{{sv.statut}}</span>
+</button>
+<sc-if value="{{sv.aRemplacer}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{sv.remplacer}}" style="align-self: flex-start; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1.5px dashed {{accent}}; background: #FFFFFF; color: {{accent}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Proposer un remplaçant</button>
+</sc-if>
+</div>
+</sc-for>
+</section>
+<section aria-label="Mes dispos" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 17px; font-weight: 700">Mes dispos de décembre</span>
+<span style="font-size: 14px; line-height: 1.45; color: {{dispoColor}}">{{dispoTexte}}</span>
+<button type="button" onClick="{{ouvrirDispos}}" style="align-self: flex-start; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{dispoBouton}}</button>
+</section>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #5B5F6B">{{agendaNote}}</p>
+</sc-if>
+<sc-if value="{{showService}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<button type="button" onClick="{{retour}}" style="align-self: flex-start; min-height: 44px; display: flex; align-items: center; gap: 6px; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; font-weight: 600; color: {{accent}}; cursor: pointer">
+<span aria-hidden="true">←</span>
+<span>Mes services</span>
+</button>
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">{{svTitre}}</h1>
+<p style="margin: 0; font-size: 15px; line-height: 1.4; color: #5B5F6B">{{svSous}}</p>
+<p style="margin: 4px 0 0; font-size: 15px; font-weight: 600">{{svPoste}}</p>
+</div>
+<h2 style="margin: 6px 0 0; font-size: 17px; font-weight: 700">Qui sert ce culte</h2>
+<sc-for list="{{equipeCulte}}" as="eq" hint-placeholder-count="2">
+<section aria-label="{{eq.titre}}" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 16px; font-weight: 700">{{eq.titre}}</span>
+<sc-for list="{{eq.items}}" as="it" hint-placeholder-count="3">
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px">
+<span style="color: #5B5F6B">{{it.label}}</span>
+<span style="font-weight: 600; text-align: right; color: {{it.color}}">{{it.nom}}</span>
+</div>
+</sc-for>
+<sc-if value="{{eq.vide}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 14px; color: #5B5F6B">{{eq.videTexte}}</span>
+</sc-if>
+</section>
+</sc-for>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #5B5F6B">Tu vois toute l'équipe de ce culte. Les plannings des autres lieux ne sont pas affichés.</p>
+</sc-if>
+<sc-if value="{{showDispos}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<button type="button" onClick="{{retour}}" style="align-self: flex-start; min-height: 44px; display: flex; align-items: center; gap: 6px; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; font-weight: 600; color: {{accent}}; cursor: pointer">
+<span aria-hidden="true">←</span>
+<span>Mes services</span>
+</button>
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Mes dispos · décembre</h1>
+<p style="margin: 0; font-size: 15px; line-height: 1.45; color: #5B5F6B">Touche une date pour changer : dispo, si besoin, pas dispo. Thomas s'en sert pour préparer le planning.</p>
+</div>
+<section aria-label="Grille des dispos" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 4px 0; display: flex; flex-direction: column">
+<sc-for list="{{grille}}" as="gr" hint-placeholder-count="4">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 8px 16px; min-height: 52px; border-bottom: 1px solid {{gr.sep}}">
+<span style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; font-weight: 600">{{gr.jour}}</span>
+<span style="font-size: 13px; color: #5B5F6B">{{gr.sous}}</span>
+</span>
+<button type="button" onClick="{{gr.toucher}}" aria-label="{{gr.aria}}" style="flex: 0 0 auto; min-width: 112px; min-height: 44px; border-radius: 12px; border: 1px solid {{gr.border}}; background: {{gr.bg}}; color: {{gr.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{gr.etat}}</button>
+</div>
+</sc-for>
+</section>
+<div style="display: flex; gap: 8px">
+<button type="button" onClick="{{aucuneIndispo}}" style="flex: 1; min-height: 48px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Je n'ai pas d'indispo</button>
+<button type="button" onClick="{{envoyerDispos}}" style="flex: 1; min-height: 48px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Envoyer</button>
+</div>
+<sc-if value="{{aErreurDispos}}" hint-placeholder-val="{{false}}">
+<p role="alert" style="margin: 0; font-size: 14px; font-weight: 600; color: #A12626">{{erreurDispos}}</p>
+</sc-if>
+</sc-if>
+<sc-if value="{{showEquipe}}" hint-placeholder-val="{{false}}">
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Équipe</h1>
+<p style="margin: 0; font-size: 15px; color: #5B5F6B">Qui sert avec toi à tes prochains cultes</p>
+<sc-for list="{{equipes}}" as="eq" hint-placeholder-count="2">
+<section aria-label="{{eq.titre}}" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 16px; font-weight: 700">{{eq.titre}}</span>
+<sc-for list="{{eq.items}}" as="it" hint-placeholder-count="3">
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px">
+<span style="color: #5B5F6B">{{it.label}}</span>
+<span style="font-weight: 600; text-align: right; color: {{it.color}}">{{it.nom}}</span>
+</div>
+</sc-for>
+</section>
+</sc-for>
+</sc-if>
+<sc-if value="{{showActus}}" hint-placeholder-val="{{false}}">
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Fil d'actualité</h1>
+<sc-for list="{{actus}}" as="a" hint-placeholder-count="4">
+<article style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 13px; font-weight: 600; color: {{accent}}">{{a.tag}}</span>
+<span style="font-size: 17px; font-weight: 700">{{a.titre}}</span>
+<span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{a.texte}}</span>
+</article>
+</sc-for>
+</sc-if>
+<sc-if value="{{showMoi}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Lucas</h1>
+<p style="margin: 0; font-size: 15px; color: #5B5F6B">{{moiPostes}}</p>
+</div>
+<section aria-label="Fréquence maximale" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 16px; font-weight: 600">Fréquence maximale</span>
+<span style="font-size: 14px; line-height: 1.4; color: #5B5F6B">Ton coordinateur est averti s'il te demande plus souvent.</span>
+<div role="group" aria-label="Fréquence maximale" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{freqs}}" as="f" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{f.on}}" onClick="{{f.pick}}" style="min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{f.label}}</button>
+</sc-for>
+</div>
+</section>
+<section aria-label="Servir ensemble" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 16px; font-weight: 600">Servir ensemble ou séparément</span>
+<span style="font-size: 14px; line-height: 1.4; color: #5B5F6B">{{lieTexte}}</span>
+<div role="group" aria-label="Servir ensemble" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{ensembles}}" as="e" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{e.on}}" onClick="{{e.pick}}" style="min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid {{e.border}}; background: {{e.bg}}; color: {{e.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{e.label}}</button>
+</sc-for>
+</div>
+</section>
+<section aria-label="Mon agenda" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 16px; font-weight: 600">Mon agenda</span>
+<span style="font-size: 14px; line-height: 1.45; color: {{agendaColor}}">{{agendaEtat}}</span>
+<button type="button" onClick="{{connecterGoogle}}" style="min-height: 48px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Connecter Google Agenda</button>
+<button type="button" onClick="{{connecterIphone}}" style="min-height: 48px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Ajouter à l'agenda de l'iPhone</button>
+</section>
+<section aria-label="Mes données" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 16px; font-weight: 600">Mes données</span>
+<span style="font-size: 14px; line-height: 1.45; color: #5B5F6B">L'appli garde seulement ton prénom, ton nom et ton e-mail. Jamais d'adresse, de téléphone, de date ou de lieu de naissance, ni d'âge.</span>
+</section>
+<a href="Accueil.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 14px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; text-decoration: none; font-size: 15px; font-weight: 600">Se déconnecter</a>
+</sc-if>
+</main>
+<nav aria-label="Navigation principale" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 8px 8px 20px; background: #FFFFFF; border-top: 1px solid #E7E3DA">
+<button type="button" aria-current="{{nav.planning.current}}" onClick="{{nav.planning.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.planning.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+<span>Planning</span>
+</button>
+<button type="button" aria-current="{{nav.equipe.current}}" onClick="{{nav.equipe.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.equipe.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.1.7 3.5 2.8 3.5 5.7"></path></svg>
+<span>Équipe</span>
+</button>
+<button type="button" aria-current="{{nav.actus.current}}" onClick="{{nav.actus.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.actus.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M7.5 8.5h9M7.5 12h9M7.5 15.5h5"></path></svg>
+<span>Actus</span>
+</button>
+<button type="button" aria-current="{{nav.moi.current}}" onClick="{{nav.moi.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.moi.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"></circle><path d="M4 21c0-4 3.6-7 8-7s8 3 8 7"></path></svg>
+<span>Moi</span>
+</button>
+</nav>
+<sc-if value="{{aToast}}" hint-placeholder-val="{{false}}">
+<div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 92px; background: #16181D; color: #FFFFFF; border-radius: 14px; padding: 14px 16px; font-size: 15px; line-height: 1.4">{{toast}}</div>
+</sc-if>
+<sc-if value="{{sheetOuvert}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(22, 24, 29, 0.45); display: flex; flex-direction: column; justify-content: flex-end">
+<div role="dialog" aria-label="{{sheetTitre}}" style="background: #FFFFFF; border-radius: 24px 24px 0 0; padding: 12px 20px 28px; display: flex; flex-direction: column; gap: 12px">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #D6D1C6"></span>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<span style="font-family: 'Space Grotesk', Inter, sans-serif; font-size: 22px; font-weight: 700">{{sheetTitre}}</span>
+<span style="font-size: 14px; color: #5B5F6B">{{sheetSous}}</span>
+</div>
+<button type="button" onClick="{{fermer}}" style="min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #E7E3DA; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #16181D; cursor: pointer">Fermer</button>
+</div>
+<p style="margin: 0; font-size: 14px; color: #5B5F6B; line-height: 1.45">{{sheetNote}}</p>
+<sc-if value="{{sheetRemplacant}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto">
+<sc-for list="{{remplacants}}" as="r" hint-placeholder-count="4">
+<div data-remplacant="{{r.nom}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF">
+<span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+<span style="font-size: 17px; font-weight: 600">{{r.nom}}</span>
+<span style="font-size: 13px; color: #5B5F6B">{{r.info}}</span>
+</span>
+<button type="button" onClick="{{r.choisir}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Demander</button>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{sheetJustif}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label for="justif" style="font-size: 14px; font-weight: 600">Pourquoi garder les deux ?</label>
+<input id="justif" type="text" value="{{texte}}" onChange="{{saisir}}" placeholder="J'ai le temps d'aller de l'un à l'autre" style="min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF">
+<sc-if value="{{aErreur}}" hint-placeholder-val="{{false}}">
+<span role="alert" style="font-size: 13px; font-weight: 600; color: #A12626">{{erreur}}</span>
+</sc-if>
+<button type="button" onClick="{{envoyerJustif}}" style="min-height: 48px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Envoyer à Hélène</button>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#4338CA","options":["#4338CA","#0F766E","#C2410C"]},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var s = this.state || {};
+    var accent = this.props.accent ?? '#4338CA';
+    var DATA = __DATA__;
+    var S = partage(DATA);
+    var DEMO = DATA.serviteurDemo || {};
+    var NOM = DEMO.nom || 'Lucas';
+
+    var tab = s.tab || 'planning';
+    var vue = s.vue || 'accueil';
+    var rep = s.rep || {};
+    var echanges = s.echanges || {};
+    var garder = s.garder || {};
+    var sheet = s.sheet || null;
+    var toast = s.toast || '';
+    var grilleEtat = s.grille || {};
+    var freq = s.freq || '2 fois par mois';
+    var ensemble = s.ensemble || 'Pas de préférence';
+    var agenda = s.agenda || '';
+
+    var MOIS = { '11': 'novembre', '12': 'décembre' };
+    var MOIS_C = { '11': 'nov', '12': 'déc' };
+    var DIMS = ['22/11', '29/11', '06/12', '13/12', '20/12', '27/12'];
+    function jourDe(d) { return parseInt(d.split('/')[0], 10); }
+    function long(d) { return jourDe(d) + ' ' + MOIS[d.split('/')[1]]; }
+    function court(d) { return jourDe(d) + ' ' + MOIS_C[d.split('/')[1]]; }
+    var LIEUX = [
+      { id: 'stm', nom: 'Saint-Maurice', heure: '10h30', creneau: 'matin', fin: '13h' },
+      { id: 'cha', nom: 'Champigny', heure: '10h30', creneau: 'matin', fin: '13h' },
+      { id: 'bou', nom: 'Boulogne', heure: '15h30', creneau: 'aprem', fin: '18h' }
+    ];
+    function lieu(id) { return LIEUX.find(function (x) { return x.id === id; }); }
+    var PL = [
+      { id: 'direction', label: 'Direction' }, { id: 'voix', label: 'Voix' }, { id: 'gac', label: 'Guitare acoustique' },
+      { id: 'piano', label: 'Piano' }, { id: 'batterie', label: 'Batterie' }, { id: 'basse', label: 'Basse' }, { id: 'gel', label: 'Guitare électrique' }
+    ];
+    var PR = [
+      { id: 'priere', label: 'Prière / permanence' }, { id: 'louange', label: 'Louange (direction)' }, { id: 'annonces', label: 'Annonces' },
+      { id: 'cene', label: 'Sainte Cène' }, { id: 'predication', label: 'Prédication' }, { id: 'traduction', label: 'Traduction' }
+    ];
+    function poste(id) { return PL.find(function (p) { return p.id === id; }) || { id: id, label: id }; }
+    var VERT = { bg: '#E7F5EC', fg: '#146C3A' }, ORANGE = { bg: '#FDF0DC', fg: '#8A5300' }, ROUGE = { bg: '#FBE7E7', fg: '#A12626' }, GRIS = { bg: '#F1EFEA', fg: '#5B5F6B' };
+
+    function equipeDe(d, l) {
+      var base = (DATA.louange[d] && DATA.louange[d][l]) || {};
+      var out = {};
+      PL.forEach(function (p) {
+        var arr = (base[p.id] || []).slice();
+        var inv = S.invitations['dimanche|' + d + '|' + l + '|louange|' + p.id];
+        if (inv && arr.indexOf(inv.nom) < 0) arr.push(inv.nom);
+        out[p.id] = arr;
+      });
+      return out;
+    }
+    function reponseDe(k) { return rep[k] || S.reponses[k] || (DEMO.reponses || {})[k] || ''; }
+
+    var tous = [];
+    DIMS.forEach(function (d) {
+      LIEUX.forEach(function (L) {
+        var eq = equipeDe(d, L.id);
+        PL.forEach(function (p) {
+          if (eq[p.id].indexOf(NOM) >= 0) tous.push({ cle: d + '|' + L.id + '|' + p.id, date: d, lieu: L, poste: p });
+        });
+      });
+    });
+    function actif(sv) { return reponseDe(sv.cle) !== 'pasdispo' && !echanges[sv.cle]; }
+    function conflitDe(sv) {
+      if (!actif(sv)) return null;
+      return tous.filter(function (o) { return o !== sv && o.date === sv.date && o.lieu.creneau === sv.lieu.creneau && o.lieu.id !== sv.lieu.id && actif(o); })[0] || null;
+    }
+    function presence(L) { return ((DATA.presence || {}).louange || {})[L.id] || ''; }
+    function horaire(sv) { var p = presence(sv.lieu); return (p ? 'Présence ' + p + ' · ' : 'Culte ' + sv.lieu.heure + ' · ') + 'fin vers ' + sv.lieu.fin; }
+    function statut(sv) {
+      if (garder[sv.cle]) return { texte: 'Les deux gardés', c: VERT };
+      if (echanges[sv.cle]) return { texte: 'Échange demandé', c: ORANGE };
+      var r = reponseDe(sv.cle);
+      if (r === 'dispo') return { texte: 'Confirmé', c: VERT };
+      if (r === 'pasdispo') return { texte: 'Pas dispo', c: ROUGE };
+      return { texte: 'En attente', c: ORANGE };
+    }
+    function ouvrirSheet(type, k) { return function () { self.setState({ sheet: { type: type, cle: k }, texte: '', erreur: '' }); }; }
+
+    var demandesSv = tous.filter(function (sv) { return !reponseDe(sv.cle) && !garder[sv.cle] && !echanges[sv.cle]; });
+    var demandes = demandesSv.map(function (sv) {
+      var c = conflitDe(sv);
+      return {
+        cle: sv.cle,
+        titre: 'Dimanche ' + long(sv.date),
+        sous: sv.lieu.nom + ' · ' + sv.poste.label.toLowerCase(),
+        horaire: horaire(sv),
+        conflit: !!c,
+        normal: !c,
+        conflitTexte: c ? 'Tu es aussi prévu à ' + c.lieu.nom + ' à ' + c.lieu.heure + ' (' + c.poste.label.toLowerCase() + '). Choisis : te faire remplacer ici, ou garder les deux en expliquant pourquoi à Hélène.' : '',
+        dispo: function () { self.repondre(sv.cle, 'dispo'); },
+        pasDispo: function () { self.repondre(sv.cle, 'pasdispo'); },
+        remplacer: function () { self.repondre(sv.cle, 'pasdispo'); },
+        garder: ouvrirSheet('justif', sv.cle)
+      };
+    });
+
+    var services = tous.map(function (sv, i) {
+      var st = statut(sv);
+      return {
+        titre: 'Dim. ' + court(sv.date) + ' · ' + sv.lieu.nom,
+        sous: sv.poste.label + ' · ' + horaire(sv).toLowerCase(),
+        statut: st.texte, statutBg: st.c.bg, statutFg: st.c.fg,
+        aRemplacer: reponseDe(sv.cle) === 'pasdispo' && !echanges[sv.cle],
+        remplacer: ouvrirSheet('remplacant', sv.cle),
+        ouvrir: function () { self.setState({ vue: 'service', svc: sv.cle }); },
+        sep: i === tous.length - 1 ? 'transparent' : '#EFEBE3'
+      };
+    });
+
+    var svc = tous.find(function (x) { return x.cle === s.svc; }) || tous[0];
+    function equipeCulteDe(sv) {
+      var out = [];
+      var eq = equipeDe(sv.date, sv.lieu.id);
+      var items = PL.filter(function (p) { return eq[p.id].length; }).map(function (p) {
+        var noms = eq[p.id].join(', ');
+        return { label: p.label, nom: noms, color: eq[p.id].indexOf(NOM) >= 0 ? accent : '#16181D' };
+      });
+      out.push({ titre: 'Louange', items: items, vide: items.length === 0, videTexte: 'Personne de prévu pour le moment' });
+      if (sv.lieu.id === 'stm') {
+        var pr = DATA.programme[sv.date] || {};
+        var itemsP = PR.filter(function (r) { return pr[r.id]; }).map(function (r) { return { label: r.label, nom: pr[r.id], color: '#16181D' }; });
+        out.push({ titre: 'Programme du culte', items: itemsP, vide: itemsP.length === 0, videTexte: 'Programme pas encore rempli' });
+      }
+      return out;
+    }
+
+    var DEC = DIMS.filter(function (d) { return d.split('/')[1] === '12'; });
+    var ETATS = [
+      { label: 'Pas répondu', c: GRIS, border: '#D6D1C6' },
+      { label: 'Dispo', c: VERT, border: '#9CCFB0' },
+      { label: 'Si besoin', c: ORANGE, border: '#E8C88E' },
+      { label: 'Pas dispo', c: ROUGE, border: '#E3B4B4' }
+    ];
+    var grille = DEC.map(function (d, i) {
+      var e = grilleEtat[d] || 0;
+      return {
+        jour: 'Dim. ' + court(d), sous: 'Culte', etat: ETATS[e].label,
+        aria: 'Dimanche ' + long(d) + ' : ' + ETATS[e].label,
+        bg: ETATS[e].c.bg, fg: ETATS[e].c.fg, border: ETATS[e].border,
+        toucher: function () {
+          var g = Object.assign({}, self.state && self.state.grille || {});
+          var cur = g[d] || 0;
+          g[d] = cur === 3 ? 1 : cur + 1;
+          self.setState({ grille: g, erreurDispos: '' });
+        },
+        sep: i === DEC.length - 1 ? 'transparent' : '#EFEBE3'
+      };
+    });
+
+    var equipes = tous.filter(actif).map(function (sv) {
+      var eq = equipeCulteDe(sv)[0];
+      return { titre: 'Dim. ' + court(sv.date) + ' · ' + sv.lieu.nom, items: eq.items };
+    });
+
+    var postesDe = Object.keys(DATA.pool).filter(function (k) { return DATA.pool[k].indexOf(NOM) >= 0 && PL.some(function (p) { return p.id === k; }); }).map(function (k) { return poste(k).label.toLowerCase(); });
+
+    function puce(label, on, pick) {
+      return { label: label, on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6', pick: pick };
+    }
+    var freqs = ['1 fois par mois', '2 fois par mois', '3 fois par mois', 'Chaque semaine', '1 fois par trimestre', 'En pause'].map(function (f) {
+      return puce(f, f === freq, function () { self.flash({ freq: f }, 'Fréquence enregistrée : ' + f.toLowerCase() + '.'); });
+    });
+    var lie = DEMO.lie || { nom: '', lien: '' };
+    var ensembles = ['Même culte', 'Même jour', 'Jamais le même jour', 'Pas de préférence'].map(function (e) {
+      return puce(e, e === ensemble, function () { self.flash({ ensemble: e }, 'Préférence enregistrée avec ' + lie.nom + ' : ' + e.toLowerCase() + '.'); });
+    });
+
+    var sheetOuvert = !!sheet && tab === 'planning';
+    var sv0 = sheet ? tous.find(function (x) { return x.cle === sheet.cle; }) : null;
+    var remplacants = [];
+    if (sheetOuvert && sheet.type === 'remplacant' && sv0) {
+      remplacants = (DATA.pool[sv0.poste.id] || []).filter(function (n) { return n !== NOM; }).map(function (n) {
+        var ailleurs = null, memeJour = null;
+        LIEUX.forEach(function (L2) {
+          var eq = equipeDe(sv0.date, L2.id);
+          var p2 = PL.filter(function (p) { return eq[p.id].indexOf(n) >= 0; })[0];
+          if (!p2) return;
+          if (L2.creneau === sv0.lieu.creneau) ailleurs = L2; else memeJour = L2;
+        });
+        if (ailleurs) return null;
+        return { nom: n, info: memeJour ? 'Sert aussi à ' + memeJour.nom + ' à ' + memeJour.heure : 'Libre à cette heure', choisir: function () { self.echanger(sv0.cle, n); } };
+      }).filter(Boolean);
+    }
+
+    function navItem(id) {
+      var on = tab === id;
+      return { current: on ? 'page' : 'false', color: on ? accent : '#5B5F6B', pick: function () { self.setState({ tab: id, vue: 'accueil', sheet: null }); } };
+    }
+    var actus = [
+      { tag: 'Ce dimanche', titre: 'Cultes du dimanche', texte: 'Saint-Maurice et Champigny à 10h30, Boulogne à 15h30. En direct sur YouTube.' },
+      { tag: 'Vendredi 27 novembre', titre: 'Veillée générale', texte: 'À partir de 22h à Saint-Maurice, pour toute l’église.' },
+      { tag: 'Samedi 5 décembre', titre: 'Jeûne du mois', texte: 'À partir de 10h à Saint-Maurice.' },
+      { tag: 'Chaque semaine', titre: 'Prière générale', texte: 'Jeudi à 20h à Saint-Maurice, mercredi à 20h à Boulogne et Champigny.' },
+      { tag: 'Chaque samedi', titre: 'Ados et Jeunes', texte: 'Ados à 15h, Jeunes à 18h, à Saint-Maurice.' }
+    ];
+    var agendaEtat = agenda === 'google' ? 'Connecté à Google Agenda : tes services confirmés s’y ajoutent tout seuls et se mettent à jour.'
+      : (agenda === 'iphone' ? 'Ajouté à l’agenda de l’iPhone : mise à jour toute seule, toutes les 15 minutes.' : 'Pas encore connecté.');
+
+    return {
+      accent: accent,
+      showAccueil: tab === 'planning' && vue === 'accueil',
+      showService: tab === 'planning' && vue === 'service' && !!svc,
+      showDispos: tab === 'planning' && vue === 'dispos',
+      showEquipe: tab === 'equipe',
+      showActus: tab === 'actus',
+      showMoi: tab === 'moi',
+      aRepondre: demandes.length > 0,
+      repondreTitre: 'À répondre (' + demandes.length + ')',
+      demandes: demandes,
+      services: services,
+      dispoTexte: s.dispoEnvoyees ? 'Envoyées. Tu peux encore les modifier.' : 'Pas encore envoyées : Thomas prépare le planning de décembre.',
+      dispoColor: s.dispoEnvoyees ? '#146C3A' : '#8A5300',
+      dispoBouton: s.dispoEnvoyees ? 'Modifier mes dispos' : 'Remplir mes dispos',
+      ouvrirDispos: function () { self.setState({ vue: 'dispos', erreurDispos: '' }); },
+      agendaNote: agenda ? 'Tes services confirmés sont dans ton agenda et se mettent à jour tout seuls.' : 'Connecte ton agenda dans Moi : tes services confirmés s’y ajouteront tout seuls.',
+      retour: function () { self.setState({ vue: 'accueil' }); },
+      svTitre: svc ? 'Dimanche ' + long(svc.date) : '',
+      svSous: svc ? svc.lieu.nom + ' · culte ' + svc.lieu.heure + ' · ' + horaire(svc).toLowerCase() : '',
+      svPoste: svc ? 'Ton poste : ' + svc.poste.label.toLowerCase() + ' · ' + statut(svc).texte.toLowerCase() : '',
+      equipeCulte: svc ? equipeCulteDe(svc) : [],
+      grille: grille,
+      aucuneIndispo: function () {
+        var g = {};
+        DEC.forEach(function (d) { g[d] = 1; });
+        self.setState({ grille: g, erreurDispos: '' });
+      },
+      envoyerDispos: function () {
+        var g = (self.state && self.state.grille) || {};
+        if (DEC.some(function (d) { return !g[d]; })) { self.setState({ erreurDispos: 'Réponds pour chaque date, ou touche « Je n’ai pas d’indispo ».' }); return; }
+        self.flash({ dispoEnvoyees: true, vue: 'accueil' }, 'Merci ! Thomas voit tes dispos pour préparer décembre.');
+      },
+      aErreurDispos: !!s.erreurDispos,
+      erreurDispos: s.erreurDispos || '',
+      equipes: equipes,
+      actus: actus,
+      moiPostes: 'Serviteur louange · ' + postesDe.join(', '),
+      freqs: freqs,
+      lieTexte: lie.nom ? 'Personne de ton foyer : ' + lie.nom + ' (' + lie.lien + '). Le coordinateur en tient compte.' : '',
+      ensembles: ensembles,
+      agendaEtat: agendaEtat,
+      agendaColor: agenda ? '#146C3A' : '#5B5F6B',
+      connecterGoogle: function () { self.flash({ agenda: 'google' }, 'Prototype : dans la vraie appli, tu choisis ton compte Google, puis tes services arrivent tout seuls dans ton agenda.'); },
+      connecterIphone: function () { self.flash({ agenda: 'iphone' }, 'Prototype : dans la vraie appli, l’iPhone te propose de t’abonner à l’agenda KERYGMA.'); },
+      nav: { planning: navItem('planning'), equipe: navItem('equipe'), actus: navItem('actus'), moi: navItem('moi') },
+      aToast: !!toast,
+      toast: toast,
+      sheetOuvert: sheetOuvert,
+      sheetRemplacant: sheetOuvert && sheet.type === 'remplacant',
+      sheetJustif: sheetOuvert && sheet.type === 'justif',
+      sheetTitre: !sheetOuvert ? '' : (sheet.type === 'justif' ? 'Garder les deux' : 'Proposer un remplaçant'),
+      sheetSous: sv0 ? sv0.poste.label + ' · ' + sv0.lieu.nom + ' · dim. ' + court(sv0.date) : '',
+      sheetNote: !sheetOuvert ? '' : (sheet.type === 'justif'
+        ? 'Tes deux services restent prévus. Hélène, responsable louange, reçoit ton explication.'
+        : 'Choisis quelqu’un qui tient le même poste. S’il accepte, Thomas valide l’échange et les agendas se mettent à jour.'),
+      remplacants: remplacants,
+      texte: s.texte || '',
+      saisir: function (e) { self.setState({ texte: e && e.target ? e.target.value : '', erreur: '' }); },
+      envoyerJustif: function () {
+        var t = ((self.state && self.state.texte) || '').trim();
+        if (!t) { self.setState({ erreur: 'Écris une courte explication d’abord.' }); return; }
+        var autre = sv0 ? conflitDe(sv0) : null;
+        var g = Object.assign({}, garder);
+        g[sv0.cle] = t;
+        if (autre) g[autre.cle] = t;
+        self.flash({ garder: g, sheet: null, texte: '', erreur: '' }, 'Explication envoyée à Hélène. Tu gardes les deux services.');
+      },
+      aErreur: !!s.erreur,
+      erreur: s.erreur || '',
+      fermer: function () { self.setState({ sheet: null, texte: '', erreur: '' }); }
+    };
+  }
+  repondre(k, r) {
+    var S = partage();
+    S.reponses[k] = r;
+    var rep = Object.assign({}, (this.state || {}).rep || {});
+    rep[k] = r;
+    if (r === 'dispo') this.flash({ rep: rep }, 'Merci ! C’est confirmé. Rappel la veille à 18h.');
+    else this.setState({ rep: rep, sheet: { type: 'remplacant', cle: k }, texte: '', erreur: '' });
+  }
+  echanger(k, nom) {
+    var e = Object.assign({}, (this.state || {}).echanges || {});
+    e[k] = nom;
+    this.flash({ echanges: e, sheet: null }, 'Demande envoyée à ' + nom + '. S’il accepte, Thomas valide l’échange et ton agenda se met à jour.');
+  }
+  flash(patch, msg) {
+    this.setState(Object.assign({}, patch, { toast: msg }));
+    clearTimeout(this._t);
+    var self = this;
+    this._t = setTimeout(function () { self.setState({ toast: '' }); }, 3500);
+  }
+  componentWillUnmount() {
+    clearTimeout(this._t);
+  }
+}
+function partage(DATA) {
+  var G = typeof window !== 'undefined' ? window : globalThis;
+  var S = G.__kerygmaPartage || (G.__kerygmaPartage = { invitations: {}, propositions: null, decisions: {}, reponses: {} });
+  if (!S.propositions && DATA) {
+    S.propositions = {};
+    (DATA.propositions || []).forEach(function (p) {
+      S.propositions['dimanche|' + p.date + '|' + p.lieu + '|louange|' + p.poste] = { nom: p.nom, coord: p.coord, date: p.date, lieu: p.lieu, poste: p.poste, raison: '' };
+    });
+  }
+  if (!S.propositions) S.propositions = {};
+  if (!S.reponses) S.reponses = {};
+  return S;
+}
+</script>
+</body>
+</html>

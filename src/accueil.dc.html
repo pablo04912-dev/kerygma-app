@@ -139,7 +139,15 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <sc-if value="{{continuerVisible}}" hint-placeholder-val="{{true}}">
 <button type="button" onClick="{{fermer}}" style="min-height: 44px; border: 0; background: transparent; font-family: inherit; font-size: 15px; font-weight: 600; color: #3D4049; cursor: pointer">Continuer sans compte</button>
 </sc-if>
-<p style="margin: 0; font-size: 13px; line-height: 1.4; color: #5B5F6B; text-align: center">Prototype : « Se connecter » ouvre directement le profil test de Hélène Moreau.</p>
+<sc-if value="{{modeConnexion}}" hint-placeholder-val="{{true}}">
+<div aria-label="Profils test" style="display: flex; flex-direction: column; gap: 8px; padding-top: 12px; border-top: 1px solid #EFEBE3">
+<span style="font-size: 13px; font-weight: 600; color: #5B5F6B">Prototype : entrer avec un profil test</span>
+<a href="Planning.dc.html" data-profil="responsable" style="display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px; padding: 6px 14px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: #16181D; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Hélène</span><span style="font-size: 13px; color: #5B5F6B">Responsable louange · valide les plannings</span></a>
+<a href="Coordinateur.dc.html" data-profil="coordinateur" style="display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px; padding: 6px 14px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: #16181D; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Thomas</span><span style="font-size: 13px; color: #5B5F6B">Coordinateur louange · Saint-Maurice</span></a>
+<a href="Serviteur.dc.html" data-profil="serviteur" style="display: flex; flex-direction: column; justify-content: center; gap: 2px; min-height: 52px; padding: 6px 14px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: #16181D; text-decoration: none"><span style="font-size: 15px; font-weight: 600">Lucas</span><span style="font-size: 13px; color: #5B5F6B">Serviteur louange</span></a>
+<span style="font-size: 13px; line-height: 1.4; color: #5B5F6B">« Se connecter » ouvre le profil de Hélène. Pour changer de profil : Moi, puis Se déconnecter.</span>
+</div>
+</sc-if>
 </div>
 </div>
 </sc-if>

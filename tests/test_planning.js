@@ -1,5 +1,6 @@
 const { load, checkHoles, checkTags, assert, report, timers } = require('./dc_harness.js');
 const file = process.argv[2];
+globalThis.__kerygmaPartage = undefined;
 const { c, tpl, src } = load(file, {});
 let v = () => c.renderVals();
 let steps = 0;
@@ -15,6 +16,8 @@ assert(checkTags(src).length === 0, 'balises : ' + checkTags(src).join(' | '));
 
 // 1. Accueil de Hélène : louange, dimanche 22 nov, 3 lieux
 let x = check('état initial');
+assert(x.aValider.length === 1 && x.aValider[0].items.length === 2 && /Thomas propose pour Saint-Maurice · 29 novembre/.test(x.aValider[0].titre), 'bloc À valider avec les 2 propositions de Thomas');
+assert(x.aRetour && !x.coordHeader && x.initiale === 'H' && x.moiNom === 'Hélène Moreau' && x.eqMins, 'profil Hélène');
 assert(x.showLieux && !x.showDetail, 'écran 3 lieux au départ');
 assert(x.cartes.length === 3, '3 cartes');
 assert(x.cartes.map(k => k.compte).join() === '4/7,4/7,3/7', 'comptes louange 22/11 : ' + x.cartes.map(k => k.compte));
@@ -37,6 +40,7 @@ assert(x.dates[1].on, 'bandeau de dates conservé avec 29 nov');
 assert(x.lignes.length === 7, '7 postes');
 const voix = x.lignes.find(l => l.label === 'Voix');
 assert(voix.vide && voix.peutChoisir, 'voix vide et choisissable le 29/11');
+assert(voix.aSous && voix.sous === 'À valider : Thomas propose Pierre', 'proposition de Thomas visible chez Hélène : ' + voix.sous);
 
 // 4. Changer de date dans le détail : on reste dans Saint-Maurice
 x.dates[0].pick(); x = check('détail stm 22/11');
@@ -209,6 +213,7 @@ if (vide) { vide.ouvrir(); x = check('feuille'); assert(x.sheetOuvert, 'feuille 
 
 // 13 bis. Inviter quand même une personne déjà ailleurs à la même heure
 {
+  globalThis.__kerygmaPartage = undefined;
   const r = load(file, {});
   let y = r.c.renderVals();
   y.dates[1].pick(); y = r.c.renderVals();

@@ -154,6 +154,65 @@ function propre(label) {
   await click(btn('Se déconnecter'), 'déconnexion');
   assert(/Bienvenue chez Kerygma/.test(txt()), 'retour à l’accueil après déconnexion');
 
+  // Les 3 profils test : Thomas propose, Hélène valide, Lucas reçoit la demande
+  const nav = (nom) => $$('nav[aria-label="Navigation principale"] button').find(x => x.textContent.trim() === nom);
+  async function entrer(profil) {
+    if (!$('[role=dialog]')) await click(btn('Espace membre'), 'Espace membre');
+    const a = $('[role=dialog] a[data-profil="' + profil + '"]');
+    assert(!!a, 'lien du profil test ' + profil);
+    await click(a, 'profil ' + profil);
+  }
+  async function sortir() {
+    await click(nav('Moi'), 'Moi');
+    await click(btn('Se déconnecter'), 'déconnexion');
+  }
+  await entrer('coordinateur');
+  assert(/Bonjour Thomas/.test(txt()) && /Coordinateur louange · Saint-Maurice/.test(txt()), 'espace de Thomas');
+  // Hélène a déjà rempli elle-même la voix et la batterie du 29 nov : les propositions de Thomas sur ces postes sont remplacées
+  assert(!/Les 3 lieux/.test(txt()) && !/en attente de validation par Hélène/.test(txt()), 'Thomas : son lieu seulement, plus rien en attente');
+  propre('espace Thomas');
+  await click(dates()[4], 'Thomas 20 déc');
+  const ligneBatterie = $$('section[aria-label="Postes"] > div').find(d => /Batterie/.test(d.textContent));
+  await click(ligneBatterie && btn('Choisir', ligneBatterie), 'Choisir batterie');
+  const lucasRow = $$('[role=dialog] [data-candidat="libre"]').find(r => /Lucas/.test(r.querySelector('span span').textContent));
+  assert(!!lucasRow && !!btn('Proposer', lucasRow), 'Thomas voit « Proposer » (pas « Inviter »)');
+  await click(btn('Proposer', lucasRow), 'proposer Lucas');
+  assert(/Proposition enregistrée : Lucas/.test(txt()) && /1 proposition en attente de validation par Hélène \(20 déc\)/.test(txt()), 'proposition de Thomas enregistrée');
+  propre('après proposition');
+  await sortir();
+
+  await entrer('responsable');
+  assert(/Bonjour Hélène/.test(txt()), 'retour chez Hélène');
+  const groupe20 = $$('section[aria-label="À valider"]').find(d => /Thomas propose pour Saint-Maurice · 20 décembre/.test(d.textContent));
+  assert(!!groupe20 && /Batterie/.test(groupe20.textContent) && /Lucas/.test(groupe20.textContent), 'Hélène voit la proposition de Thomas');
+  propre('À valider');
+  await click(groupe20 && btn('Valider', groupe20), 'valider');
+  assert(/Planning validé/.test(txt()), 'Hélène valide');
+  await sortir();
+
+  await entrer('serviteur');
+  assert(/Bonjour Lucas/.test(txt()) && /Serviteur · Louange/.test(txt()), 'espace de Lucas');
+  const demande = $('[data-demande="20/12|stm|batterie"]');
+  assert(!!demande && /Dimanche 20 décembre/.test(demande.textContent) && /Présence 9h · fin vers 13h/.test(demande.textContent), 'Lucas reçoit la demande validée');
+  propre('espace Lucas');
+  await click(btn('Dispo', demande), 'Lucas dispo');
+  assert(!$('[data-demande="20/12|stm|batterie"]') && /C’est confirmé/.test(txt()), 'Lucas confirme');
+  await click(btn('Garder les deux'), 'garder les deux');
+  assert(!!$('[role=dialog]') && !!$('#justif'), 'feuille de justification');
+  const j = $('#justif'); j.focus(); j.value = 'Je peux';
+  j.dispatchEvent(new window.Event('input', { bubbles: true }));
+  await tick();
+  assert(doc.activeElement.id === 'justif', 'focus gardé dans la justification');
+  await click(btn('Envoyer à Hélène'), 'envoyer justif');
+  assert(!$('[role=dialog]') && /Explication envoyée à Hélène/.test(txt()), 'justification envoyée');
+  await click(btn('Remplir mes dispos'), 'grille');
+  await click(btn("Je n'ai pas d'indispo"), 'aucune indispo');
+  await click(btn('Envoyer'), 'envoyer dispos');
+  assert(/Thomas voit tes dispos/.test(txt()), 'dispos envoyées');
+  for (const nom of ['Équipe', 'Actus', 'Moi', 'Planning']) { await click(nav(nom), 'Lucas ' + nom); propre('Lucas ' + nom); }
+  await sortir();
+  assert(/Bienvenue chez Kerygma/.test(txt()), 'retour à l’accueil');
+
   // Page : zoom bloqué et plein écran
   const vp = $('meta[name=viewport]').getAttribute('content');
   assert(/user-scalable=no/.test(vp) && /maximum-scale=1/.test(vp), 'zoom désactivé dans le viewport');

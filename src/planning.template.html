@@ -18,7 +18,7 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <div style="width: 390px; height: 844px; box-sizing: border-box; background: #F6F4EF; font-family: Inter, system-ui, sans-serif; color: #16181D; position: relative; overflow: hidden; display: flex; flex-direction: column">
 <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px 4px">
 <span style="font-family: 'Space Grotesk', Inter, sans-serif; font-weight: 700; font-size: 18px; letter-spacing: 3px">KERYGMA</span>
-<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 18px; background: #16181D; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px">H</span>
+<span aria-hidden="true" style="width: 36px; height: 36px; border-radius: 18px; background: #16181D; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 15px">{{initiale}}</span>
 </div>
 <main style="flex: 1; overflow-y: auto; padding: 8px 20px 20px; display: flex; flex-direction: column; gap: 12px">
 <sc-if value="{{showLieux}}" hint-placeholder-val="{{true}}">
@@ -41,7 +41,7 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-for>
 </div>
 </sc-if>
-<nav aria-label="Dates" style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<nav aria-label="Dates" style="display: flex; flex-shrink: 0; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
 <sc-for list="{{dates}}" as="d" hint-placeholder-count="5">
 <button type="button" aria-pressed="{{d.on}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 64px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 1px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer">
 <span style="font-size: 12px; font-weight: 500">{{d.jour}}</span>
@@ -49,6 +49,20 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </button>
 </sc-for>
 </nav>
+<sc-for list="{{aValider}}" as="v" hint-placeholder-count="1">
+<section aria-label="À valider" style="background: #FFF8EC; border: 1px solid #F0D9B0; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 13px; font-weight: 700; color: #8A5300">À valider</span>
+<span style="font-size: 17px; font-weight: 700">{{v.titre}}</span>
+<sc-for list="{{v.items}}" as="it" hint-placeholder-count="2">
+<span style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px"><span style="color: #5B5F6B">{{it.poste}}</span><span style="font-weight: 600">{{it.nom}}</span></span>
+</sc-for>
+<span style="display: flex; gap: 8px; margin-top: 4px">
+<button type="button" onClick="{{v.valider}}" style="flex: 1; min-height: 44px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Valider</button>
+<button type="button" onClick="{{v.refuser}}" style="flex: 1; min-height: 44px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #3D4049; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Refuser</button>
+</span>
+<span style="font-size: 13px; line-height: 1.4; color: #5B5F6B">Valider envoie les demandes aux serviteurs et ajoute les services dans leurs agendas.</span>
+</section>
+</sc-for>
 <p style="margin: 0; font-size: 14px; font-weight: 600; color: {{aTraiterColor}}">{{aTraiter}}</p>
 <sc-for list="{{cartes}}" as="c" hint-placeholder-count="3">
 <button type="button" onClick="{{c.ouvrir}}" style="display: flex; flex-direction: column; gap: 8px; width: 100%; text-align: left; padding: 14px 16px; border-radius: 18px; border: 1px solid #E7E3DA; background: #FFFFFF; font-family: inherit; color: #16181D; cursor: pointer">
@@ -85,14 +99,24 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-if>
 <sc-if value="{{showDetail}}" hint-placeholder-val="{{false}}">
 <div style="display: flex; flex-direction: column; gap: 4px">
+<sc-if value="{{aRetour}}" hint-placeholder-val="{{true}}">
 <button type="button" onClick="{{retour}}" style="align-self: flex-start; min-height: 44px; display: flex; align-items: center; gap: 6px; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; font-weight: 600; color: {{accent}}; cursor: pointer">
 <span aria-hidden="true">←</span>
 <span>Les 3 lieux</span>
 </button>
+</sc-if>
 <h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">{{dTitre}}</h1>
+<sc-if value="{{coordHeader}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-wrap: wrap; gap: 6px; margin: 4px 0 2px">
+<span style="font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">Coordinateur louange · Saint-Maurice</span>
+</div>
+</sc-if>
 <p style="margin: 0; font-size: 15px; line-height: 1.4; color: #5B5F6B">{{dSous}}</p>
 </div>
-<nav aria-label="Dates" style="display: flex; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<sc-if value="{{aPropAttente}}" hint-placeholder-val="{{false}}">
+<p role="status" style="margin: 0; padding: 12px 14px; border-radius: 14px; background: #FFF8EC; border: 1px solid #F0D9B0; color: #8A5300; font-size: 14px; line-height: 1.45; font-weight: 600">{{propAttente}}</p>
+</sc-if>
+<nav aria-label="Dates" style="display: flex; flex-shrink: 0; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
 <sc-for list="{{dates}}" as="d" hint-placeholder-count="5">
 <button type="button" aria-pressed="{{d.on}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 64px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 1px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer">
 <span style="font-size: 12px; font-weight: 500">{{d.jour}}</span>
@@ -101,7 +125,12 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-for>
 </nav>
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<span style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0">
 <span style="font-size: 14px; font-weight: 600; color: {{dCompteColor}}">{{dCompte}}</span>
+<span aria-hidden="true" style="display: block; height: 6px; border-radius: 3px; background: #E7E3DA; overflow: hidden; max-width: 220px">
+<span style="display: block; height: 6px; border-radius: 3px; background: {{dBarColor}}; width: {{dPct}}"></span>
+</span>
+</span>
 <sc-if value="{{dEdit}}" hint-placeholder-val="{{true}}">
 <span style="flex: 0 0 auto; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; border: 1px solid {{accent}}; color: {{accent}}">Modifiable</span>
 </sc-if>
@@ -148,11 +177,13 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-if>
 <sc-if value="{{showEquipe}}" hint-placeholder-val="{{false}}">
 <h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Équipe</h1>
+<sc-if value="{{eqMins}}" hint-placeholder-val="{{true}}">
 <div role="group" aria-label="Ministère" style="display: flex; flex-wrap: wrap; gap: 8px">
 <sc-for list="{{mins}}" as="m" hint-placeholder-count="2">
 <button type="button" aria-pressed="{{m.on}}" onClick="{{m.pick}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{m.border}}; background: {{m.bg}}; color: {{m.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{m.label}}</button>
 </sc-for>
 </div>
+</sc-if>
 <div role="group" aria-label="Affichage" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 14px; background: #ECE8DF">
 <sc-for list="{{vues}}" as="v" hint-placeholder-count="2">
 <button type="button" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="min-height: 44px; border-radius: 11px; border: 0; background: {{v.bg}}; color: {{v.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{v.label}}</button>
@@ -198,7 +229,7 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-if>
 <sc-if value="{{showMoi}}" hint-placeholder-val="{{false}}">
 <div style="display: flex; flex-direction: column; gap: 4px">
-<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Hélène Moreau</h1>
+<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">{{moiNom}}</h1>
 <p style="margin: 0; font-size: 15px; color: #5B5F6B">Mes rôles dans l'appli</p>
 </div>
 <section aria-label="Mes rôles" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 4px 0; display: flex; flex-direction: column">
@@ -279,7 +310,7 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </span>
 </sc-if>
 </span>
-<button type="button" onClick="{{k.choisir}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Inviter</button>
+<button type="button" onClick="{{k.choisir}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{boutonInviter}}</button>
 </div>
 </sc-for>
 <sc-if value="{{aBloques}}" hint-placeholder-val="{{false}}">
@@ -291,7 +322,7 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <span style="font-size: 17px; font-weight: 600; color: #5B5F6B">{{k.nom}}</span>
 <span style="font-size: 13px; font-weight: 600; color: #A12626">{{k.raison}}</span>
 </span>
-<button type="button" onClick="{{k.choisir}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #3D4049; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Inviter quand même</button>
+<button type="button" onClick="{{k.choisir}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #3D4049; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{boutonForcer}}</button>
 </div>
 </sc-for>
 </sc-if>
@@ -308,12 +339,17 @@ class Component extends DCLogic {
     var s = this.state || {};
     var accent = this.props.accent ?? '#4338CA';
     var DATA = __DATA__;
+    var PROFIL_DEFAUT = '__PROFIL__';
+    var profil = this.props.profil || PROFIL_DEFAUT;
+    var coord = profil === 'coordinateur';
+    this._coord = coord;
+    var S = partage(DATA);
 
     var tab = s.tab || 'planning';
-    var type = s.type || 'dimanche';
-    var min = s.min || 'louange';
-    var ecran = s.ecran || 'lieux';
-    var lieuId = s.lieu || 'stm';
+    var type = coord ? 'dimanche' : (s.type || 'dimanche');
+    var min = coord ? 'louange' : (s.min || 'louange');
+    var ecran = coord ? 'detail' : (s.ecran || 'lieux');
+    var lieuId = coord ? 'stm' : (s.lieu || 'stm');
     var sheet = s.sheet || null;
     var picks = s.picks || {};
     var toast = s.toast || '';
@@ -371,13 +407,17 @@ class Component extends DCLogic {
     var ROUGE = '#A12626', VERT = '#146C3A', GRIS = '#5B5F6B', AMBRE = '#8A5300';
 
     function cle(t, d, l, m, p) { return t + '|' + d + '|' + l + '|' + m + '|' + p; }
+    function propEnAttente(k) { var p = S.propositions[k]; return p && !S.decisions[k] ? p : null; }
     function louangeDe(d, l) {
       var base = (DATA.louange[d] && DATA.louange[d][l]) || {};
       var out = {};
       PL.forEach(function (p) {
         var arr = (base[p.id] || []).slice();
-        var k = picks[cle('dimanche', d, l, 'louange', p.id)];
-        if (k) arr.push(k);
+        var k = cle('dimanche', d, l, 'louange', p.id);
+        var ajoute = function (n) { if (n && arr.indexOf(n) < 0) arr.push(n); };
+        ajoute(picks[k]);
+        ajoute(S.invitations[k] && S.invitations[k].nom);
+        if (coord) { var pr = propEnAttente(k); if (pr) ajoute(pr.nom); }
         out[p.id] = arr;
       });
       return out;
@@ -407,6 +447,7 @@ class Component extends DCLogic {
     }
     function datePriDe(L) { return L.priVeille ? veille(datePri) : datePri; }
     function peutModifier(t, m, l) {
+      if (coord) return t === 'dimanche' && m === 'louange' && l === 'stm';
       if (t === 'priere') return l === 'stm';
       if (m === 'louange') return true;
       return l === 'stm';
@@ -540,6 +581,27 @@ class Component extends DCLogic {
       if (!rs.vides) aTraiterColor = VERT;
     }
 
+    var groupesV = {};
+    Object.keys(S.propositions).forEach(function (k) {
+      var pr = S.propositions[k];
+      if (S.decisions[k]) return;
+      var gk = pr.date + '|' + pr.lieu;
+      if (!groupesV[gk]) groupesV[gk] = { date: pr.date, lieu: pr.lieu, coord: pr.coord, cles: [], items: [] };
+      var P1 = PL.find(function (x) { return x.id === pr.poste; });
+      groupesV[gk].cles.push(k);
+      groupesV[gk].items.push({ poste: P1 ? P1.label : pr.poste, nom: pr.nom });
+    });
+    var aValider = coord ? [] : Object.keys(groupesV).map(function (gk) {
+      var g = groupesV[gk];
+      var LV = LIEUX.find(function (x) { return x.id === g.lieu; });
+      return {
+        titre: g.coord + ' propose pour ' + LV.nom + ' · ' + long(g.date),
+        items: g.items,
+        valider: function () { self.decider(g.cles, 'validee'); },
+        refuser: function () { self.decider(g.cles, 'refusee'); }
+      };
+    });
+
     var L = LIEUX.find(function (x) { return x.id === lieuId; }) || LIEUX[0];
     var dEdit = peutModifier(type, min, L.id);
     var lignes = [];
@@ -561,16 +623,24 @@ class Component extends DCLogic {
       });
       if (!L.priResp) dNote = 'Responsable de la réunion de prière de ' + L.nom + ' à définir.';
     } else if (min === 'louange') {
-      dSous = 'Louange · dimanche ' + long(dateDim) + ' · ' + L.heure + ' · coord. ' + L.coord;
+      dSous = coord ? 'Louange · ' + L.nom + ' · dimanche ' + long(dateDim) + ' · ' + L.heure : 'Louange · dimanche ' + long(dateDim) + ' · ' + L.heure + ' · coord. ' + L.coord;
       var lo = louangeDe(dateDim, L.id);
       lignes = PL.map(function (p) {
         var arr = lo[p.id];
         var k = cle('dimanche', dateDim, L.id, 'louange', p.id);
-        var invite = !!picks[k];
-        var force = !!forces[k];
+        var inv = S.invitations[k];
+        var invite = !!picks[k] || !!inv;
+        var force = !!forces[k] || !!(inv && inv.raison);
+        var prop = propEnAttente(k);
+        var sous = '', sousColor = AMBRE;
+        if (coord && S.decisions[k] === 'validee') { sous = 'Validé par Hélène · invitation envoyée'; sousColor = VERT; }
+        else if (invite) { sous = force ? 'Invitation envoyée · conflit signalé' : 'Invitation envoyée'; sousColor = force ? ROUGE : AMBRE; }
+        else if (coord && prop) { sous = 'Proposé · en attente de validation par Hélène'; }
+        else if (coord && S.decisions[k] === 'refusee' && arr.length === 0) { sous = 'Refusé par Hélène : propose quelqu’un d’autre'; sousColor = ROUGE; }
+        else if (!coord && prop && arr.length === 0) { sous = 'À valider : ' + prop.coord + ' propose ' + prop.nom; }
         return ligne({
           label: p.label, rempli: arr.length > 0, vide: arr.length === 0, nom: arr.join(', '),
-          aSous: invite, sous: invite ? (force ? 'Invitation envoyée · conflit signalé' : 'Invitation envoyée') : '', sousColor: force ? ROUGE : AMBRE,
+          aSous: !!sous, sous: sous, sousColor: sousColor,
           peutChoisir: arr.length === 0 && dEdit && (DATA.pool[p.id] || []).length > 0,
           ouvrir: ouvrirFeuille(p.id)
         });
@@ -613,6 +683,10 @@ class Component extends DCLogic {
       if (!pr) dNote = 'Le programme de ' + L.nom + " n'est pas encore rempli dans le tableau actuel.";
     }
     lignes.forEach(function (l, i) { l.sep = i === lignes.length - 1 ? 'transparent' : '#EFEBE3'; });
+    var attentes = Object.keys(S.propositions).filter(function (k) { return propEnAttente(k) && S.propositions[k].lieu === L.id; });
+    var nbAttente = attentes.length;
+    var datesAttente = [];
+    attentes.forEach(function (k) { var d = S.propositions[k].date; if (datesAttente.indexOf(d) < 0) datesAttente.push(d); });
 
     var candidats = [];
     var sheetTitre = '', sheetNote = '', sheetSous = '';
@@ -638,7 +712,7 @@ class Component extends DCLogic {
     } else if (sheetOuvert && min === 'louange') {
       var P = PL.find(function (p) { return p.id === sheet; });
       sheetTitre = P ? P.label : '';
-      sheetNote = 'Ceux qui ont le moins servi sont en haut. Les plannings des 3 lieux sont vérifiés.';
+      sheetNote = 'Ceux qui ont le moins servi sont en haut. Les plannings des 3 lieux sont vérifiés.' + (coord ? ' Hélène valide ta proposition avant l’envoi.' : '');
       sheetSous = 'Dimanche ' + long(dateDim) + ' · ' + L.nom + ' ' + L.heure;
       var ici = louangeDe(dateDim, L.id);
       candidats = (DATA.pool[sheet] || []).filter(function (n) { return ici[sheet].indexOf(n) < 0; }).map(function (n) {
@@ -719,7 +793,7 @@ class Component extends DCLogic {
     var candLibres = candidats.filter(function (c) { return c.libre; });
     var candBloques = candidats.filter(function (c) { return c.bloque; });
 
-    var groupes = LIEUX.map(function (G) {
+    var groupes = LIEUX.filter(function (G) { return !coord || G.id === 'stm'; }).map(function (G) {
       var items = [];
       if (min === 'louange') {
         var lo = louangeDe(dateDim, G.id);
@@ -759,10 +833,12 @@ class Component extends DCLogic {
       { tag: 'Chaque semaine', titre: 'Prière générale', texte: 'Jeudi à 20h à Saint-Maurice, mercredi à 20h à Boulogne et Champigny.' },
       { tag: 'Chaque samedi', titre: 'Ados et Jeunes', texte: 'Ados à 15h, Jeunes à 18h, à Saint-Maurice.' }
     ];
-    var roles = [
+    var roles = (coord ? [
+      { label: 'Coordinateur louange · Saint-Maurice', detail: 'Remplit le planning louange de Saint-Maurice. Hélène, responsable louange, valide avant l’envoi aux serviteurs.' }
+    ] : [
       { label: 'Ancienne · Saint-Maurice', detail: 'Tient le programme du culte de Saint-Maurice, voit Champigny et Boulogne.' },
-      { label: 'Responsable louange', detail: 'Modifie les plannings louange des 3 lieux.' }
-    ].map(function (r, i, a) { return Object.assign({}, r, { sep: i === a.length - 1 ? 'transparent' : '#EFEBE3' }); });
+      { label: 'Responsable louange', detail: 'Modifie les plannings louange des 3 lieux et valide les propositions des coordinateurs.' }
+    ]).map(function (r, i, a) { return Object.assign({}, r, { sep: i === a.length - 1 ? 'transparent' : '#EFEBE3' }); });
 
     function navItem(id) {
       var on = tab === id;
@@ -784,7 +860,17 @@ class Component extends DCLogic {
       aTraiterColor: aTraiterColor,
       cartes: cartes,
       retour: function () { self.setState({ ecran: 'lieux', sheet: null }); },
-      dTitre: L.nom,
+      dTitre: coord ? 'Bonjour Thomas' : L.nom,
+      aRetour: !coord,
+      coordHeader: coord,
+      aPropAttente: coord && nbAttente > 0,
+      propAttente: nbAttente + (nbAttente > 1 ? ' propositions en attente' : ' proposition en attente') + ' de validation par Hélène (' + datesAttente.map(court).join(', ') + ').',
+      dPct: rd.total ? Math.round(rd.n / rd.total * 100) + '%' : '0%',
+      dBarColor: rd.vides ? accent : '#1F8A4C',
+      initiale: coord ? 'T' : 'H',
+      moiNom: coord ? 'Thomas' : 'Hélène Moreau',
+      eqMins: !coord,
+      aValider: aValider,
       dSous: dSous,
       dCompte: rd.aCompte ? rd.n + ' sur ' + rd.total + (type === 'dimanche' && min === 'programme' ? ' rôles pourvus' : ' postes pourvus') : 'Pas encore rempli',
       dCompteColor: rd.aCompte ? (rd.vides ? ROUGE : VERT) : GRIS,
@@ -808,6 +894,8 @@ class Component extends DCLogic {
       sheetTitre: sheetTitre,
       sheetSous: sheetSous,
       sheetNote: sheetNote,
+      boutonInviter: coord ? 'Proposer' : 'Inviter',
+      boutonForcer: coord ? 'Proposer quand même' : 'Inviter quand même',
       sheetSaisie: sheetOuvert && type === 'dimanche' && min === 'programme' && sheet === 'cene',
       texte: texte,
       saisir: function (e) { self.setState({ texte: e && e.target ? e.target.value : '', erreur: '' }); },
@@ -827,18 +915,49 @@ class Component extends DCLogic {
   }
   choisir(nom, raison) {
     var s = this.state || {};
-    var type = s.type || 'dimanche';
+    var coord = !!this._coord;
+    var type = coord ? 'dimanche' : (s.type || 'dimanche');
     var picks = Object.assign({}, s.picks || {});
     var forces = Object.assign({}, s.forces || {});
+    var lieu = coord ? 'stm' : (s.lieu || 'stm');
+    var min = coord ? 'louange' : (s.min || 'louange');
+    var date = s.dateDim || '22/11';
     var k = type === 'priere'
-      ? 'priere|' + (s.datePri || '26/11') + '|' + (s.lieu || 'stm') + '|priere|' + s.sheet
-      : 'dimanche|' + (s.dateDim || '22/11') + '|' + (s.lieu || 'stm') + '|' + (s.min || 'louange') + '|' + s.sheet;
-    picks[k] = nom;
-    if (raison) forces[k] = raison; else delete forces[k];
-    var toast = raison
-      ? 'Invitation envoyée à ' + nom + ', avec le conflit signalé : ' + raison.charAt(0).toLowerCase() + raison.slice(1) + '. La personne choisira de se faire remplacer, ou de garder les deux en justifiant.'
-      : 'Invitation envoyée à ' + nom + '. Rappel automatique la veille à 18h.';
-    this.setState({ picks: picks, forces: forces, sheet: null, texte: '', erreur: '', toast: toast });
+      ? 'priere|' + (s.datePri || '26/11') + '|' + lieu + '|priere|' + s.sheet
+      : 'dimanche|' + date + '|' + lieu + '|' + min + '|' + s.sheet;
+    var S = partage();
+    var toast;
+    if (coord) {
+      S.propositions[k] = { nom: nom, coord: 'Thomas', date: date, lieu: lieu, poste: s.sheet, raison: raison || '' };
+      delete S.decisions[k];
+      toast = 'Proposition enregistrée : ' + nom + '. Hélène doit la valider avant l’envoi aux serviteurs.';
+      this.setState({ sheet: null, texte: '', erreur: '', toast: toast, maj: (s.maj || 0) + 1 });
+    } else {
+      picks[k] = nom;
+      if (raison) forces[k] = raison; else delete forces[k];
+      if (min === 'louange' && type === 'dimanche') {
+        S.invitations[k] = { nom: nom, raison: raison || '' };
+        if (S.propositions[k] && !S.decisions[k]) S.decisions[k] = 'remplacee';
+      }
+      toast = raison
+        ? 'Invitation envoyée à ' + nom + ', avec le conflit signalé : ' + raison.charAt(0).toLowerCase() + raison.slice(1) + '. La personne choisira de se faire remplacer, ou de garder les deux en justifiant.'
+        : 'Invitation envoyée à ' + nom + '. Rappel automatique la veille à 18h.';
+      this.setState({ picks: picks, forces: forces, sheet: null, texte: '', erreur: '', toast: toast });
+    }
+    clearTimeout(this._t);
+    var self = this;
+    this._t = setTimeout(function () { self.setState({ toast: '' }); }, 3500);
+  }
+  decider(cles, decision) {
+    var S = partage();
+    cles.forEach(function (k) {
+      S.decisions[k] = decision;
+      if (decision === 'validee') S.invitations[k] = { nom: S.propositions[k].nom, raison: S.propositions[k].raison || '' };
+    });
+    var toast = decision === 'validee'
+      ? 'Planning validé : les demandes partent aux serviteurs et les services s’ajoutent à leurs agendas.'
+      : 'Propositions refusées. Thomas est prévenu et peut proposer quelqu’un d’autre.';
+    this.setState({ toast: toast, maj: ((this.state || {}).maj || 0) + 1 });
     clearTimeout(this._t);
     var self = this;
     this._t = setTimeout(function () { self.setState({ toast: '' }); }, 3500);
@@ -846,6 +965,18 @@ class Component extends DCLogic {
   componentWillUnmount() {
     clearTimeout(this._t);
   }
+}
+function partage(DATA) {
+  var G = typeof window !== 'undefined' ? window : globalThis;
+  var S = G.__kerygmaPartage || (G.__kerygmaPartage = { invitations: {}, propositions: null, decisions: {}, reponses: {} });
+  if (!S.propositions && DATA) {
+    S.propositions = {};
+    (DATA.propositions || []).forEach(function (p) {
+      S.propositions['dimanche|' + p.date + '|' + p.lieu + '|louange|' + p.poste] = { nom: p.nom, coord: p.coord, date: p.date, lieu: p.lieu, poste: p.poste, raison: '' };
+    });
+  }
+  if (!S.propositions) S.propositions = {};
+  return S;
 }
 </script>
 </body>

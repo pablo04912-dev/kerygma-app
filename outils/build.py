@@ -1,7 +1,8 @@
 """Construit le prototype à partir des sources.
 
 Produit :
-  build/Accueil.dc.html et build/Planning.dc.html : les écrans au format du canevas Claude Design
+  build/Accueil.dc.html, build/Planning.dc.html (Hélène, responsable), build/Coordinateur.dc.html (Thomas)
+  et build/Serviteur.dc.html (Lucas) : les écrans au format du canevas Claude Design
   site/index.html : la version téléphone (mise en ligne sur GitHub Pages)
 
 Usage : python3 outils/build.py
@@ -41,22 +42,35 @@ def ecran_dc(source):
 def main():
     donnees = json.loads(lire("data/exemple.json"))
     accueil = lire("src/accueil.dc.html")
+    json_donnees = json.dumps(donnees, ensure_ascii=False, separators=(",", ":"))
     planning = lire("src/planning.template.html")
-    if planning.count("__DATA__") != 1:
-        raise SystemExit("__DATA__ doit apparaître une fois dans src/planning.template.html")
-    planning = planning.replace("__DATA__", json.dumps(donnees, ensure_ascii=False, separators=(",", ":")))
+    serviteur = lire("src/serviteur.template.html")
+    for nom, texte in (("planning", planning), ("serviteur", serviteur)):
+        if texte.count("__DATA__") != 1:
+            raise SystemExit("__DATA__ doit apparaître une fois dans src/" + nom + ".template.html")
+    if planning.count("__PROFIL__") != 1:
+        raise SystemExit("__PROFIL__ doit apparaître une fois dans src/planning.template.html")
+    planning = planning.replace("__DATA__", json_donnees)
+    serviteur = serviteur.replace("__DATA__", json_donnees)
+    responsable = planning.replace("__PROFIL__", "responsable")
+    coordinateur = planning.replace("__PROFIL__", "coordinateur").replace("espace de Hélène", "espace de Thomas")
     ecrire("build/Accueil.dc.html", accueil)
-    ecrire("build/Planning.dc.html", planning)
+    ecrire("build/Planning.dc.html", responsable)
+    ecrire("build/Coordinateur.dc.html", coordinateur)
+    ecrire("build/Serviteur.dc.html", serviteur)
 
     a_gab, a_js = ecran_dc(accueil)
-    p_gab, p_js = ecran_dc(planning)
+    p_gab, p_js = ecran_dc(responsable)
+    s_gab, s_js = ecran_dc(serviteur)
     moteur = lire("src/runtime.js").replace(
         "/*__COMPONENTS__*/",
         "const AccueilComponent = (function () {\n" + a_js + "\nreturn Component;\n})();\n"
-        "const PlanningComponent = (function () {\n" + p_js + "\nreturn Component;\n})();\n",
+        "const PlanningComponent = (function () {\n" + p_js + "\nreturn Component;\n})();\n"
+        "const ServiteurComponent = (function () {\n" + s_js + "\nreturn Component;\n})();\n",
     )
     page = lire("src/page.html")
-    page = page.replace("<!--ACCUEIL-->", a_gab).replace("<!--PLANNING-->", p_gab).replace("/*MOTEUR*/", moteur)
+    page = (page.replace("<!--ACCUEIL-->", a_gab).replace("<!--PLANNING-->", p_gab)
+            .replace("<!--SERVITEUR-->", s_gab).replace("/*MOTEUR*/", moteur))
     ecrire("site/index.html", page)
     print("build/ et site/index.html à jour")
 

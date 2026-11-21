@@ -49,11 +49,13 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 ## 5. Comment le projet est construit
 
 - `src/accueil.dc.html` : écran d'accueil public et connexion.
-- `src/planning.template.html` : espace connecté (profil test "Hélène", responsable louange). `__DATA__` est remplacé par `data/exemple.json` au build.
+- `src/planning.template.html` : espace connecté des responsables et coordinateurs. Profil test "Hélène" (responsable louange) et, avec `profil: 'coordinateur'`, "Thomas" (coordinateur louange à Saint-Maurice). `__DATA__` est remplacé par `data/exemple.json` et `__PROFIL__` par le profil au build.
+- `src/serviteur.template.html` : espace d'un serviteur (profil test "Lucas").
+- Les 3 profils partagent pendant la visite un même état (`partage()` : invitations, propositions, décisions, réponses), pour montrer la chaîne coordinateur → responsable → serviteur. Rien n'est enregistré.
 - `data/exemple.json` : plannings louange et programme (22/11 au 27/12), `historique` (4 dimanches passés, pour "X dimanches de suite" et "X semaines sans service"), `indispos` et `freqMax` (exemples pour les étiquettes de la liste "Choisir"). Tout est inventé.
 - `src/runtime.js` + `src/page.html` : moteur qui fait tourner ces écrans dans la page téléphone.
-- `outils/build.py` : produit `build/*.dc.html` (format du canevas Claude Design) et `site/index.html` (page téléphone).
-- `tests/` : tests de la logique (`test_accueil.js`, `test_planning.js`) et test de bout en bout de la page téléphone (`test_phone.js`). Ajoute un test pour chaque nouveau comportement.
+- `outils/build.py` : produit `build/*.dc.html` (Accueil, Planning pour Hélène, Coordinateur pour Thomas, Serviteur pour Lucas ; format du canevas Claude Design) et `site/index.html` (page téléphone).
+- `tests/` : tests de la logique (`test_accueil.js`, `test_planning.js`, `test_coordinateur.js`, `test_serviteur.js`) et test de bout en bout de la page téléphone (`test_phone.js`, avec la chaîne Thomas → Hélène → Lucas). Ajoute un test pour chaque nouveau comportement.
 - `.github/workflows/ci.yml` : à chaque envoi, build + tests + mise en ligne sur GitHub Pages.
 - Format des écrans : HTML avec `{{trous}}`, `<sc-if>`, `<sc-for>`, `onClick="{{fonction}}"`, et une classe `Component extends DCLogic` avec `renderVals()`. Pas de logique dans les trous : calcule dans `renderVals()`.
 
@@ -66,7 +68,7 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 - Une personne peut servir dans plusieurs lieux : conflit seulement si deux réunions se chevauchent.
 - Sainte Cène une fois sur deux : bouton Oui/Non. Le rôle "Louange" du programme est repris de la direction du planning louange.
 - Barre du bas (Planning, Équipe, Actus, Moi) sur tous les écrans connectés. Boutons d'au moins 44 px, lisibles par tous les âges.
-- **Prototype** : "Se connecter" ouvre directement le profil test. À retirer avant la vraie appli.
+- **Prototype** : "Se connecter" ouvre directement le profil de Hélène ; la fenêtre de connexion propose aussi les 3 profils test (Hélène responsable, Thomas coordinateur, Lucas serviteur). À retirer avant la vraie appli.
 - Contrôle des conflits entre lieux, règles validées : rouge = déjà ailleurs à la même heure (ou prière le même soir ailleurs) ; orange = même jour à un horaire compatible, ou fréquence max atteinte ; rouge clair = indispo déclarée ; gris = déjà sur un autre poste du même culte.
 - Liste "Choisir" (quand on remplit un poste) : ceux qui ont **le moins servi en premier**. En petit : "2 dimanches de suite", "3 dimanches de suite"… pour ceux qui enchaînent ; "2 semaines sans service"… pour les autres (compté en semaines, pas en jours).
 - Personnes déjà ailleurs à la même heure : grisées en bas **avec la raison** ("Sert à Champigny à 10h30"), mais on peut quand même les inviter ("Inviter quand même", utile en cas d'erreur de planning). Le serviteur choisit alors : se faire remplacer sur l'un des deux, ou garder les deux exceptionnellement en justifiant au responsable.

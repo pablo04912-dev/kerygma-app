@@ -15,6 +15,13 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 - Décision : le responsable du ministère valide le planning avec un bouton dans l'appli ; la validation envoie les demandes aux serviteurs et ajoute les services dans les agendas, connectés une fois à la création du compte (Google : écriture directe ; iPhone et autres : abonnement), de l'heure de présence fixée par le responsable jusqu'à la fin du culte, avec mise à jour à chaque changement : `CLAUDE.md`, section 6.
 - Nouvelle règle : envoi au fil de l'eau, dès qu'une modification est finie et testée (plus seulement en fin de séance).
 - `CLAUDE.md` : lecture de la boîte à messages en début de séance, `git pull` avant chaque réponse pendant la séance, explication de l'aperçu à droite.
+- **3 profils test** dans le prototype, choisis dans la fenêtre de connexion ("Prototype : entrer avec un profil test") ; pour changer : Moi, puis Se déconnecter.
+  - **Hélène**, responsable louange : les 3 lieux, plus un bloc "À valider" (propositions de Thomas, boutons Valider / Refuser). Valider envoie les demandes aux serviteurs.
+  - **Thomas**, coordinateur louange à Saint-Maurice : arrive directement sur son lieu, jauge de remplissage, bouton "Proposer" au lieu d'"Inviter" ; ses propositions affichent "en attente de validation par Hélène", puis "Validé par Hélène" ou "Refusé par Hélène".
+  - **Lucas**, serviteur louange : demandes à répondre (Dispo / Pas dispo, heure de présence et fin du culte), conflit signalé avec "Me faire remplacer ici" ou "Garder les deux" (explication envoyée à Hélène), proposer un remplaçant, ses prochains services avec statut, "Qui sert ce culte" (son culte seulement), grille des dispos de décembre (dispo / si besoin / pas dispo, "Je n'ai pas d'indispo"), fréquence max, servir ensemble (Inès, sa sœur), connexion de l'agenda (simulée).
+  - Les 3 profils partagent les mêmes données pendant la visite : ce que Thomas propose arrive chez Hélène, ce qu'Hélène valide arrive chez Lucas. Rien n'est enregistré (tout revient à zéro en rechargeant la page).
+- Correction : la bande des dates ne s'écrase plus quand la page est longue.
+- Tests : `test_coordinateur.js`, `test_serviteur.js`, et la chaîne Thomas → Hélène → Lucas dans `test_phone.js`. 486 vérifications, toutes vertes.
 
 **Décisions**
 - Le dépôt, le journal, les messages et le suivi ne parlent que de l'appli (changements, décisions communes, événements techniques). Les recherches et idées de chacun restent dans son propre projet Claude.
@@ -24,7 +31,10 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 **Reste à faire**
 - Manuel : répondre à la question WhatsApp (`MESSAGES.md`).
 - Manuel : première séance, test visuel (actu "Test d'envoi réussi"), mise en place de son suivi automatique (voir `MESSAGES.md`).
-- Écran coordinateur, dans l'ordre : profil test d'un coordinateur avec son périmètre et les modifications à valider côté responsable ; compte rendu de service ; côté serviteur (grille des dispos, réponse dispo / pas dispo, échange, choix en cas de conflit signalé).
+- Compte rendu de service après le culte (côté responsable).
+- Collecte des dispos lancée par le coordinateur, et lecture des dispos reçues dans sa liste "Choisir".
+- Côté coordinateur : valider un échange entre deux serviteurs (Oui / Non).
+- Durée des réunions de prière dans les agendas : à préciser (2h par défaut en attendant).
 
 ## 2026-11-20 · Pablo (avec Claude) · création du dépôt
 

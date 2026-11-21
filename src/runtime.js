@@ -18,12 +18,18 @@
 
   /*__COMPONENTS__*/
 
-  const COMPONENTS = { accueil: AccueilComponent, planning: PlanningComponent };
+  const COMPONENTS = { accueil: AccueilComponent, planning: PlanningComponent, serviteur: ServiteurComponent };
   const TEMPLATES = {
     accueil: document.getElementById('tpl-accueil').content,
-    planning: document.getElementById('tpl-planning').content
+    planning: document.getElementById('tpl-planning').content,
+    serviteur: document.getElementById('tpl-serviteur').content
   };
-  const ROUTES = { 'Accueil.dc.html': 'accueil', 'Planning.dc.html': 'planning' };
+  const ROUTES = {
+    'Accueil.dc.html': ['accueil', {}],
+    'Planning.dc.html': ['planning', {}],
+    'Coordinateur.dc.html': ['planning', { profil: 'coordinateur' }],
+    'Serviteur.dc.html': ['serviteur', {}]
+  };
   const WHOLE = /^\s*\{\{\s*([^}]+?)\s*\}\}\s*$/;
   let current = null, inst = null, lastSig = '';
 
@@ -127,10 +133,10 @@
       }
     }
   }
-  function mount(name) {
+  function mount(name, props) {
     if (inst && inst.componentWillUnmount) inst.componentWillUnmount();
     current = name;
-    inst = new COMPONENTS[name]({});
+    inst = new COMPONENTS[name](props || {});
     lastSig = '';
     render();
     if (inst.componentDidMount) inst.componentDidMount();
@@ -139,7 +145,7 @@
     const a = e.target.closest('a[href]');
     if (!a) return;
     const h = a.getAttribute('href');
-    if (ROUTES[h]) { e.preventDefault(); mount(ROUTES[h]); return; }
+    if (ROUTES[h]) { e.preventDefault(); mount(ROUTES[h][0], ROUTES[h][1]); app.scrollTop = 0; return; }
     if (h.charAt(0) === '#') {
       e.preventDefault();
       const t = app.querySelector(h);

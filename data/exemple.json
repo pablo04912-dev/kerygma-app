@@ -181,7 +181,11 @@
      "Adrien"
     ]
    },
-   "cha": {},
+   "cha": {
+    "gac": [
+     "Lucas"
+    ]
+   },
    "bou": {
     "direction": [
      "Noé"
@@ -546,5 +550,39 @@
  "freqMax": {
   "Inès": 2,
   "Hugo": 2
+ },
+ "propositions": [
+  {
+   "coord": "Thomas",
+   "date": "29/11",
+   "lieu": "stm",
+   "poste": "voix",
+   "nom": "Pierre"
+  },
+  {
+   "coord": "Thomas",
+   "date": "29/11",
+   "lieu": "stm",
+   "poste": "batterie",
+   "nom": "Bérénice"
+  }
+ ],
+ "presence": {
+  "louange": {
+   "stm": "9h",
+   "cha": "9h",
+   "bou": "14h"
+  }
+ },
+ "serviteurDemo": {
+  "nom": "Lucas",
+  "reponses": {
+   "29/11|stm|gac": "dispo",
+   "13/12|stm|gac": "dispo"
+  },
+  "lie": {
+   "nom": "Inès",
+   "lien": "sœur"
+  }
  }
 }
