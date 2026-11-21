@@ -138,6 +138,21 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <button type="button" onClick="{{ouvrirCR}}" style="align-self: flex-start; min-height: 44px; margin-top: 2px; padding: 0 16px; border-radius: 12px; border: {{crCarteBtnBorder}}; background: {{crCarteBtnBg}}; color: {{crCarteBtnFg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{crCarteBouton}}</button>
 </section>
 </sc-if>
+<sc-for list="{{echangesAValider}}" as="ex" hint-placeholder-count="1">
+<section aria-label="Échange à valider" style="background: #FFF8EC; border: 1px solid #F0D9B0; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; color: #8A5300">Échange à valider</span>
+<span style="font-size: 17px; font-weight: 700">{{ex.titre}}</span>
+<span style="font-size: 14px; line-height: 1.45; color: #3D4049">{{ex.texte}}</span>
+<span style="display: flex; gap: 8px; margin-top: 4px">
+<button type="button" onClick="{{ex.oui}}" style="flex: 1; min-height: 44px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Oui, valider</button>
+<button type="button" onClick="{{ex.non}}" style="flex: 1; min-height: 44px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #3D4049; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Non</button>
+</span>
+<span style="font-size: 13px; line-height: 1.4; color: #5B5F6B">Oui : le planning change et les agendas des deux se mettent à jour.</span>
+</section>
+</sc-for>
+<sc-for list="{{echangesAttente}}" as="ea" hint-placeholder-count="1">
+<p role="status" style="margin: 0; padding: 10px 14px; border-radius: 14px; background: #F1EFEA; color: #3D4049; font-size: 14px; line-height: 1.45">{{ea.texte}}</p>
+</sc-for>
 <sc-if value="{{aPropAttente}}" hint-placeholder-val="{{false}}">
 <p role="status" style="margin: 0; padding: 12px 14px; border-radius: 14px; background: #FFF8EC; border: 1px solid #F0D9B0; color: #8A5300; font-size: 14px; line-height: 1.45; font-weight: 600">{{propAttente}}</p>
 </sc-if>
@@ -281,6 +296,31 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-if>
 <sc-if value="{{showEquipe}}" hint-placeholder-val="{{false}}">
 <h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Équipe</h1>
+<sc-if value="{{aCollecte}}" hint-placeholder-val="{{false}}">
+<section aria-label="Dispos du mois" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 14px 0 4px; display: flex; flex-direction: column; gap: 6px">
+<span style="padding: 0 16px; font-size: 17px; font-weight: 700">{{colTitre}}</span>
+<span style="padding: 0 16px; font-size: 14px; line-height: 1.45; color: #5B5F6B">{{colTexte}}</span>
+<sc-if value="{{colLancee}}" hint-placeholder-val="{{false}}">
+<span aria-hidden="true" style="display: block; margin: 2px 16px 0; height: 6px; border-radius: 3px; background: #E7E3DA; overflow: hidden">
+<span style="display: block; height: 6px; border-radius: 3px; background: {{colBarColor}}; width: {{colPct}}"></span>
+</span>
+</sc-if>
+<sc-if value="{{colPasLancee}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{lancerCollecte}}" style="align-self: flex-start; margin: 4px 16px 10px; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{colBouton}}</button>
+</sc-if>
+<sc-if value="{{colPeutRelancer}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{relancer}}" style="align-self: flex-start; margin: 4px 16px 6px; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{colRelanceBouton}}</button>
+</sc-if>
+<sc-if value="{{colLancee}}" hint-placeholder-val="{{false}}">
+<sc-for list="{{colPersonnes}}" as="cp" hint-placeholder-count="5">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 44px; padding: 6px 16px; border-top: 1px solid #EFEBE3">
+<span style="font-size: 15px; font-weight: 600">{{cp.nom}}</span>
+<span style="font-size: 14px; text-align: right; color: {{cp.color}}">{{cp.resume}}</span>
+</div>
+</sc-for>
+</sc-if>
+</section>
+</sc-if>
 <sc-if value="{{eqMins}}" hint-placeholder-val="{{true}}">
 <div role="group" aria-label="Ministère" style="display: flex; flex-wrap: wrap; gap: 8px">
 <sc-for list="{{mins}}" as="m" hint-placeholder-count="2">
@@ -518,6 +558,8 @@ class Component extends DCLogic {
       PL.forEach(function (p) {
         var arr = (base[p.id] || []).slice();
         var k = cle('dimanche', d, l, 'louange', p.id);
+        var ex = S.echanges[d + '|' + l + '|' + p.id];
+        if (ex && ex.etat === 'validee') arr = arr.map(function (n) { return n === ex.de ? ex.par : n; }).filter(function (n, i, a) { return a.indexOf(n) === i; });
         var ajoute = function (n) { if (n && arr.indexOf(n) < 0) arr.push(n); };
         ajoute(picks[k]);
         ajoute(S.invitations[k] && S.invitations[k].nom);
@@ -707,6 +749,46 @@ class Component extends DCLogic {
       };
     });
 
+    // Échanges entre serviteurs, validés par le coordinateur du lieu
+    function posteLabel(id) { var P1 = PL.find(function (x) { return x.id === id; }); return P1 ? P1.label : id; }
+    var echangesAValider = [], echangesAttente = [];
+    Object.keys(S.echanges).forEach(function (k) {
+      var ex = S.echanges[k];
+      if (!coord || ex.lieu !== 'stm') return;
+      if (ex.etat === 'accepte') echangesAValider.push({
+        titre: posteLabel(ex.poste) + ' · dimanche ' + long(ex.date),
+        texte: ex.de + ' n’est pas dispo et a demandé à ' + ex.par + ' de prendre sa place. ' + ex.par + ' a accepté.',
+        oui: function () { self.validerEchange(k, true); },
+        non: function () { self.validerEchange(k, false); }
+      });
+      else if (ex.etat === 'attente') echangesAttente.push({
+        texte: 'Échange en cours : ' + ex.de + ' a demandé à ' + ex.par + ' de prendre sa place (' + posteLabel(ex.poste).toLowerCase() + ', ' + court(ex.date) + '). Pas encore de réponse de ' + ex.par + '.'
+      });
+    });
+
+    // Collecte des dispos du mois (décembre)
+    var DEC = DIMS.filter(function (d) { return d.split('/')[1] === '12'; });
+    var equipeLieu = [];
+    TOUS_DIMS.forEach(function (d) {
+      var e = equipeDim(d, 'stm');
+      PL.forEach(function (p) { (e[p.id] || []).forEach(function (n) { if (n !== 'Thomas' && equipeLieu.indexOf(n) < 0) equipeLieu.push(n); }); });
+    });
+    equipeLieu.sort(function (a, b) { return a.localeCompare(b, 'fr'); });
+    var col = S.collecte['12'] || null;
+    function aRepondu(n) { var g = S.dispos[n] || {}; return DEC.every(function (d) { return !!g[d]; }); }
+    var repondus = equipeLieu.filter(aRepondu);
+    var colPersonnes = equipeLieu.map(function (n) {
+      if (!aRepondu(n)) return { nom: n, resume: 'Pas encore répondu', color: GRIS, ordre: 1 };
+      var g = S.dispos[n];
+      var pas = DEC.filter(function (d) { return g[d] === 'pasdispo'; }).map(court);
+      var sib = DEC.filter(function (d) { return g[d] === 'sibesoin'; }).map(court);
+      var morceaux = [];
+      if (pas.length) morceaux.push('Pas dispo : ' + pas.join(', '));
+      if (sib.length) morceaux.push('Si besoin : ' + sib.join(', '));
+      return { nom: n, resume: morceaux.length ? morceaux.join(' · ') : 'Dispo tous les dimanches', color: pas.length ? ROUGE : (sib.length ? AMBRE : VERT), ordre: 0 };
+    }).sort(function (a, b) { return a.ordre - b.ordre; });
+    var manquants = equipeLieu.length - repondus.length;
+
     // Compte rendu de service (dernier dimanche passé)
     function prevuCR(l) {
       var e = (HIST[CR_DATE] || {})[l] || {};
@@ -798,7 +880,9 @@ class Component extends DCLogic {
         var force = !!forces[k] || !!(inv && inv.raison);
         var prop = propEnAttente(k);
         var sous = '', sousColor = AMBRE;
-        if (coord && S.decisions[k] === 'validee') { sous = 'Validé par Hélène · invitation envoyée'; sousColor = VERT; }
+        var exL = S.echanges[dateDim + '|' + L.id + '|' + p.id];
+        if (exL && exL.etat === 'validee') { sous = 'Échange : ' + exL.de + ' → ' + exL.par + ' (' + exL.de + ' pas dispo)'; sousColor = VERT; }
+        else if (coord && S.decisions[k] === 'validee') { sous = 'Validé par Hélène · invitation envoyée'; sousColor = VERT; }
         else if (invite) { sous = force ? 'Invitation envoyée · conflit signalé' : 'Invitation envoyée'; sousColor = force ? ROUGE : AMBRE; }
         else if (coord && prop) { sous = 'Proposé · en attente de validation par Hélène'; }
         else if (coord && S.decisions[k] === 'refusee' && arr.length === 0) { sous = 'Refusé par Hélène : propose quelqu’un d’autre'; sousColor = ROUGE; }
@@ -896,7 +980,9 @@ class Component extends DCLogic {
             if (etat === 'libre') etat = 'compatible';
           }
         });
-        if ((INDISPOS[n] || []).indexOf(dateDim) >= 0) {
+        var dispoN = (S.dispos[n] || {})[dateDim];
+        if (dispoN === 'sibesoin') tags.push(tag('Si besoin seulement', T_ORANGE));
+        if ((INDISPOS[n] || []).indexOf(dateDim) >= 0 || dispoN === 'pasdispo') {
           tags.push(tag('Indisponible ce jour-là', T_ROUGE));
           if (etat !== 'conflit') etat = 'indispo';
         }
@@ -1015,6 +1101,23 @@ class Component extends DCLogic {
       showLieux: tab === 'planning' && ecran === 'lieux',
       showDetail: tab === 'planning' && ecran === 'detail',
       showCR: tab === 'planning' && ecran === 'cr',
+      echangesAValider: echangesAValider,
+      echangesAttente: echangesAttente,
+      aCollecte: coord,
+      colTitre: 'Dispos de décembre',
+      colTexte: col
+        ? 'Demande envoyée à ' + equipeLieu.length + ' personnes de l’équipe louange de Saint-Maurice · ' + repondus.length + ' réponse' + (repondus.length > 1 ? 's' : '') + ' sur ' + equipeLieu.length + (col.relances ? ' · rappel envoyé' : '') + '.'
+        : 'Demande à l’équipe louange de Saint-Maurice (' + equipeLieu.length + ' personnes) de remplir la grille de décembre : dispo, si besoin, pas dispo. ' + repondus.length + ' l’ont déjà fait à l’avance.',
+      colLancee: !!col,
+      colPasLancee: !col,
+      colBouton: 'Lancer la collecte',
+      lancerCollecte: function () { self.lancerCollecte(equipeLieu.length); },
+      colPct: equipeLieu.length ? Math.round(repondus.length / equipeLieu.length * 100) + '%' : '0%',
+      colBarColor: manquants ? accent : '#1F8A4C',
+      colPeutRelancer: !!col && manquants > 0,
+      colRelanceBouton: 'Relancer les ' + manquants + ' sans réponse',
+      relancer: function () { self.relancer(manquants); },
+      colPersonnes: colPersonnes,
       aCRs: !coord && type === 'dimanche' && min === 'louange',
       crListeTitre: 'Comptes rendus · dimanche ' + long(CR_DATE),
       crListe: crListe,
@@ -1158,6 +1261,27 @@ class Component extends DCLogic {
     var self = this;
     this._t = setTimeout(function () { self.setState({ toast: '' }); }, 3500);
   }
+  validerEchange(k, oui) {
+    var S = partage();
+    var ex = S.echanges[k];
+    if (!ex) return;
+    ex.etat = oui ? 'validee' : 'refusee';
+    var mois = { '11': 'novembre', '12': 'décembre' };
+    var jour = parseInt(ex.date.split('/')[0], 10) + ' ' + mois[ex.date.split('/')[1]];
+    this.flash({}, oui
+      ? 'Échange validé : ' + ex.par + ' remplace ' + ex.de + ' le ' + jour + '. Les agendas se mettent à jour.'
+      : 'Échange refusé : ' + ex.de + ' garde son service du ' + jour + ' et reçoit ta réponse.');
+  }
+  lancerCollecte(n) {
+    var S = partage();
+    S.collecte['12'] = { par: 'Thomas', lieu: 'stm', relances: 0 };
+    this.flash({}, 'Collecte lancée : ' + n + ' personnes reçoivent la grille de décembre.');
+  }
+  relancer(n) {
+    var S = partage();
+    if (S.collecte['12']) S.collecte['12'].relances = (S.collecte['12'].relances || 0) + 1;
+    this.flash({}, 'Rappel envoyé aux ' + n + ' personnes qui n’ont pas répondu.');
+  }
   envoyerCR(date, lieu, prevus) {
     var s = this.state || {};
     var S = partage();
@@ -1211,6 +1335,16 @@ function partage(DATA) {
     ((DATA && DATA.comptesRendus) || []).forEach(function (c) { S.comptesRendus[c.date + '|' + c.lieu + '|louange'] = Object.assign({}, c); });
   }
   if (!S.mercis) S.mercis = [];
+  if (!S.echanges) {
+    S.echanges = {};
+    ((DATA && DATA.echanges) || []).forEach(function (e) { S.echanges[e.date + '|' + e.lieu + '|' + e.poste] = Object.assign({}, e); });
+  }
+  if (!S.dispos) {
+    S.dispos = {};
+    var D0 = (DATA && DATA.dispos) || {};
+    Object.keys(D0).forEach(function (n) { S.dispos[n] = Object.assign({}, D0[n]); });
+  }
+  if (!S.collecte) S.collecte = {};
   if (!S.reponses) S.reponses = {};
   return S;
 }

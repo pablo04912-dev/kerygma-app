@@ -38,6 +38,23 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{mc.texte}}</span>
 </section>
 </sc-for>
+<sc-for list="{{demandesEchange}}" as="de" hint-placeholder-count="1">
+<article aria-label="Demande d'échange" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; color: #8A5300">Demande d'échange</span>
+<span style="font-size: 18px; font-weight: 700">{{de.titre}}</span>
+<span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{de.texte}}</span>
+<span style="font-size: 14px; color: #5B5F6B">{{de.horaire}}</span>
+<sc-if value="{{de.enAttente}}" hint-placeholder-val="{{true}}">
+<span style="display: flex; gap: 8px; margin-top: 4px">
+<button type="button" onClick="{{de.accepter}}" style="flex: 1; min-height: 48px; border-radius: 12px; border: 0; background: #146C3A; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">J'accepte</button>
+<button type="button" onClick="{{de.refuser}}" style="flex: 1; min-height: 48px; border-radius: 12px; border: 1px solid #E3B4B4; background: #FFFFFF; color: #A12626; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Je ne peux pas</button>
+</span>
+</sc-if>
+<sc-if value="{{de.accepte}}" hint-placeholder-val="{{false}}">
+<span style="margin-top: 2px; padding: 10px 12px; border-radius: 12px; background: #FDF0DC; color: #8A5300; font-size: 14px; font-weight: 600; line-height: 1.4">{{de.etat}}</span>
+</sc-if>
+</article>
+</sc-for>
 <sc-if value="{{aRepondre}}" hint-placeholder-val="{{true}}">
 <h2 style="margin: 6px 0 0; font-size: 17px; font-weight: 700">{{repondreTitre}}</h2>
 <sc-for list="{{demandes}}" as="dm" hint-placeholder-count="2">
@@ -69,6 +86,9 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
 <span style="font-size: 16px; font-weight: 600">{{sv.titre}}</span>
 <span style="font-size: 14px; color: #5B5F6B">{{sv.sous}}</span>
+<sc-if value="{{sv.aNote}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 13px; font-weight: 600; color: {{sv.noteColor}}">{{sv.note}}</span>
+</sc-if>
 </span>
 <span style="flex: 0 0 auto; font-size: 13px; font-weight: 600; padding: 4px 9px; border-radius: 8px; background: {{sv.statutBg}}; color: {{sv.statutFg}}">{{sv.statut}}</span>
 </button>
@@ -276,11 +296,13 @@ class Component extends DCLogic {
     var tab = s.tab || 'planning';
     var vue = s.vue || 'accueil';
     var rep = s.rep || {};
-    var echanges = s.echanges || {};
     var garder = s.garder || {};
     var sheet = s.sheet || null;
     var toast = s.toast || '';
-    var grilleEtat = s.grille || {};
+    var CODE = { dispo: 1, sibesoin: 2, pasdispo: 3 };
+    var mesDispos = S.dispos[NOM] || null;
+    var grilleEtat = s.grille || (function () { var g = {}; Object.keys(mesDispos || {}).forEach(function (d) { g[d] = CODE[mesDispos[d]] || 0; }); return g; })();
+    var collecte = S.collecte['12'] || null;
     var freq = s.freq || '2 fois par mois';
     var ensemble = s.ensemble || 'Pas de préférence';
     var agenda = s.agenda || '';
@@ -288,13 +310,14 @@ class Component extends DCLogic {
     var MOIS = { '11': 'novembre', '12': 'décembre' };
     var MOIS_C = { '11': 'nov', '12': 'déc' };
     var DIMS = ['22/11', '29/11', '06/12', '13/12', '20/12', '27/12'];
+    var DEC = DIMS.filter(function (d) { return d.split('/')[1] === '12'; });
     function jourDe(d) { return parseInt(d.split('/')[0], 10); }
     function long(d) { return jourDe(d) + ' ' + MOIS[d.split('/')[1]]; }
     function court(d) { return jourDe(d) + ' ' + MOIS_C[d.split('/')[1]]; }
     var LIEUX = [
-      { id: 'stm', nom: 'Saint-Maurice', heure: '10h30', creneau: 'matin', fin: '13h' },
-      { id: 'cha', nom: 'Champigny', heure: '10h30', creneau: 'matin', fin: '13h' },
-      { id: 'bou', nom: 'Boulogne', heure: '15h30', creneau: 'aprem', fin: '18h' }
+      { id: 'stm', nom: 'Saint-Maurice', heure: '10h30', creneau: 'matin', fin: '13h', coord: 'Thomas' },
+      { id: 'cha', nom: 'Champigny', heure: '10h30', creneau: 'matin', fin: '13h', coord: 'Sylvie' },
+      { id: 'bou', nom: 'Boulogne', heure: '15h30', creneau: 'aprem', fin: '18h', coord: 'Marco' }
     ];
     function lieu(id) { return LIEUX.find(function (x) { return x.id === id; }); }
     var PL = [
@@ -313,6 +336,8 @@ class Component extends DCLogic {
       var out = {};
       PL.forEach(function (p) {
         var arr = (base[p.id] || []).slice();
+        var ex = S.echanges[d + '|' + l + '|' + p.id];
+        if (ex && ex.etat === 'validee') arr = arr.map(function (n) { return n === ex.de ? ex.par : n; }).filter(function (n, i, a) { return a.indexOf(n) === i; });
         var inv = S.invitations['dimanche|' + d + '|' + l + '|louange|' + p.id];
         if (inv && arr.indexOf(inv.nom) < 0) arr.push(inv.nom);
         out[p.id] = arr;
@@ -326,11 +351,17 @@ class Component extends DCLogic {
       LIEUX.forEach(function (L) {
         var eq = equipeDe(d, L.id);
         PL.forEach(function (p) {
-          if (eq[p.id].indexOf(NOM) >= 0) tous.push({ cle: d + '|' + L.id + '|' + p.id, date: d, lieu: L, poste: p });
+          var k0 = d + '|' + L.id + '|' + p.id;
+          var ex0 = S.echanges[k0];
+          if (eq[p.id].indexOf(NOM) >= 0) tous.push({ cle: k0, date: d, lieu: L, poste: p });
+          else if (ex0 && ex0.de === NOM && ex0.etat === 'validee') tous.push({ cle: k0, date: d, lieu: L, poste: p, remplacePar: ex0.par });
         });
       });
     });
-    function actif(sv) { return reponseDe(sv.cle) !== 'pasdispo' && !echanges[sv.cle]; }
+    // Échange demandé par Lucas pour ce service (attente, accepte, refusee, refusepar)
+    function monEchange(k) { var e = S.echanges[k]; return e && e.de === NOM && e.etat !== 'validee' ? e : null; }
+    function echangeEnCours(k) { var e = monEchange(k); return !!e && (e.etat === 'attente' || e.etat === 'accepte'); }
+    function actif(sv) { return !sv.remplacePar && reponseDe(sv.cle) !== 'pasdispo' && !echangeEnCours(sv.cle); }
     function conflitDe(sv) {
       if (!actif(sv)) return null;
       return tous.filter(function (o) { return o !== sv && o.date === sv.date && o.lieu.creneau === sv.lieu.creneau && o.lieu.id !== sv.lieu.id && actif(o); })[0] || null;
@@ -338,8 +369,13 @@ class Component extends DCLogic {
     function presence(L) { return ((DATA.presence || {}).louange || {})[L.id] || ''; }
     function horaire(sv) { var p = presence(sv.lieu); return (p ? 'Présence ' + p + ' · ' : 'Culte ' + sv.lieu.heure + ' · ') + 'fin vers ' + sv.lieu.fin; }
     function statut(sv) {
+      if (sv.remplacePar) return { texte: 'Remplacé', c: GRIS, note: sv.remplacePar + ' prend ta place (échange validé)', noteC: GRIS.fg };
       if (garder[sv.cle]) return { texte: 'Les deux gardés', c: VERT };
-      if (echanges[sv.cle]) return { texte: 'Échange demandé', c: ORANGE };
+      var ex = monEchange(sv.cle);
+      if (ex && ex.etat === 'attente') return { texte: 'Échange demandé', c: ORANGE, note: 'Pas encore de réponse de ' + ex.par, noteC: ORANGE.fg };
+      if (ex && ex.etat === 'accepte') return { texte: 'Échange demandé', c: ORANGE, note: ex.par + ' a accepté · ' + sv.lieu.coord + ' doit valider', noteC: ORANGE.fg };
+      if (ex && ex.etat === 'refusee') return { texte: 'Pas dispo', c: ROUGE, note: sv.lieu.coord + ' a refusé l’échange avec ' + ex.par, noteC: ROUGE.fg };
+      if (ex && ex.etat === 'refusepar') return { texte: 'Pas dispo', c: ROUGE, note: ex.par + ' ne peut pas : propose quelqu’un d’autre', noteC: ROUGE.fg };
       var r = reponseDe(sv.cle);
       if (r === 'dispo') return { texte: 'Confirmé', c: VERT };
       if (r === 'pasdispo') return { texte: 'Pas dispo', c: ROUGE };
@@ -347,7 +383,7 @@ class Component extends DCLogic {
     }
     function ouvrirSheet(type, k) { return function () { self.setState({ sheet: { type: type, cle: k }, texte: '', erreur: '' }); }; }
 
-    var demandesSv = tous.filter(function (sv) { return !reponseDe(sv.cle) && !garder[sv.cle] && !echanges[sv.cle]; });
+    var demandesSv = tous.filter(function (sv) { return !sv.remplacePar && !reponseDe(sv.cle) && !garder[sv.cle] && !echangeEnCours(sv.cle); });
     var demandes = demandesSv.map(function (sv) {
       var c = conflitDe(sv);
       return {
@@ -365,13 +401,33 @@ class Component extends DCLogic {
       };
     });
 
+    var demandesEchange = Object.keys(S.echanges).filter(function (k) {
+      var e = S.echanges[k];
+      return e.par === NOM && (e.etat === 'attente' || e.etat === 'accepte');
+    }).map(function (k) {
+      var e = S.echanges[k];
+      var L2 = lieu(e.lieu);
+      var sv2 = { lieu: L2 };
+      return {
+        titre: 'Dimanche ' + long(e.date) + ' · ' + L2.nom,
+        texte: e.de + ' n’est pas dispo et te demande de prendre sa place (' + poste(e.poste).label.toLowerCase() + ').',
+        horaire: horaire(sv2),
+        enAttente: e.etat === 'attente',
+        accepte: e.etat === 'accepte',
+        etat: 'Tu as accepté. ' + L2.coord + ' doit valider l’échange, puis le service s’ajoute à ton agenda.',
+        accepter: function () { self.repondreEchange(k, true); },
+        refuser: function () { self.repondreEchange(k, false); }
+      };
+    });
+
     var services = tous.map(function (sv, i) {
       var st = statut(sv);
       return {
         titre: 'Dim. ' + court(sv.date) + ' · ' + sv.lieu.nom,
         sous: sv.poste.label + ' · ' + horaire(sv).toLowerCase(),
         statut: st.texte, statutBg: st.c.bg, statutFg: st.c.fg,
-        aRemplacer: reponseDe(sv.cle) === 'pasdispo' && !echanges[sv.cle],
+        aNote: !!st.note, note: st.note || '', noteColor: st.noteC || '#5B5F6B',
+        aRemplacer: !sv.remplacePar && reponseDe(sv.cle) === 'pasdispo' && !echangeEnCours(sv.cle),
         remplacer: ouvrirSheet('remplacant', sv.cle),
         ouvrir: function () { self.setState({ vue: 'service', svc: sv.cle }); },
         sep: i === tous.length - 1 ? 'transparent' : '#EFEBE3'
@@ -395,7 +451,6 @@ class Component extends DCLogic {
       return out;
     }
 
-    var DEC = DIMS.filter(function (d) { return d.split('/')[1] === '12'; });
     var ETATS = [
       { label: 'Pas répondu', c: GRIS, border: '#D6D1C6' },
       { label: 'Dispo', c: VERT, border: '#9CCFB0' },
@@ -488,9 +543,10 @@ class Component extends DCLogic {
       demandes: demandes,
       services: services,
       mercis: mercis,
-      dispoTexte: s.dispoEnvoyees ? 'Envoyées. Tu peux encore les modifier.' : 'Pas encore envoyées : Thomas prépare le planning de décembre.',
-      dispoColor: s.dispoEnvoyees ? '#146C3A' : '#8A5300',
-      dispoBouton: s.dispoEnvoyees ? 'Modifier mes dispos' : 'Remplir mes dispos',
+      demandesEchange: demandesEchange,
+      dispoTexte: mesDispos ? 'Envoyées à Thomas. Tu peux encore les modifier.' : (collecte ? 'Thomas demande tes dispos de décembre pour préparer le planning.' : 'Pas encore envoyées : Thomas prépare le planning de décembre.'),
+      dispoColor: mesDispos ? '#146C3A' : (collecte ? '#A12626' : '#8A5300'),
+      dispoBouton: mesDispos ? 'Modifier mes dispos' : 'Remplir mes dispos',
       ouvrirDispos: function () { self.setState({ vue: 'dispos', erreurDispos: '' }); },
       agendaNote: agenda ? 'Tes services confirmés sont dans ton agenda et se mettent à jour tout seuls.' : 'Connecte ton agenda dans Moi : tes services confirmés s’y ajouteront tout seuls.',
       retour: function () { self.setState({ vue: 'accueil' }); },
@@ -507,7 +563,11 @@ class Component extends DCLogic {
       envoyerDispos: function () {
         var g = (self.state && self.state.grille) || {};
         if (DEC.some(function (d) { return !g[d]; })) { self.setState({ erreurDispos: 'Réponds pour chaque date, ou touche « Je n’ai pas d’indispo ».' }); return; }
-        self.flash({ dispoEnvoyees: true, vue: 'accueil' }, 'Merci ! Thomas voit tes dispos pour préparer décembre.');
+        var NOMS = { 1: 'dispo', 2: 'sibesoin', 3: 'pasdispo' };
+        var envoi = {};
+        DEC.forEach(function (d) { envoi[d] = NOMS[g[d]]; });
+        partage().dispos[NOM] = envoi;
+        self.flash({ vue: 'accueil' }, 'Merci ! Thomas voit tes dispos pour préparer décembre.');
       },
       aErreurDispos: !!s.erreurDispos,
       erreurDispos: s.erreurDispos || '',
@@ -558,9 +618,20 @@ class Component extends DCLogic {
     else this.setState({ rep: rep, sheet: { type: 'remplacant', cle: k }, texte: '', erreur: '' });
   }
   echanger(k, nom) {
-    var e = Object.assign({}, (this.state || {}).echanges || {});
-    e[k] = nom;
-    this.flash({ echanges: e, sheet: null }, 'Demande envoyée à ' + nom + '. S’il accepte, Thomas valide l’échange et ton agenda se met à jour.');
+    var S = partage();
+    var parts = k.split('|');
+    var COORD = { stm: 'Thomas', cha: 'Sylvie', bou: 'Marco' };
+    S.echanges[k] = { date: parts[0], lieu: parts[1], poste: parts[2], de: 'Lucas', par: nom, etat: 'attente' };
+    this.flash({ sheet: null }, 'Demande envoyée à ' + nom + '. Si ' + nom + ' accepte, ' + COORD[parts[1]] + ' valide l’échange et ton agenda se met à jour.');
+  }
+  repondreEchange(k, oui) {
+    var S = partage();
+    var e = S.echanges[k];
+    if (!e) return;
+    var COORD = { stm: 'Thomas', cha: 'Sylvie', bou: 'Marco' };
+    e.etat = oui ? 'accepte' : 'refusepar';
+    if (oui) S.reponses[k] = 'dispo';
+    this.flash({}, oui ? 'Merci ! ' + COORD[e.lieu] + ' doit valider l’échange, puis le service s’ajoute à ton agenda.' : 'Réponse envoyée à ' + e.de + '.');
   }
   flash(patch, msg) {
     this.setState(Object.assign({}, patch, { toast: msg }));
@@ -587,6 +658,16 @@ function partage(DATA) {
     ((DATA && DATA.comptesRendus) || []).forEach(function (c) { S.comptesRendus[c.date + '|' + c.lieu + '|louange'] = Object.assign({}, c); });
   }
   if (!S.mercis) S.mercis = [];
+  if (!S.echanges) {
+    S.echanges = {};
+    ((DATA && DATA.echanges) || []).forEach(function (e) { S.echanges[e.date + '|' + e.lieu + '|' + e.poste] = Object.assign({}, e); });
+  }
+  if (!S.dispos) {
+    S.dispos = {};
+    var D0 = (DATA && DATA.dispos) || {};
+    Object.keys(D0).forEach(function (n) { S.dispos[n] = Object.assign({}, D0[n]); });
+  }
+  if (!S.collecte) S.collecte = {};
   if (!S.reponses) S.reponses = {};
   return S;
 }

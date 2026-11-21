@@ -237,6 +237,31 @@ function propre(label) {
   await click(btn('Envoyer'), 'envoyer dispos');
   assert(/Thomas voit tes dispos/.test(txt()), 'dispos envoyées');
   for (const nom of ['Équipe', 'Actus', 'Moi', 'Planning']) { await click(nav(nom), 'Lucas ' + nom); propre('Lucas ' + nom); }
+  // Échange : Adrien demande à Lucas de prendre sa place, Lucas accepte, Thomas valide
+  const demEch = $('article[aria-label="Demande d\'échange"]');
+  assert(!!demEch && /Adrien n’est pas dispo/.test(demEch.textContent), 'Lucas reçoit la demande d’échange d’Adrien');
+  await click(btn("J'accepte", demEch), 'accepter l’échange');
+  assert(/Thomas doit valider/.test(txt()) && !btn("J'accepte"), 'échange accepté, en attente de Thomas');
+  propre('échange accepté');
+  await sortir();
+  await entrer('coordinateur');
+  const exAdrien = $$('section[aria-label="Échange à valider"]').find(x => /Adrien/.test(x.textContent));
+  assert(!!exAdrien && /Lucas a accepté/.test(exAdrien.textContent), 'Thomas voit l’échange à valider');
+  await click(btn('Oui, valider', exAdrien), 'valider l’échange');
+  assert(/Échange validé : Lucas remplace Adrien le 22 novembre/.test(txt()), 'échange validé');
+  await click(dates()[0], 'Thomas 22 nov');
+  const voix22 = $$('section[aria-label="Postes"] > div').find(d => /Voix/.test(d.textContent));
+  assert(voix22 && /Lucas/.test(voix22.textContent) && /Échange : Adrien → Lucas \(Adrien pas dispo\)/.test(voix22.textContent), 'planning du 22 nov changé');
+  propre('après échange');
+  // Collecte des dispos
+  await click(nav('Équipe'), 'Thomas équipe');
+  await click(btn('Lancer la collecte'), 'lancer la collecte');
+  const col = $('section[aria-label="Dispos du mois"]');
+  assert(!!col && /Collecte lancée/.test(txt()) && /5 réponses sur 14/.test(col.textContent), 'collecte lancée, Lucas a déjà répondu');
+  assert(/Lucas\s*Dispo tous les dimanches/.test(col.textContent), 'les dispos de Lucas arrivent chez Thomas');
+  await click(btn('Relancer les 9 sans réponse'), 'relancer');
+  assert(/Rappel envoyé aux 9 personnes/.test(txt()), 'relance envoyée');
+  propre('collecte');
   await sortir();
   assert(/Bienvenue chez Kerygma/.test(txt()), 'retour à l’accueil');
 

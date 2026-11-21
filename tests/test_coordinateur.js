@@ -163,5 +163,60 @@ assert(e.crLecture && e.crTextes.length === 3 && e.crAbsentsTexte === 'Pierre' &
 e.mins[1].pick(); e.retourCR(); e = H3.v('programme');
 assert(!e.aCRs, 'comptes rendus louange masqués sur le programme du culte');
 
+// 11. Échanges entre serviteurs : Thomas valide
+globalThis.__kerygmaPartage = undefined;
+const T4 = ouvrir(fichierCoord);
+let g = T4.v('Thomas échanges');
+assert(g.echangesAValider.length === 1 && g.echangesAValider[0].titre === 'Batterie · dimanche 6 décembre', 'un échange à valider : ' + (g.echangesAValider[0] || {}).titre);
+assert(/Bérénice n’est pas dispo et a demandé à Thaïs de prendre sa place\. Thaïs a accepté\./.test(g.echangesAValider[0].texte), 'texte de l’échange');
+assert(g.echangesAttente.length === 1 && /Adrien a demandé à Lucas/.test(g.echangesAttente[0].texte) && /Pas encore de réponse de Lucas/.test(g.echangesAttente[0].texte), 'échange en attente de réponse');
+g.echangesAValider[0].oui(); g = T4.v('échange validé');
+assert(g.echangesAValider.length === 0 && /Échange validé : Thaïs remplace Bérénice le 6 décembre/.test(g.toast), 'toast : ' + g.toast);
+g.dates[2].pick(); g = T4.v('6 déc');
+const bat = g.lignes.find(l => l.label === 'Batterie');
+assert(bat.nom === 'Thaïs' && bat.sous === 'Échange : Bérénice → Thaïs (Bérénice pas dispo)' && bat.sousColor === '#146C3A', 'planning changé : ' + bat.nom + ' / ' + bat.sous);
+const H4 = ouvrir(fichierHelene);
+let h4 = H4.v('Hélène voit l’échange');
+h4.dates[2].pick(); h4 = H4.v('Hélène 6 déc');
+h4.cartes[0].ouvrir(); h4 = H4.v('Hélène stm 6 déc');
+assert(h4.lignes.find(l => l.label === 'Batterie').nom === 'Thaïs' && /Bérénice → Thaïs/.test(h4.lignes.find(l => l.label === 'Batterie').sous), 'Hélène voit l’échange validé');
+assert(h4.echangesAValider.length === 0, 'Hélène n’a pas d’échange à valider (c’est le coordinateur)');
+globalThis.__kerygmaPartage.echanges['13/12|stm|piano'] = { date: '13/12', lieu: 'stm', poste: 'piano', de: 'Hugo', par: 'Camille', etat: 'accepte' };
+g = T4.v('deuxième échange');
+assert(g.echangesAValider.length === 1 && g.echangesAValider[0].titre === 'Piano · dimanche 13 décembre', 'nouvel échange à valider');
+g.echangesAValider[0].non(); g = T4.v('échange refusé');
+assert(globalThis.__kerygmaPartage.echanges['13/12|stm|piano'].etat === 'refusee' && /Hugo garde son service du 13 décembre/.test(g.toast), 'refus : ' + g.toast);
+g.dates[3].pick(); g = T4.v('13 déc');
+assert(g.lignes.find(l => l.label === 'Piano').nom === 'Hugo', 'refusé : le planning ne change pas');
+globalThis.__kerygmaPartage.echanges['06/12|cha|voix'] = { date: '06/12', lieu: 'cha', poste: 'voix', de: 'Joëlle', par: 'Mona', etat: 'accepte' };
+g = T4.v('échange à Champigny');
+assert(g.echangesAValider.length === 0, 'Thomas ne voit pas les échanges de Champigny');
+
+// 12. Collecte des dispos de décembre (15 personnes : l'équipe de Saint-Maurice, Thaïs comprise depuis l'échange validé)
+g.nav.equipe.pick(); g = T4.v('équipe Thomas collecte');
+assert(g.aCollecte && g.colPasLancee && !g.colLancee && g.colTitre === 'Dispos de décembre', 'carte de collecte');
+assert(/\(15 personnes\)/.test(g.colTexte) && /4 l’ont déjà fait à l’avance/.test(g.colTexte), 'texte avant lancement : ' + g.colTexte);
+g.lancerCollecte(); g = T4.v('collecte lancée');
+assert(g.colLancee && !g.colPasLancee && /Collecte lancée : 15 personnes/.test(g.toast), 'collecte lancée : ' + g.toast);
+assert(/4 réponses sur 15/.test(g.colTexte) && g.colPct === '27%', 'progression : ' + g.colTexte + ' ' + g.colPct);
+const resume = n => (g.colPersonnes.find(c => c.nom === n) || {}).resume;
+assert(resume('Adrien') === 'Si besoin : 20 déc' && resume('Bérénice') === 'Pas dispo : 6 déc, 27 déc' && resume('Chloé') === 'Pas dispo : 13 déc · Si besoin : 27 déc' && resume('Lucas') === 'Pas encore répondu', 'résumés des dispos');
+assert(g.colPersonnes.slice(0, 4).every(c => c.resume !== 'Pas encore répondu'), 'ceux qui ont répondu en premier');
+assert(g.colPeutRelancer && g.colRelanceBouton === 'Relancer les 11 sans réponse', 'bouton relancer');
+g.relancer(); g = T4.v('relance');
+assert(/Rappel envoyé aux 11 personnes/.test(g.toast) && /rappel envoyé/.test(g.colTexte), 'relance');
+globalThis.__kerygmaPartage.dispos.Lucas = { '06/12': 'dispo', '13/12': 'dispo', '20/12': 'dispo', '27/12': 'dispo' };
+g = T4.v('Lucas répond');
+assert(/5 réponses sur 15/.test(g.colTexte) && resume('Lucas') === 'Dispo tous les dimanches', 'réponse de Lucas reçue');
+assert(!H4.v('Hélène équipe').aCollecte, 'collecte réservée au coordinateur');
+// Les dispos reçues apparaissent dans la liste Choisir
+g.nav.planning.pick(); g = T4.v('planning');
+g.dates[5].pick(); g = T4.v('27 déc');
+globalThis.__kerygmaPartage.dispos['Thaïs'] = { '27/12': 'sibesoin' };
+g.lignes.find(l => l.label === 'Batterie').ouvrir(); g = T4.v('Choisir batterie 27 déc');
+const tagsDe = n => ((g.candLibres.find(c => c.nom === n) || {}).tags || []).map(t => t.texte);
+assert(tagsDe('Bérénice').indexOf('Indisponible ce jour-là') >= 0, 'Bérénice : pas dispo dans sa grille');
+assert(tagsDe('Thaïs').indexOf('Si besoin seulement') >= 0, 'Thaïs : si besoin');
+
 console.log(steps + ' états vérifiés');
 process.exit(report('Coordinateur') ? 1 : 0);

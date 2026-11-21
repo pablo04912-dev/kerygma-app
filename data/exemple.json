@@ -601,5 +601,49 @@
    "ameliorer": "Arriver un quart d'heure plus tôt pour les balances.",
    "merci": "equipe"
   }
- ]
+ ],
+ "echanges": [
+  {
+   "date": "06/12",
+   "lieu": "stm",
+   "poste": "batterie",
+   "de": "Bérénice",
+   "par": "Thaïs",
+   "etat": "accepte"
+  },
+  {
+   "date": "22/11",
+   "lieu": "stm",
+   "poste": "voix",
+   "de": "Adrien",
+   "par": "Lucas",
+   "etat": "attente"
+  }
+ ],
+ "dispos": {
+  "Chloé": {
+   "06/12": "dispo",
+   "13/12": "pasdispo",
+   "20/12": "dispo",
+   "27/12": "sibesoin"
+  },
+  "Pierre": {
+   "06/12": "pasdispo",
+   "13/12": "dispo",
+   "20/12": "dispo",
+   "27/12": "dispo"
+  },
+  "Adrien": {
+   "06/12": "dispo",
+   "13/12": "dispo",
+   "20/12": "sibesoin",
+   "27/12": "dispo"
+  },
+  "Bérénice": {
+   "06/12": "pasdispo",
+   "13/12": "dispo",
+   "20/12": "dispo",
+   "27/12": "pasdispo"
+  }
+ }
 }

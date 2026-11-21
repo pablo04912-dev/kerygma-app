@@ -46,6 +46,13 @@ def main():
     json_donnees = json.dumps(donnees, ensure_ascii=False, separators=(",", ":"))
     planning = lire("src/planning.template.html")
     serviteur = lire("src/serviteur.template.html")
+
+    # L'état partagé entre les 3 profils doit être le même dans les deux écrans
+    def fonction_partage(texte):
+        debut = texte.index("function partage(DATA) {")
+        return texte[debut:texte.index("</script>", debut)].strip()
+    if fonction_partage(planning) != fonction_partage(serviteur):
+        raise SystemExit("function partage() doit être identique dans planning.template.html et serviteur.template.html")
     for nom, texte in (("planning", planning), ("serviteur", serviteur)):
         if texte.count("__DATA__") != 1:
             raise SystemExit("__DATA__ doit apparaître une fois dans src/" + nom + ".template.html")

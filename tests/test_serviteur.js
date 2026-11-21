@@ -143,5 +143,64 @@ globalThis.__kerygmaPartage.mercis[0].mode = 'equipe';
 x = L.v('merci équipe');
 assert(x.mercis[0].titre === 'Merci à toute l’équipe !' && /l’équipe louange de Saint-Maurice/.test(x.mercis[0].texte), 'merci à l’équipe');
 
+// 11. Demande d'échange reçue (Adrien demande à Lucas de prendre sa place)
+globalThis.__kerygmaPartage = undefined;
+L = ouvrir();
+x = L.v('demande d’échange');
+assert(x.demandesEchange.length === 1 && x.demandesEchange[0].titre === 'Dimanche 22 novembre · Saint-Maurice', 'demande d’échange reçue');
+assert(/Adrien n’est pas dispo et te demande de prendre sa place \(voix\)/.test(x.demandesEchange[0].texte) && x.demandesEchange[0].horaire === 'Présence 9h · fin vers 13h' && x.demandesEchange[0].enAttente, 'texte et horaire');
+x.demandesEchange[0].accepter(); x = L.v('accepté');
+assert(x.demandesEchange.length === 1 && x.demandesEchange[0].accepte && !x.demandesEchange[0].enAttente && /Thomas doit valider/.test(x.demandesEchange[0].etat), 'en attente de Thomas');
+assert(/Thomas doit valider l’échange/.test(x.toast) && globalThis.__kerygmaPartage.echanges['22/11|stm|voix'].etat === 'accepte', 'échange accepté');
+assert(!x.services.some(sv => /22 nov/.test(sv.titre)), 'pas encore dans ses services');
+globalThis.__kerygmaPartage.echanges['22/11|stm|voix'].etat = 'validee';
+x = L.v('validé par Thomas');
+assert(x.demandesEchange.length === 0, 'plus de demande');
+const s22 = x.services.find(sv => sv.titre === 'Dim. 22 nov · Saint-Maurice');
+assert(s22 && /^Voix/.test(s22.sous) && s22.statut === 'Confirmé', 'nouveau service confirmé le 22 nov');
+globalThis.__kerygmaPartage = undefined;
+L = ouvrir();
+x = L.v('refus');
+x.demandesEchange[0].refuser(); x = L.v('refusé');
+assert(x.demandesEchange.length === 0 && /Réponse envoyée à Adrien/.test(x.toast) && globalThis.__kerygmaPartage.echanges['22/11|stm|voix'].etat === 'refusepar', 'Lucas ne peut pas');
+
+// 12. Échange demandé par Lucas : suivi jusqu'à la validation
+x.demandes.find(d => d.cle === '06/12|cha|gac').pasDispo(); x = L.v('pas dispo 6 déc');
+const nomR2 = x.remplacants[0].nom;
+x.remplacants[0].choisir(); x = L.v('demande envoyée');
+assert(new RegExp('Si ' + nomR2 + ' accepte, Sylvie valide l’échange').test(x.toast), 'toast : coordinatrice de Champigny');
+const sv6 = () => x.services.find(sv => sv.titre === 'Dim. 6 déc · Champigny');
+assert(sv6().statut === 'Échange demandé' && sv6().note === 'Pas encore de réponse de ' + nomR2 && !sv6().aRemplacer, 'échange demandé');
+const ech = globalThis.__kerygmaPartage.echanges['06/12|cha|gac'];
+ech.etat = 'accepte'; x = L.v('accepté par le remplaçant');
+assert(sv6().note === nomR2 + ' a accepté · Sylvie doit valider', 'accepté : ' + sv6().note);
+ech.etat = 'refusepar'; x = L.v('le remplaçant ne peut pas');
+assert(sv6().statut === 'Pas dispo' && sv6().aRemplacer && /ne peut pas/.test(sv6().note), 'proposer quelqu’un d’autre');
+ech.etat = 'validee'; x = L.v('échange validé');
+assert(sv6().statut === 'Remplacé' && sv6().note === nomR2 + ' prend ta place (échange validé)' && !sv6().aRemplacer, 'remplacé');
+x.services.find(sv => sv.titre === 'Dim. 27 déc · Champigny').ouvrir(); x = L.v('équipe 27');
+x.retour(); x = L.v('retour');
+
+// 13. Collecte des dispos lancée par Thomas
+globalThis.__kerygmaPartage = undefined;
+L = ouvrir();
+x = L.v('avant collecte');
+assert(/Pas encore envoyées/.test(x.dispoTexte), 'avant collecte : ' + x.dispoTexte);
+globalThis.__kerygmaPartage.collecte['12'] = { par: 'Thomas', lieu: 'stm', relances: 0 };
+x = L.v('collecte lancée');
+assert(x.dispoTexte === 'Thomas demande tes dispos de décembre pour préparer le planning.' && x.dispoColor === '#A12626', 'demande de Thomas');
+x.ouvrirDispos(); x = L.v('grille');
+x.grille[1].toucher(); x = L.v('13 dispo');
+x.grille[1].toucher(); x = L.v('13 si besoin');
+x.grille[0].toucher(); x.grille[2].toucher(); x.grille[3].toucher(); x = L.v('toutes');
+x.grille[3].toucher(); x.grille[3].toucher(); x = L.v('27 pas dispo');
+x.envoyerDispos(); x = L.v('envoyées');
+assert(JSON.stringify(globalThis.__kerygmaPartage.dispos.Lucas) === JSON.stringify({ '06/12': 'dispo', '13/12': 'sibesoin', '20/12': 'dispo', '27/12': 'pasdispo' }), 'dispos partagées : ' + JSON.stringify(globalThis.__kerygmaPartage.dispos.Lucas));
+assert(/Envoyées à Thomas/.test(x.dispoTexte) && x.dispoBouton === 'Modifier mes dispos', 'envoyées');
+const L2 = ouvrir();
+let y = L2.v('nouvelle visite');
+y.ouvrirDispos(); y = L2.v('grille pré-remplie');
+assert(y.grille.map(g => g.etat).join() === 'Dispo,Si besoin,Dispo,Pas dispo', 'grille pré-remplie : ' + y.grille.map(g => g.etat));
+
 console.log(steps + ' états vérifiés');
 process.exit(report('Serviteur') ? 1 : 0);
