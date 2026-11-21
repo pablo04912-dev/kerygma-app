@@ -263,28 +263,38 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </div>
 </sc-if>
 <div style="display: flex; flex-direction: column; gap: 8px; max-height: 340px; overflow-y: auto">
-<sc-for list="{{candidats}}" as="k" hint-placeholder-count="4">
-<sc-if value="{{k.libre}}" hint-placeholder-val="{{true}}">
-<button type="button" onClick="{{k.choisir}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<sc-for list="{{candLibres}}" as="k" hint-placeholder-count="4">
+<div data-candidat="libre" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF">
 <span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; flex: 0 0 auto; background: {{k.dot}}"></span>
-<span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+<span style="display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0">
 <span style="font-size: 17px; font-weight: 600">{{k.nom}}</span>
-<span style="font-size: 14px; color: {{k.infoColor}}">{{k.info}}</span>
-</span>
-<span style="font-size: 14px; font-weight: 600; color: {{accent}}">Inviter</span>
-</button>
+<sc-if value="{{k.aHisto}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 13px; color: #5B5F6B">{{k.histo}}</span>
 </sc-if>
-<sc-if value="{{k.bloque}}" hint-placeholder-val="{{false}}">
-<button type="button" disabled="{{true}}" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border-radius: 14px; border: 1px solid #EFEBE3; background: #F6F4EF; text-align: left; font-family: inherit; color: #5B5F6B; cursor: not-allowed">
-<span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; flex: 0 0 auto; background: {{k.dot}}"></span>
-<span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
-<span style="font-size: 17px; font-weight: 600; text-decoration: line-through">{{k.nom}}</span>
-<span style="font-size: 14px; color: {{k.infoColor}}">{{k.info}}</span>
-</span>
-<span style="font-size: 13px; font-weight: 600; color: {{k.infoColor}}">Conflit</span>
-</button>
-</sc-if>
+<sc-if value="{{k.aTags}}" hint-placeholder-val="{{false}}">
+<span style="display: flex; flex-wrap: wrap; gap: 4px">
+<sc-for list="{{k.tags}}" as="tg" hint-placeholder-count="1">
+<span style="font-size: 13px; font-weight: 600; padding: 3px 8px; border-radius: 8px; background: {{tg.bg}}; color: {{tg.fg}}">{{tg.texte}}</span>
 </sc-for>
+</span>
+</sc-if>
+</span>
+<button type="button" onClick="{{k.choisir}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Inviter</button>
+</div>
+</sc-for>
+<sc-if value="{{aBloques}}" hint-placeholder-val="{{false}}">
+<span style="margin-top: 6px; font-size: 13px; font-weight: 600; color: #5B5F6B">Déjà ailleurs à la même heure</span>
+<sc-for list="{{candBloques}}" as="k" hint-placeholder-count="1">
+<div data-candidat="bloque" style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 10px 14px; border-radius: 14px; border: 1px solid #EFEBE3; background: #F6F4EF">
+<span aria-hidden="true" style="width: 10px; height: 10px; border-radius: 5px; flex: 0 0 auto; background: {{k.dot}}"></span>
+<span style="display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0">
+<span style="font-size: 17px; font-weight: 600; color: #5B5F6B">{{k.nom}}</span>
+<span style="font-size: 13px; font-weight: 600; color: #A12626">{{k.raison}}</span>
+</span>
+<button type="button" onClick="{{k.choisir}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #3D4049; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Inviter quand même</button>
+</div>
+</sc-for>
+</sc-if>
 </div>
 </div>
 </div>
@@ -402,6 +412,38 @@ class Component extends DCLogic {
       return l === 'stm';
     }
     function liste(arr) { return arr.map(function (x) { return x.toLowerCase(); }).join(', '); }
+
+    var forces = s.forces || {};
+    var HIST = DATA.historique || {};
+    var INDISPOS = DATA.indispos || {};
+    var FREQMAX = DATA.freqMax || {};
+    function dateNum(d) { var p = d.split('/'); return Date.UTC(2026, parseInt(p[1], 10) - 1, parseInt(p[0], 10)); }
+    var TOUS_DIMS = Object.keys(HIST).concat(DIMS).sort(function (a, b) { return dateNum(a) - dateNum(b); });
+    function equipeDim(d, l) { return HIST[d] ? (HIST[d][l] || {}) : louangeDe(d, l); }
+    function sertLe(n, d) {
+      return LIEUX.some(function (L2) {
+        var e = equipeDim(d, L2.id);
+        return PL.some(function (p) { return (e[p.id] || []).indexOf(n) >= 0; });
+      });
+    }
+    function historique(n, d) {
+      var avant = TOUS_DIMS.filter(function (x) { return dateNum(x) < dateNum(d); });
+      var serie = 0, dernier = null;
+      for (var i = avant.length - 1; i >= 0; i--) { if (sertLe(n, avant[i])) serie++; else break; }
+      for (var j = avant.length - 1; j >= 0; j--) { if (sertLe(n, avant[j])) { dernier = avant[j]; break; } }
+      var recents = avant.slice(-8).filter(function (x) { return sertLe(n, x); }).length;
+      var semaines = dernier ? Math.round((dateNum(d) - dateNum(dernier)) / (7 * 86400000)) : 99;
+      var texte = serie >= 2 ? serie + ' dimanches de suite'
+        : (serie === 1 ? 'A servi dimanche dernier'
+        : (dernier ? semaines + ' semaines sans service' : 'Pas de service récent'));
+      return { serie: serie, recents: recents, semaines: semaines, texte: texte };
+    }
+    function foisCeMois(n, d) {
+      var mois = d.split('/')[1];
+      return TOUS_DIMS.filter(function (x) { return x !== d && x.split('/')[1] === mois && sertLe(n, x); }).length;
+    }
+    var T_ORANGE = { bg: '#FDF0DC', fg: '#8A5300' }, T_ROUGE = { bg: '#FBE7E7', fg: '#A12626' }, T_GRIS = { bg: '#F1EFEA', fg: '#5B5F6B' };
+    function tag(t, c) { return { texte: t, bg: c.bg, fg: c.fg }; }
     function ligne(o) {
       return Object.assign({
         rempli: false, vide: true, nom: '', videTexte: 'À pourvoir', videColor: ROUGE,
@@ -508,10 +550,11 @@ class Component extends DCLogic {
       var pq = priereDe(L.id);
       lignes = PP.map(function (p) {
         var nom = pq[p.id];
+        var forceP = !!forces[cle('priere', datePri, L.id, 'priere', p.id)];
         return ligne({
           label: p.label, rempli: !!nom, vide: !nom, nom: nom,
           videColor: dEdit ? ROUGE : GRIS,
-          aSous: !!nom, sous: nom ? 'Invitation envoyée' : '', sousColor: AMBRE,
+          aSous: !!nom, sous: nom ? (forceP ? 'Invitation envoyée · conflit signalé' : 'Invitation envoyée') : '', sousColor: forceP ? ROUGE : AMBRE,
           peutChoisir: !nom && dEdit && p.pool.length > 0,
           ouvrir: ouvrirFeuille(p.id)
         });
@@ -522,10 +565,12 @@ class Component extends DCLogic {
       var lo = louangeDe(dateDim, L.id);
       lignes = PL.map(function (p) {
         var arr = lo[p.id];
-        var invite = !!picks[cle('dimanche', dateDim, L.id, 'louange', p.id)];
+        var k = cle('dimanche', dateDim, L.id, 'louange', p.id);
+        var invite = !!picks[k];
+        var force = !!forces[k];
         return ligne({
           label: p.label, rempli: arr.length > 0, vide: arr.length === 0, nom: arr.join(', '),
-          aSous: invite, sous: invite ? 'Invitation envoyée' : '', sousColor: AMBRE,
+          aSous: invite, sous: invite ? (force ? 'Invitation envoyée · conflit signalé' : 'Invitation envoyée') : '', sousColor: force ? ROUGE : AMBRE,
           peutChoisir: arr.length === 0 && dEdit && (DATA.pool[p.id] || []).length > 0,
           ouvrir: ouvrirFeuille(p.id)
         });
@@ -569,13 +614,6 @@ class Component extends DCLogic {
     }
     lignes.forEach(function (l, i) { l.sep = i === lignes.length - 1 ? 'transparent' : '#EFEBE3'; });
 
-    var ETATS = {
-      libre: { dot: '#9A968C', info: GRIS, libre: true },
-      pasteur: { dot: '#1F8A4C', info: VERT, libre: true },
-      meme: { dot: '#C77700', info: AMBRE, libre: true },
-      compatible: { dot: '#C77700', info: AMBRE, libre: true },
-      conflit: { dot: '#C62828', info: ROUGE, libre: false }
-    };
     var candidats = [];
     var sheetTitre = '', sheetNote = '', sheetSous = '';
     var sheetOuvert = !!sheet && tab === 'planning' && ecran === 'detail';
@@ -586,36 +624,48 @@ class Component extends DCLogic {
       sheetSous = L.priJour + ' ' + long(datePriDe(L)) + ' · ' + L.nom + ' 20h';
       var pqi = priereDe(L.id);
       candidats = (P0 ? P0.pool : []).filter(function (n) { return pqi[sheet] !== n; }).map(function (n) {
-        var etat = 'libre', info = 'Dispos pas encore renseignées';
+        var etat = 'libre', raison = '', tags = [];
         var autre = PP.filter(function (p) { return p.id !== sheet && pqi[p.id] === n; })[0];
-        if (autre) { etat = 'meme'; info = 'Déjà ' + autre.a + ' ici : possible'; }
+        if (autre) { etat = 'meme'; tags.push(tag('Déjà ' + autre.a + ' ici', T_GRIS)); }
         LIEUX.forEach(function (L2) {
           if (L2.id === L.id || L2.priJour !== L.priJour) return;
           var pq2 = priereDe(L2.id);
           var p2 = PP.filter(function (p) { return pq2[p.id] === n; })[0];
-          if (p2) { etat = 'conflit'; info = 'Déjà ' + p2.a + ' à ' + L2.nom + ' le même soir'; }
+          if (p2) { etat = 'conflit'; raison = 'Sert à ' + L2.nom + ' ce soir (' + p2.label.toLowerCase() + ')'; }
         });
-        return { nom: n, etat: etat, info: info };
+        return { nom: n, etat: etat, raison: raison, tags: tags, histo: '', info: raison || tags.map(function (t) { return t.texte; }).join(' · ') };
       });
     } else if (sheetOuvert && min === 'louange') {
       var P = PL.find(function (p) { return p.id === sheet; });
       sheetTitre = P ? P.label : '';
-      sheetNote = 'Les plannings des 3 lieux sont vérifiés : impossible de choisir quelqu’un qui sert ailleurs à la même heure.';
+      sheetNote = 'Ceux qui ont le moins servi sont en haut. Les plannings des 3 lieux sont vérifiés.';
       sheetSous = 'Dimanche ' + long(dateDim) + ' · ' + L.nom + ' ' + L.heure;
       var ici = louangeDe(dateDim, L.id);
       candidats = (DATA.pool[sheet] || []).filter(function (n) { return ici[sheet].indexOf(n) < 0; }).map(function (n) {
-        var etat = 'libre', info = 'Dispos pas encore renseignées';
+        var etat = 'libre', raison = '', tags = [];
+        var h = historique(n, dateDim);
         var autres = PL.filter(function (p) { return p.id !== sheet && ici[p.id].indexOf(n) >= 0; });
-        if (autres.length) { etat = 'meme'; info = 'Déjà ' + autres[0].a + ' ici : possible'; }
+        if (autres.length) { etat = 'meme'; tags.push(tag('Déjà ' + autres[0].a + ' ici', T_GRIS)); }
         LIEUX.forEach(function (L2) {
           if (L2.id === L.id) return;
           var lo2 = louangeDe(dateDim, L2.id);
           var p2 = PL.filter(function (p) { return lo2[p.id].indexOf(n) >= 0; })[0];
           if (!p2) return;
-          if (L2.creneau === L.creneau) { etat = 'conflit'; info = 'Déjà ' + p2.a + ' à ' + L2.nom + ' à ' + L2.heure; }
-          else if (etat !== 'conflit') { etat = 'compatible'; info = 'Aussi ' + p2.a + ' à ' + L2.nom + ' à ' + L2.heure + ' : compatible'; }
+          if (L2.creneau === L.creneau) { etat = 'conflit'; raison = 'Sert à ' + L2.nom + ' à ' + L2.heure + ' (' + p2.label.toLowerCase() + ')'; }
+          else {
+            tags.push(tag('Aussi à ' + L2.nom + ' à ' + L2.heure + ' (' + p2.label.toLowerCase() + ')', T_ORANGE));
+            if (etat === 'libre') etat = 'compatible';
+          }
         });
-        return { nom: n, etat: etat, info: info };
+        if ((INDISPOS[n] || []).indexOf(dateDim) >= 0) {
+          tags.push(tag('Indisponible ce jour-là', T_ROUGE));
+          if (etat !== 'conflit') etat = 'indispo';
+        }
+        if (FREQMAX[n]) {
+          var f = foisCeMois(n, dateDim);
+          if (f >= FREQMAX[n]) tags.push(tag('Déjà ' + f + ' fois ce mois-ci (max ' + FREQMAX[n] + ')', T_ORANGE));
+        }
+        return { nom: n, etat: etat, raison: raison, tags: tags, histo: h.texte, cle: [h.recents, -h.semaines], info: raison || tags.map(function (t) { return t.texte; }).join(' · ') || h.texte };
       });
     } else if (sheetOuvert) {
       var R = PR.find(function (r) { return r.id === sheet; });
@@ -647,12 +697,27 @@ class Component extends DCLogic {
         });
       }
     }
-    var ordre = { pasteur: 0, compatible: 1, libre: 2, meme: 2, conflit: 3 };
-    candidats.sort(function (a, b) { return ordre[a.etat] - ordre[b.etat]; });
-    candidats = candidats.map(function (c) {
-      var e = ETATS[c.etat];
-      return { nom: c.nom, info: c.info, dot: e.dot, infoColor: e.info, libre: e.libre, bloque: !e.libre, choisir: function () { self.choisir(c.nom); } };
+    var ordre = { pasteur: 0, libre: 1, compatible: 1, meme: 1, indispo: 1, conflit: 2 };
+    candidats.sort(function (a, b) {
+      var o = ordre[a.etat] - ordre[b.etat];
+      if (o) return o;
+      var ka = a.cle || [0, 0], kb = b.cle || [0, 0];
+      return (ka[0] - kb[0]) || (ka[1] - kb[1]);
     });
+    var DOTS = { libre: '#9A968C', pasteur: '#1F8A4C', meme: '#9A968C', compatible: '#C77700', indispo: '#C62828', conflit: '#C62828' };
+    candidats = candidats.map(function (c) {
+      var bloque = c.etat === 'conflit';
+      var tags = c.tags || (c.etat === 'meme' ? [tag(c.info, T_GRIS)] : []);
+      var histo = c.histo !== undefined ? c.histo : (c.etat === 'meme' ? '' : c.info);
+      return {
+        nom: c.nom, info: c.info, raison: c.raison || '', dot: DOTS[c.etat] || '#9A968C',
+        libre: !bloque, bloque: bloque,
+        tags: tags, aTags: tags.length > 0, histo: histo || '', aHisto: !!histo,
+        choisir: function () { self.choisir(c.nom, bloque ? c.raison : ''); }
+      };
+    });
+    var candLibres = candidats.filter(function (c) { return c.libre; });
+    var candBloques = candidats.filter(function (c) { return c.bloque; });
 
     var groupes = LIEUX.map(function (G) {
       var items = [];
@@ -754,18 +819,26 @@ class Component extends DCLogic {
       aErreur: !!erreur,
       erreur: erreur,
       candidats: candidats,
+      candLibres: candLibres,
+      candBloques: candBloques,
+      aBloques: candBloques.length > 0,
       fermer: function () { self.setState({ sheet: null, texte: '', erreur: '' }); }
     };
   }
-  choisir(nom) {
+  choisir(nom, raison) {
     var s = this.state || {};
     var type = s.type || 'dimanche';
     var picks = Object.assign({}, s.picks || {});
+    var forces = Object.assign({}, s.forces || {});
     var k = type === 'priere'
       ? 'priere|' + (s.datePri || '26/11') + '|' + (s.lieu || 'stm') + '|priere|' + s.sheet
       : 'dimanche|' + (s.dateDim || '22/11') + '|' + (s.lieu || 'stm') + '|' + (s.min || 'louange') + '|' + s.sheet;
     picks[k] = nom;
-    this.setState({ picks: picks, sheet: null, texte: '', erreur: '', toast: 'Invitation envoyée à ' + nom + '. Rappel automatique la veille à 18h.' });
+    if (raison) forces[k] = raison; else delete forces[k];
+    var toast = raison
+      ? 'Invitation envoyée à ' + nom + ', avec le conflit signalé : ' + raison.charAt(0).toLowerCase() + raison.slice(1) + '. La personne choisira de se faire remplacer, ou de garder les deux en justifiant.'
+      : 'Invitation envoyée à ' + nom + '. Rappel automatique la veille à 18h.';
+    this.setState({ picks: picks, forces: forces, sheet: null, texte: '', erreur: '', toast: toast });
     clearTimeout(this._t);
     var self = this;
     this._t = setTimeout(function () { self.setState({ toast: '' }); }, 3500);

@@ -357,5 +357,194 @@
    "Pasteur Victor",
    "Antoine"
   ]
+ },
+ "historique": {
+  "25/10": {
+   "stm": {
+    "direction": [
+     "Tania"
+    ],
+    "voix": [
+     "Pierre",
+     "Chloé"
+    ],
+    "gac": [
+     "Inès"
+    ],
+    "batterie": [
+     "Bérénice"
+    ]
+   },
+   "cha": {
+    "direction": [
+     "Paula"
+    ],
+    "gac": [
+     "Marco"
+    ],
+    "voix": [
+     "Héloïse",
+     "Mona"
+    ],
+    "piano": [
+     "Quentin"
+    ]
+   },
+   "bou": {
+    "direction": [
+     "Diego"
+    ],
+    "voix": [
+     "Noé"
+    ],
+    "gac": [
+     "Damien"
+    ]
+   }
+  },
+  "01/11": {
+   "stm": {
+    "direction": [
+     "Olivier"
+    ],
+    "voix": [
+     "Adrien",
+     "Chloé"
+    ],
+    "piano": [
+     "Camille"
+    ],
+    "batterie": [
+     "Lucas"
+    ]
+   },
+   "cha": {
+    "direction": [
+     "Marco"
+    ],
+    "gac": [
+     "Ismaël"
+    ],
+    "voix": [
+     "Joëlle"
+    ],
+    "batterie": [
+     "Thaïs"
+    ]
+   },
+   "bou": {
+    "direction": [
+     "Kenza"
+    ],
+    "voix": [
+     "Élise"
+    ],
+    "piano": [
+     "Félix"
+    ]
+   }
+  },
+  "08/11": {
+   "stm": {
+    "direction": [
+     "Inès"
+    ],
+    "voix": [
+     "Adrien",
+     "Mona"
+    ],
+    "gac": [
+     "Thomas"
+    ],
+    "batterie": [
+     "Bérénice"
+    ]
+   },
+   "cha": {
+    "direction": [
+     "Sylvie"
+    ],
+    "gac": [
+     "Marco"
+    ],
+    "voix": [
+     "Héloïse",
+     "Rachel"
+    ],
+    "piano": [
+     "Quentin"
+    ]
+   },
+   "bou": {
+    "direction": [
+     "Noé"
+    ],
+    "voix": [
+     "Ugo"
+    ],
+    "gac": [
+     "Damien"
+    ]
+   }
+  },
+  "15/11": {
+   "stm": {
+    "direction": [
+     "Inès"
+    ],
+    "voix": [
+     "Adrien",
+     "Chloé"
+    ],
+    "batterie": [
+     "Bérénice"
+    ],
+    "piano": [
+     "Camille"
+    ]
+   },
+   "cha": {
+    "direction": [
+     "Marco"
+    ],
+    "gac": [
+     "Ismaël"
+    ],
+    "voix": [
+     "Joëlle",
+     "Pierre"
+    ],
+    "batterie": [
+     "Thaïs"
+    ]
+   },
+   "bou": {
+    "direction": [
+     "Kenza"
+    ],
+    "gac": [
+     "Damien"
+    ],
+    "voix": [
+     "Noé"
+    ]
+   }
+  }
+ },
+ "indispos": {
+  "Chloé": [
+   "29/11",
+   "13/12"
+  ],
+  "Pierre": [
+   "06/12"
+  ],
+  "Camille": [
+   "29/11"
+  ]
+ },
+ "freqMax": {
+  "Inès": 2,
+  "Hugo": 2
  }
 }

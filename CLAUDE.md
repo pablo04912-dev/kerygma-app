@@ -50,6 +50,7 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 
 - `src/accueil.dc.html` : écran d'accueil public et connexion.
 - `src/planning.template.html` : espace connecté (profil test "Hélène", responsable louange). `__DATA__` est remplacé par `data/exemple.json` au build.
+- `data/exemple.json` : plannings louange et programme (22/11 au 27/12), `historique` (4 dimanches passés, pour "X dimanches de suite" et "X semaines sans service"), `indispos` et `freqMax` (exemples pour les étiquettes de la liste "Choisir"). Tout est inventé.
 - `src/runtime.js` + `src/page.html` : moteur qui fait tourner ces écrans dans la page téléphone.
 - `outils/build.py` : produit `build/*.dc.html` (format du canevas Claude Design) et `site/index.html` (page téléphone).
 - `tests/` : tests de la logique (`test_accueil.js`, `test_planning.js`) et test de bout en bout de la page téléphone (`test_phone.js`). Ajoute un test pour chaque nouveau comportement.

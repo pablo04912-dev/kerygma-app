@@ -60,10 +60,25 @@ x.lignes.find(l => l.label === 'Voix').ouvrir(); x = check('feuille voix 29/11')
 const byName = n => x.candidats.find(k => k.nom === n);
 assert(byName('Emma') && byName('Emma').bloque && /Champigny/.test(byName('Emma').info), 'Emma en conflit (voix à Champigny 10h30)');
 assert(byName('Marco') && byName('Marco').bloque, 'Marco en conflit (direction à Champigny)');
-assert(byName('Noé') && byName('Noé').libre && /compatible/.test(byName('Noé').info), 'Noé compatible (Boulogne 15h30) : ' + (byName('Noé') && byName('Noé').info));
+assert(byName('Noé') && byName('Noé').libre && /Aussi à Boulogne à 15h30/.test(byName('Noé').info), 'Noé compatible (Boulogne 15h30) : ' + (byName('Noé') && byName('Noé').info));
+assert(byName('Noé').tags.some(t => /Aussi à Boulogne/.test(t.texte) && t.bg === '#FDF0DC'), 'étiquette orange pour Noé');
 const order = x.candidats.map(k => k.bloque);
 assert(order.indexOf(true) === -1 || order.slice(order.indexOf(true)).every(b => b), 'conflits en bas de liste');
-assert(x.candidats.filter(k => k.bloque).every(k => !('choisir' in k) || typeof k.choisir === 'function'), 'boutons conflit désactivés côté markup');
+assert(x.candidats.filter(k => k.bloque).every(k => typeof k.choisir === 'function' && /^Sert à /.test(k.raison)), 'conflits : raison affichée et invitation possible');
+assert(x.candLibres.length + x.candBloques.length === x.candidats.length && x.aBloques, 'deux listes : libres puis déjà ailleurs');
+// Historique : dimanches de suite ou semaines sans service
+assert(byName('Adrien').histo === '4 dimanches de suite', 'Adrien : 4 dimanches de suite : ' + byName('Adrien').histo);
+assert(byName('Héloïse').histo === 'A servi dimanche dernier', 'Héloïse : dimanche dernier : ' + byName('Héloïse').histo);
+assert(byName('Pierre').histo === '2 semaines sans service', 'Pierre : 2 semaines sans service : ' + byName('Pierre').histo);
+assert(byName('Malik').histo === 'Pas de service récent', 'Malik : pas de service récent');
+assert(x.candLibres.every(k => k.aHisto && k.histo.length > 0), 'chaque personne libre a son historique');
+// Tri : ceux qui ont le moins servi en premier
+const pos = n => x.candLibres.findIndex(k => k.nom === n);
+assert(pos('Malik') < pos('Pierre') && pos('Pierre') < pos('Kenza') && pos('Kenza') < pos('Adrien'), 'tri : le moins servi en haut');
+// Étiquettes indispo et fréquence max
+assert(byName('Chloé').tags.some(t => t.texte === 'Indisponible ce jour-là' && t.bg === '#FBE7E7'), 'Chloé indisponible (rouge clair)');
+assert(byName('Inès').tags.some(t => /fois ce mois-ci \(max 2\)/.test(t.texte)), 'Inès : fréquence max atteinte');
+assert(byName('Olivier').tags.some(t => t.texte === 'Déjà à la direction ici' && t.bg === '#F1EFEA'), 'Olivier : déjà à la direction ici (gris)');
 
 // 7. Inviter Noé aux voix à Saint-Maurice
 byName('Noé').choisir(); x = check('après invitation');
@@ -191,6 +206,26 @@ assert(x.showLieux, 'retour au planning sur l’écran 3 lieux');
 x.cartes[0].ouvrir(); x = check('stm');
 const vide = x.lignes.find(l => l.peutChoisir);
 if (vide) { vide.ouvrir(); x = check('feuille'); assert(x.sheetOuvert, 'feuille ouverte'); x.nav.equipe.pick(); x = check('onglet'); assert(!x.sheetOuvert, 'feuille fermée en changeant d’onglet'); }
+
+// 13 bis. Inviter quand même une personne déjà ailleurs à la même heure
+{
+  const r = load(file, {});
+  let y = r.c.renderVals();
+  y.dates[1].pick(); y = r.c.renderVals();
+  y.cartes[0].ouvrir(); y = r.c.renderVals();
+  y.lignes.find(l => l.label === 'Voix').ouvrir(); y = r.c.renderVals();
+  const emma = y.candidats.find(k => k.nom === 'Emma');
+  assert(emma && emma.bloque && emma.raison === 'Sert à Champigny à 10h30 (voix)', 'raison du conflit : ' + (emma && emma.raison));
+  emma.choisir(); y = r.c.renderVals();
+  assert(!y.sheetOuvert && /conflit signalé : sert à Champigny à 10h30 \(voix\)\./.test(y.toast) && /garder les deux en justifiant/.test(y.toast), 'toast conflit signalé : ' + y.toast);
+  const v = y.lignes.find(l => l.label === 'Voix');
+  assert(v.rempli && v.nom === 'Emma' && v.sous === 'Invitation envoyée · conflit signalé' && v.sousColor === '#A12626', 'ligne voix : conflit signalé');
+  assert(checkHoles(tpl, y).length === 0, 'trous après invitation forcée');
+  y.lignes.find(l => l.label === 'Batterie').ouvrir(); y = r.c.renderVals();
+  y.candLibres[0].choisir(); y = r.c.renderVals();
+  assert(y.lignes.find(l => l.label === 'Batterie').sous === 'Invitation envoyée', 'invitation normale sans conflit');
+  steps += 3;
+}
 
 // 13. Couleur principale (tweak)
 const alt = load(file, { accent: '#0F766E' }).c.renderVals();
