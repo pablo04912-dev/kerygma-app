@@ -645,5 +645,27 @@
    "20/12": "dispo",
    "27/12": "pasdispo"
   }
- }
+ },
+ "tachesTypes": {
+  "louange": [
+   "Installer et brancher le matériel",
+   "Faire la balance son",
+   "Préparer la liste des chants",
+   "Ranger le matériel après le culte",
+   "Nettoyer la salle après le culte"
+  ]
+ },
+ "taches": [
+  {
+   "id": "t1",
+   "date": "29/11",
+   "lieu": "stm",
+   "poste": "gac",
+   "nom": "Lucas",
+   "titre": "Installer et brancher le matériel",
+   "message": "Arrive à 8h45 pour installer les amplis avec Inès.",
+   "par": "Thomas",
+   "fait": false
+  }
+ ]
 }

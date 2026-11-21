@@ -261,5 +261,82 @@ const tagsDe = n => ((g.candLibres.find(c => c.nom === n) || {}).tags || []).map
 assert(tagsDe('Bérénice').indexOf('Indisponible ce jour-là') >= 0, 'Bérénice : pas dispo dans sa grille');
 assert(tagsDe('Thaïs').indexOf('Si besoin seulement') >= 0, 'Thaïs : si besoin');
 
+// 13. Tâches : Thomas confie une tâche à quelqu'un du planning
+globalThis.__kerygmaPartage = undefined;
+const T5 = ouvrir(fichierCoord);
+let k = T5.v('Thomas tâches');
+k.dates[1].pick(); k = T5.v('29 nov');
+const gac = k.lignes.find(l => l.label === 'Guitare acoustique');
+assert(gac.aTache && gac.tacheTexte === 'Tâche : installer et brancher le matériel · à faire' && gac.tacheColor === '#4338CA', 'tâche de démonstration visible : ' + gac.tacheTexte);
+assert(k.aTachesCulte && k.tachesCulte.length === 1 && k.tachesCulte[0].etat === 'À faire' && /Lucas · guitare acoustique · demandé par Thomas/.test(k.tachesCulte[0].detail), 'liste des tâches du culte');
+assert(k.lignes.filter(l => l.peutTache).length === 5 && !k.lignes.find(l => l.label === 'Basse').peutTache, '« + Tâche » sur les postes remplis seulement');
+const dir = k.lignes.find(l => l.label === 'Direction');
+assert(dir.tacheAria === 'Ajouter une tâche à Olivier', 'libellé accessible : ' + dir.tacheAria);
+dir.ajouterTache(); k = T5.v('feuille tâche');
+assert(k.tacheOuverte && !k.sheetOuvert && k.tacheSous === 'Direction · Saint-Maurice · dim. 29 nov' && !k.tachePlusieurs, 'feuille « Ajouter une tâche »');
+assert(k.tacheTypes.length === 6 && k.tacheTypes[0].on && k.tacheTypes[5].label === 'Autre tâche' && !k.tacheAutre, 'tâches prédéfinies de la louange + Autre');
+assert(k.tacheMsg === 'Peux-tu t’occuper de ça dimanche ? Merci !' && k.tacheBouton === 'Envoyer la tâche à Olivier', 'message par défaut');
+k.tacheTypes[4].pick(); k = T5.v('nettoyer');
+assert(k.tacheTypes[4].on && !k.tacheTypes[0].on, 'tâche choisie');
+k.saisirTacheMsg({ target: { value: 'Avec Pierre, après la prière de fin.' } });
+k = T5.v('message');
+k.envoyerTache(); k = T5.v('tâche envoyée');
+assert(!k.tacheOuverte && /Tâche envoyée à Olivier : nettoyer la salle après le culte\./.test(k.toast), 'toast : ' + k.toast);
+const tS = globalThis.__kerygmaPartage.taches;
+assert(tS.length === 2 && tS[1].nom === 'Olivier' && tS[1].par === 'Thomas' && tS[1].message === 'Avec Pierre, après la prière de fin.' && tS[1].poste === 'direction' && !tS[1].fait, 'tâche enregistrée');
+assert(k.lignes.find(l => l.label === 'Direction').aTache && k.tachesCulte.length === 2, 'tâche visible sur la ligne et dans la liste');
+// Autre tâche, texte libre obligatoire
+k.lignes.find(l => l.label === 'Piano').ajouterTache(); k = T5.v('piano');
+k.tacheTypes[5].pick(); k = T5.v('autre');
+assert(k.tacheAutre && k.tacheTitre === '', 'champ libre');
+k.envoyerTache(); k = T5.v('autre vide');
+assert(k.aErreurTache && k.tacheOuverte, 'intitulé obligatoire');
+k.saisirTacheTitre({ target: { value: 'Accueillir le nouveau bassiste' } });
+k = T5.v('intitulé');
+k.envoyerTache(); k = T5.v('autre envoyée');
+assert(tS.length === 3 && tS[2].titre === 'Accueillir le nouveau bassiste' && tS[2].nom === 'Inès', 'tâche libre');
+// Poste tenu par deux personnes : choisir pour qui
+T5.r.c.setState({ tache: { date: '29/11', lieu: 'stm', poste: 'voix', noms: ['Pierre', 'Emma'] }, tacheNom: 'Pierre', tacheChoix: 0, tacheMsg: null, erreurTache: '' });
+k = T5.v('deux personnes');
+assert(k.tachePlusieurs && k.tacheNoms.length === 2 && k.tacheNoms[0].on, 'choix de la personne');
+k.tacheNoms[1].pick(); k = T5.v('Emma');
+assert(k.tacheBouton === 'Envoyer la tâche à Emma', 'bouton : ' + k.tacheBouton);
+k.fermerTache(); k = T5.v('fermée');
+assert(!k.tacheOuverte && tS.length === 3, 'fermer sans envoyer');
+// Hélène voit les tâches et peut en ajouter
+const H5 = ouvrir(fichierHelene);
+let h5 = H5.v('Hélène tâches');
+h5.dates[1].pick(); h5 = H5.v('29');
+h5.cartes[0].ouvrir(); h5 = H5.v('stm 29');
+assert(h5.tachesCulte.length === 3, 'Hélène voit les tâches du culte');
+h5.lignes.find(l => l.label === 'Guitare acoustique').ajouterTache(); h5 = H5.v('Hélène feuille');
+h5.envoyerTache(); h5 = H5.v('Hélène envoie');
+assert(tS.length === 4 && tS[3].par === 'Hélène' && tS[3].nom === 'Lucas', 'tâche d’Hélène');
+
+// 14. Calendrier du mois (bouton « Mois »)
+k = T5.v('avant mois');
+assert(k.moisFerme && !k.moisOuvert, 'bande des dates par défaut');
+k.toggleMois(); k = T5.v('mois ouvert');
+assert(k.moisOuvert && !k.moisFerme && k.moisTitre === 'Novembre 2026', 'mois du dimanche affiché : ' + k.moisTitre);
+assert(k.moisEntetes.map(e => e.l).join('') === 'LMMJVSD' && k.moisCases.length === 36 && k.moisCases.slice(0, 6).every(c => c.inactif), 'grille : lundi en premier, 1er novembre un dimanche');
+const actifs = k.moisCases.filter(c => c.actif);
+assert(actifs.map(c => c.n).join() === '22,29' && actifs[1].on === 'true' && actifs[0].on === 'false', 'dimanches cliquables, 29 sélectionné');
+assert(actifs.every(c => c.dot === '#C2410C') && /postes à pourvoir/.test(actifs[1].aria), 'point orange : postes à pourvoir');
+assert(k.moisLegende.map(l => l.texte).join() === 'Je sers,Complet,Postes à pourvoir,Date affichée', 'légende');
+assert(k.moisPrecOff === 'true' && k.moisSuivOff === 'false', 'flèches');
+k.moisPrec(); k = T5.v('pas avant novembre');
+assert(k.moisTitre === 'Novembre 2026', 'reste en novembre');
+k.moisSuiv(); k = T5.v('décembre');
+assert(k.moisTitre === 'Décembre 2026' && k.moisCases.filter(c => c.actif).map(c => c.n).join() === '6,13,20,27' && k.moisSuivOff === 'true', 'décembre');
+k.moisCases.find(c => c.n === '13' && c.actif).pick(); k = T5.v('13 déc');
+assert(/dimanche 13 décembre/.test(k.dSous) && k.moisOuvert && k.moisCases.find(c => c.n === '13' && c.actif).on === 'true', 'choisir un dimanche dans le mois');
+k.toggleMois(); k = T5.v('réduit');
+assert(k.moisFerme && k.dates.find(d => d.on).label === '13 déc', 'retour à la bande, date gardée');
+// Jours où l'on sert : violet
+globalThis.__kerygmaPartage.invitations['dimanche|20/12|cha|louange|gac'] = { nom: 'Thomas', raison: '' };
+k.toggleMois(); k = T5.v('Thomas sert le 20');
+const c20 = k.moisCases.find(c => c.n === '20' && c.actif);
+assert(c20.bg === '#4338CA' && c20.fg === '#FFFFFF' && /tu sers/.test(c20.aria), 'jour où Thomas sert en violet');
+
 console.log(steps + ' états vérifiés');
 process.exit(report('Coordinateur') ? 1 : 0);

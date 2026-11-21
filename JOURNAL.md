@@ -2,6 +2,26 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-21 (midi) · Pablo (avec Claude) · tâches et calendrier du mois
+
+**Décisions**
+- Tâches : le coordinateur ou le responsable confie une tâche à quelqu'un du planning (liste prédéfinie par ministère ou tâche libre, message modifiable) ; le serviteur la voit sur son planning et dans son service, et la coche quand c'est fait.
+- Calendrier du mois : bouton "Mois" sur la bande des dates ; jours où je sers en violet.
+
+**Fait**
+- Thomas et Hélène :
+  - bouton "+ Tâche" sur chaque poste rempli et feuille "Ajouter une tâche" ;
+  - le poste affiche « Tâche : … · à faire / faite ✓ » ;
+  - bloc « Tâches de ce culte ».
+- Calendrier du mois sur la bande des dates (3 lieux et planning d'un lieu) : point vert si le dimanche est complet, orange s'il manque des postes, violet les jours où l'on sert.
+- Lucas :
+  - nouvelle bande « Mes dimanches » en haut de son planning (violet si confirmé, violet clair si à confirmer, point s'il y a une tâche) et calendrier du mois ;
+  - « 1 tâche à faire » sur le service, la tâche dans le détail du service, case « Marquer comme faite ».
+- Tests : 850 vérifications ; chaîne Thomas → Lucas (tâche envoyée, cochée, vue « faite » par Thomas) dans `test_phone.js`. Contrôle visuel étendu au calendrier et aux tâches.
+
+**Reste à faire**
+- Sur un très petit téléphone (320 px de large, iPhone SE de première génération), les cases du calendrier font 37 px de large au lieu de 44 ; ça va dès 375 px.
+
 ## 2026-11-21 (matin) · Pablo (avec Claude) · commentaires et messages des responsables
 
 **Décision**

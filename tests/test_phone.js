@@ -77,7 +77,7 @@ function propre(label) {
   assert($$('nav[aria-label="Navigation principale"] button').length === 4, '4 boutons dans la barre du bas');
 
   // Dates, lieux, détail
-  const dates = () => $$('nav[aria-label="Dates"] button');
+  const dates = () => $$('nav[aria-label="Dates"] button:not([aria-label="Voir le mois"])');
   await click(dates()[1], 'date 29 nov');
   assert(dates()[1].getAttribute('aria-pressed') === 'true', '29 nov sélectionné');
   const cartes = () => $$('main > button');
@@ -181,6 +181,25 @@ function propre(label) {
   await click(btn('Proposer', lucasRow), 'proposer Lucas');
   assert(/Proposition enregistrée : Lucas/.test(txt()) && /1 proposition en attente de validation par Hélène \(20 déc\)/.test(txt()), 'proposition de Thomas enregistrée');
   propre('après proposition');
+  // Tâche pour Lucas le 13 déc, et calendrier du mois
+  await click(dates()[3], 'Thomas 13 déc');
+  await click($('button[aria-label="Ajouter une tâche à Lucas"]'), '+ Tâche Lucas');
+  const fT = $('[role=dialog][aria-label="Ajouter une tâche"]');
+  assert(!!fT && /Guitare acoustique · Saint-Maurice · dim. 13 déc/.test(fT.textContent), 'feuille « Ajouter une tâche »');
+  propre('feuille tâche');
+  await click(btn('Faire la balance son', fT), 'balance son');
+  const tmsg = $('#tacheMsg'); tmsg.focus(); tmsg.value = 'Balance à 9h avec Hugo';
+  tmsg.dispatchEvent(new window.Event('input', { bubbles: true }));
+  await tick();
+  assert(doc.activeElement.id === 'tacheMsg', 'focus gardé dans le message de la tâche');
+  await click(btn('Envoyer la tâche à Lucas'), 'envoyer la tâche');
+  assert(/Tâche envoyée à Lucas : faire la balance son/.test(txt()) && /Tâche : faire la balance son · à faire/.test(txt()), 'tâche envoyée et visible sur la ligne');
+  await click($('button[aria-label="Voir le mois"]'), 'voir le mois');
+  const cal = $('section[aria-label="Calendrier du mois"]');
+  assert(!!cal && /Décembre 2026/.test(cal.textContent) && $$('section[aria-label="Calendrier du mois"] button[aria-pressed]').length === 4, 'calendrier de décembre, 4 dimanches');
+  propre('calendrier Thomas');
+  await click(btn('Réduire', cal), 'réduire');
+  assert(!$('section[aria-label="Calendrier du mois"]') && dates().length === 6, 'retour à la bande des dates');
   // Compte rendu du dernier dimanche
   await click(btn('Remplir le compte rendu'), 'remplir le compte rendu');
   assert(/Qui était là/.test(txt()) && $$('[role=checkbox]').length === 6, 'formulaire du compte rendu, 6 personnes prévues');
@@ -236,6 +255,19 @@ function propre(label) {
   const demande = $('[data-demande="20/12|stm|batterie"]');
   assert(!!demande && /Dimanche 20 décembre/.test(demande.textContent) && /Présence 9h · fin vers 13h/.test(demande.textContent), 'Lucas reçoit la demande validée');
   propre('espace Lucas');
+  const d13 = $('button[aria-label^="Dimanche 13 décembre"]');
+  assert(!!d13 && /tu sers, une tâche à faire/.test(d13.getAttribute('aria-label')), 'le 13 déc signale la tâche dans « Mes dimanches »');
+  await click(d13, 'ouvrir le 13 déc');
+  const carteT = $$('section[aria-label="Tâche"]').find(x => /Faire la balance son/.test(x.textContent));
+  assert(!!carteT && /Balance à 9h avec Hugo/.test(carteT.textContent) && /Demandée par Thomas/.test(carteT.textContent), 'Lucas voit la tâche dans son service');
+  propre('tâche Lucas');
+  await click($('[role=checkbox]', carteT), 'cocher la tâche');
+  assert($('[role=checkbox]', $$('section[aria-label="Tâche"]').find(x => /Faire la balance son/.test(x.textContent))).getAttribute('aria-checked') === 'true' && /Thomas voit que c’est fait/.test(txt()), 'tâche cochée');
+  await click($$('main button').find(b => /Mes services/.test(b.textContent)), 'retour accueil Lucas');
+  await click($('button[aria-label="Voir le mois"]'), 'mois Lucas');
+  assert(!!$('section[aria-label="Calendrier du mois"]') && $$('section[aria-label="Calendrier du mois"] button[aria-label*="tu sers"]').length >= 1, 'calendrier de Lucas, jours en violet');
+  propre('calendrier Lucas');
+  await click(btn('Réduire', $('section[aria-label="Calendrier du mois"]')), 'réduire Lucas');
   const mercisL = $$('section[aria-label="Merci"]').map(x => x.textContent.replace(/\s+/g, ' '));
   assert(mercisL.length === 2 && /Message de Thomas.*Très bon service dimanche, merci pour ton service !/.test(mercisL[0]) && /Message d’Hélène.*Merci Lucas, très belle guitare dimanche !/.test(mercisL[1]), 'Lucas reçoit le merci de Thomas et le message d’Hélène : ' + mercisL.join(' | '));
   await click(btn('Dispo', demande), 'Lucas dispo');
@@ -270,6 +302,8 @@ function propre(label) {
   const voix22 = $$('section[aria-label="Postes"] > div').find(d => /Voix/.test(d.textContent));
   assert(voix22 && /Lucas/.test(voix22.textContent) && /Échange : Adrien → Lucas \(Adrien pas dispo\)/.test(voix22.textContent), 'planning du 22 nov changé');
   propre('après échange');
+  await click(dates()[3], 'Thomas 13 déc');
+  assert(/Tâche : faire la balance son · faite ✓/.test(txt()) && /Tâches de ce culte/.test(txt()), 'Thomas voit la tâche faite');
   // Collecte des dispos
   await click(nav('Équipe'), 'Thomas équipe');
   await click(btn('Lancer la collecte'), 'lancer la collecte');

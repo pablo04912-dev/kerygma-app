@@ -203,5 +203,48 @@ let y = L2.v('nouvelle visite');
 y.ouvrirDispos(); y = L2.v('grille pré-remplie');
 assert(y.grille.map(g => g.etat).join() === 'Dispo,Si besoin,Dispo,Pas dispo', 'grille pré-remplie : ' + y.grille.map(g => g.etat));
 
+// 14. Mes dimanches, calendrier du mois et tâches
+globalThis.__kerygmaPartage = undefined;
+L = ouvrir();
+x = L.v('mes dimanches');
+assert(x.mesDims.length === 6 && x.moisFerme, 'bande des dimanches');
+const md = n => x.mesDims.find(m => m.label === n);
+assert(md('29 nov').bg === '#4338CA' && md('29 nov').dot === '#FFFFFF' && /tu sers, une tâche à faire/.test(md('29 nov').aria), '29 nov : confirmé (violet) avec une tâche');
+assert(md('6 déc').bg === '#E4E6FB' && /à confirmer/.test(md('6 déc').aria), '6 déc : à confirmer (violet clair)');
+assert(md('22 nov').bg === '#FFFFFF' && /pas de service/.test(md('22 nov').aria), '22 nov : pas de service');
+md('22 nov').pick(); x = L.v('22 nov');
+assert(/Pas de service prévu le dimanche 22 novembre/.test(x.toast) && x.showAccueil, 'pas de service ce jour-là');
+const s29 = x.services.find(sv => sv.titre === 'Dim. 29 nov · Saint-Maurice');
+assert(s29.aTache && s29.tacheTexte === '1 tâche à faire' && s29.tacheFg === '#4338CA', 'indication de tâche sur le service');
+md('29 nov').pick(); x = L.v('service 29');
+assert(x.showService && x.aMesTaches && x.mesTachesTitre === 'Ta tâche' && x.mesTaches.length === 1, 'tâche dans le détail du service');
+const t0 = x.mesTaches[0];
+assert(t0.titre === 'Installer et brancher le matériel' && t0.message === 'Arrive à 8h45 pour installer les amplis avec Inès.' && t0.de === 'Demandée par Thomas' && t0.fait === 'false' && t0.libelle === 'Marquer comme faite', 'détail de la tâche');
+t0.cocher(); x = L.v('faite');
+assert(x.mesTaches[0].fait === 'true' && x.mesTaches[0].libelle === 'Faite' && /Thomas voit que c’est fait/.test(x.toast), 'tâche cochée');
+assert(globalThis.__kerygmaPartage.taches[0].fait === true, 'état partagé avec Thomas');
+x.retour(); x = L.v('retour');
+assert(x.services.find(sv => sv.titre === 'Dim. 29 nov · Saint-Maurice').tacheTexte === 'Tâche faite ✓', 'service : tâche faite');
+x = L.v('après');
+assert(x.mesDims.find(m => m.label === '29 nov').dot === 'transparent', 'plus de point quand la tâche est faite');
+x.services.find(sv => sv.titre === 'Dim. 29 nov · Saint-Maurice').ouvrir(); x = L.v('rouvrir');
+x.mesTaches[0].cocher(); x = L.v('décochée');
+assert(x.mesTaches[0].fait === 'false' && /remise à faire/.test(x.toast), 'on peut décocher');
+x.retour(); x = L.v('retour 2');
+// Calendrier
+x.toggleMois(); x = L.v('mois');
+assert(x.moisOuvert && x.moisTitre === 'Novembre 2026', 'calendrier de novembre');
+const n29 = x.moisCases.find(c => c.actif && c.n === '29');
+assert(n29.bg === '#4338CA' && n29.dot === '#FFFFFF' && x.moisCases.find(c => c.actif && c.n === '22').bg === '#FFFFFF', 'violet le 29, point de tâche');
+assert(x.moisLegende.map(l => l.texte).join() === 'Je sers,À confirmer,Tâche à faire', 'légende serviteur');
+x.moisSuiv(); x = L.v('décembre');
+assert(x.moisCases.find(c => c.actif && c.n === '6').bg === '#E4E6FB' && x.moisCases.find(c => c.actif && c.n === '13').bg === '#4338CA', 'décembre : à confirmer et confirmé');
+x.moisCases.find(c => c.actif && c.n === '13').pick(); x = L.v('13 déc');
+assert(x.showService && x.svTitre === 'Dimanche 13 décembre' && !x.aMesTaches, 'ouvrir un service depuis le calendrier');
+// Une tâche envoyée par Thomas arrive chez Lucas
+globalThis.__kerygmaPartage.taches.push({ id: 'tx', date: '13/12', lieu: 'stm', poste: 'gac', nom: 'Lucas', titre: 'Faire la balance son', message: '', par: 'Hélène', fait: false });
+x = L.v('nouvelle tâche');
+assert(x.aMesTaches && x.mesTaches[0].titre === 'Faire la balance son' && !x.mesTaches[0].aMessage && x.mesTaches[0].de === 'Demandée par Hélène', 'nouvelle tâche reçue');
+
 console.log(steps + ' états vérifiés');
 process.exit(report('Serviteur') ? 1 : 0);

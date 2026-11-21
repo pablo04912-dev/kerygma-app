@@ -44,7 +44,12 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-for>
 </div>
 </sc-if>
+<sc-if value="{{moisFerme}}" hint-placeholder-val="{{true}}">
 <nav aria-label="Dates" style="display: flex; flex-shrink: 0; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<button type="button" aria-expanded="false" aria-label="Voir le mois" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 10px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+<span style="font-size: 12px; font-weight: 600">Mois</span>
+</button>
 <sc-for list="{{dates}}" as="d" hint-placeholder-count="5">
 <button type="button" aria-pressed="{{d.on}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 64px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 1px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer">
 <span style="font-size: 12px; font-weight: 500">{{d.jour}}</span>
@@ -52,6 +57,41 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </button>
 </sc-for>
 </nav>
+</sc-if>
+<sc-if value="{{moisOuvert}}" hint-placeholder-val="{{false}}">
+<section aria-label="Calendrier du mois" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 8px 4px 12px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 4px">
+<button type="button" aria-label="Mois précédent" aria-disabled="{{moisPrecOff}}" onClick="{{moisPrec}}" style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent; color: {{moisPrecFg}}; font-family: inherit; font-size: 20px; font-weight: 600; cursor: pointer">‹</button>
+<span style="flex: 1; min-width: 0; text-align: center; font-size: 16px; font-weight: 700">{{moisTitre}}</span>
+<button type="button" aria-label="Mois suivant" aria-disabled="{{moisSuivOff}}" onClick="{{moisSuiv}}" style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent; color: {{moisSuivFg}}; font-family: inherit; font-size: 20px; font-weight: 600; cursor: pointer">›</button>
+<button type="button" aria-expanded="true" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Réduire</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px 2px; text-align: center">
+<sc-for list="{{moisEntetes}}" as="me" hint-placeholder-count="7">
+<span aria-hidden="true" style="font-size: 12px; font-weight: 600; color: #5B5F6B; padding: 2px 0">{{me.l}}</span>
+</sc-for>
+<sc-for list="{{moisCases}}" as="mc" hint-placeholder-count="35">
+<sc-if value="{{mc.actif}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-label="{{mc.aria}}" aria-pressed="{{mc.on}}" onClick="{{mc.pick}}" style="min-width: 0; min-height: 44px; padding: 0; border-radius: 12px; border: 2px solid {{mc.border}}; background: {{mc.bg}}; color: {{mc.fg}}; font-family: inherit; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
+<span>{{mc.n}}</span>
+<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 3px; background: {{mc.dot}}"></span>
+</button>
+</sc-if>
+<sc-if value="{{mc.inactif}}" hint-placeholder-val="{{true}}">
+<span aria-hidden="true" style="min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #B9B3A6">{{mc.n}}</span>
+</sc-if>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 0 4px">
+<sc-for list="{{moisLegende}}" as="lg" hint-placeholder-count="3">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #3D4049">
+<span aria-hidden="true" style="flex: 0 0 auto; width: {{lg.taille}}; height: {{lg.taille}}; border-radius: {{lg.rayon}}; background: {{lg.fond}}; border: 2px solid {{lg.bord}}; box-sizing: border-box"></span>
+<span>{{lg.texte}}</span>
+</span>
+</sc-for>
+</div>
+</section>
+</sc-if>
 <sc-for list="{{aValider}}" as="v" hint-placeholder-count="1">
 <section aria-label="À valider" style="background: #FFF8EC; border: 1px solid #F0D9B0; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 13px; font-weight: 700; color: #8A5300">À valider</span>
@@ -159,7 +199,12 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <sc-if value="{{aPropAttente}}" hint-placeholder-val="{{false}}">
 <p role="status" style="margin: 0; padding: 12px 14px; border-radius: 14px; background: #FFF8EC; border: 1px solid #F0D9B0; color: #8A5300; font-size: 14px; line-height: 1.45; font-weight: 600">{{propAttente}}</p>
 </sc-if>
+<sc-if value="{{moisFerme}}" hint-placeholder-val="{{true}}">
 <nav aria-label="Dates" style="display: flex; flex-shrink: 0; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<button type="button" aria-expanded="false" aria-label="Voir le mois" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 10px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+<span style="font-size: 12px; font-weight: 600">Mois</span>
+</button>
 <sc-for list="{{dates}}" as="d" hint-placeholder-count="5">
 <button type="button" aria-pressed="{{d.on}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 64px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 1px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer">
 <span style="font-size: 12px; font-weight: 500">{{d.jour}}</span>
@@ -167,6 +212,41 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </button>
 </sc-for>
 </nav>
+</sc-if>
+<sc-if value="{{moisOuvert}}" hint-placeholder-val="{{false}}">
+<section aria-label="Calendrier du mois" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 8px 4px 12px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 4px">
+<button type="button" aria-label="Mois précédent" aria-disabled="{{moisPrecOff}}" onClick="{{moisPrec}}" style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent; color: {{moisPrecFg}}; font-family: inherit; font-size: 20px; font-weight: 600; cursor: pointer">‹</button>
+<span style="flex: 1; min-width: 0; text-align: center; font-size: 16px; font-weight: 700">{{moisTitre}}</span>
+<button type="button" aria-label="Mois suivant" aria-disabled="{{moisSuivOff}}" onClick="{{moisSuiv}}" style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent; color: {{moisSuivFg}}; font-family: inherit; font-size: 20px; font-weight: 600; cursor: pointer">›</button>
+<button type="button" aria-expanded="true" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Réduire</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px 2px; text-align: center">
+<sc-for list="{{moisEntetes}}" as="me" hint-placeholder-count="7">
+<span aria-hidden="true" style="font-size: 12px; font-weight: 600; color: #5B5F6B; padding: 2px 0">{{me.l}}</span>
+</sc-for>
+<sc-for list="{{moisCases}}" as="mc" hint-placeholder-count="35">
+<sc-if value="{{mc.actif}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-label="{{mc.aria}}" aria-pressed="{{mc.on}}" onClick="{{mc.pick}}" style="min-width: 0; min-height: 44px; padding: 0; border-radius: 12px; border: 2px solid {{mc.border}}; background: {{mc.bg}}; color: {{mc.fg}}; font-family: inherit; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
+<span>{{mc.n}}</span>
+<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 3px; background: {{mc.dot}}"></span>
+</button>
+</sc-if>
+<sc-if value="{{mc.inactif}}" hint-placeholder-val="{{true}}">
+<span aria-hidden="true" style="min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #B9B3A6">{{mc.n}}</span>
+</sc-if>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 0 4px">
+<sc-for list="{{moisLegende}}" as="lg" hint-placeholder-count="3">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #3D4049">
+<span aria-hidden="true" style="flex: 0 0 auto; width: {{lg.taille}}; height: {{lg.taille}}; border-radius: {{lg.rayon}}; background: {{lg.fond}}; border: 2px solid {{lg.bord}}; box-sizing: border-box"></span>
+<span>{{lg.texte}}</span>
+</span>
+</sc-for>
+</div>
+</section>
+</sc-if>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px 12px">
 <span style="display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 0">
 <span style="font-size: 14px; font-weight: 600; color: {{dCompteColor}}">{{dCompte}}</span>
@@ -198,12 +278,18 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <sc-if value="{{l.aSous}}" hint-placeholder-val="{{false}}">
 <span style="font-size: 13px; font-weight: 500; color: {{l.sousColor}}">{{l.sous}}</span>
 </sc-if>
+<sc-if value="{{l.aTache}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 13px; font-weight: 600; color: {{l.tacheColor}}">{{l.tacheTexte}}</span>
+</sc-if>
 <sc-if value="{{l.peutChoisirSous}}" hint-placeholder-val="{{false}}">
 <button type="button" onClick="{{l.ouvrir}}" style="align-self: flex-start; min-height: 44px; margin-top: 4px; padding: 0 14px; border-radius: 12px; border: 1.5px dashed {{accent}}; background: #FFFFFF; color: {{accent}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Choisir un nom</button>
 </sc-if>
 </div>
 <sc-if value="{{l.peutChoisir}}" hint-placeholder-val="{{false}}">
 <button type="button" onClick="{{l.ouvrir}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1.5px dashed {{accent}}; background: #FFFFFF; color: {{accent}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Choisir</button>
+</sc-if>
+<sc-if value="{{l.peutTache}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-label="{{l.tacheAria}}" onClick="{{l.ajouterTache}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #3D4049; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">+ Tâche</button>
 </sc-if>
 <sc-if value="{{l.aToggle}}" hint-placeholder-val="{{false}}">
 <div role="group" aria-label="{{l.label}} ce dimanche" style="flex: 0 0 auto; align-self: flex-start; display: flex; gap: 4px; padding: 3px; border-radius: 12px; background: #ECE8DF">
@@ -214,6 +300,20 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </div>
 </sc-for>
 </section>
+<sc-if value="{{aTachesCulte}}" hint-placeholder-val="{{false}}">
+<section aria-label="Tâches de ce culte" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px 6px; display: flex; flex-direction: column">
+<span style="font-size: 16px; font-weight: 700; padding-bottom: 4px">Tâches de ce culte</span>
+<sc-for list="{{tachesCulte}}" as="tc" hint-placeholder-count="2">
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px 12px; padding: 8px 0; border-top: 1px solid #EFEBE3">
+<span style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+<span style="font-size: 15px; font-weight: 600">{{tc.titre}}</span>
+<span style="font-size: 13px; color: #5B5F6B">{{tc.detail}}</span>
+</span>
+<span style="flex: 0 0 auto; font-size: 13px; font-weight: 600; padding: 4px 9px; border-radius: 8px; background: {{tc.bg}}; color: {{tc.fg}}">{{tc.etat}}</span>
+</div>
+</sc-for>
+</section>
+</sc-if>
 <sc-if value="{{dANote}}" hint-placeholder-val="{{false}}">
 <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #5B5F6B">{{dNote}}</p>
 </sc-if>
@@ -468,6 +568,45 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <sc-if value="{{aToast}}" hint-placeholder-val="{{false}}">
 <div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 92px; background: #16181D; color: #FFFFFF; border-radius: 14px; padding: 14px 16px; font-size: 15px; line-height: 1.4">{{toast}}</div>
 </sc-if>
+<sc-if value="{{tacheOuverte}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; inset: 0; background: rgba(22, 24, 29, 0.45); display: flex; flex-direction: column; justify-content: flex-end; z-index: 2">
+<div role="dialog" aria-label="Ajouter une tâche" style="background: #FFFFFF; border-radius: 24px 24px 0 0; padding: 12px 20px 28px; display: flex; flex-direction: column; gap: 10px; max-height: calc(100% - 24px); overflow-y: auto; box-sizing: border-box">
+<span aria-hidden="true" style="align-self: center; width: 40px; height: 5px; border-radius: 3px; background: #D6D1C6; flex-shrink: 0"></span>
+<div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0">
+<span style="font-family: 'Space Grotesk', Inter, sans-serif; font-size: 22px; font-weight: 700">Ajouter une tâche</span>
+<span style="font-size: 14px; color: #5B5F6B">{{tacheSous}}</span>
+</div>
+<button type="button" onClick="{{fermerTache}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 14px; border-radius: 12px; border: 1px solid #E7E3DA; background: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; color: #16181D; cursor: pointer">Fermer</button>
+</div>
+<sc-if value="{{tachePlusieurs}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 14px; font-weight: 600">Pour qui ?</span>
+<div role="group" aria-label="Pour qui" style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{tacheNoms}}" as="tn" hint-placeholder-count="2">
+<button type="button" aria-pressed="{{tn.on}}" onClick="{{tn.pick}}" style="min-height: 44px; padding: 0 14px; border-radius: 999px; border: 1px solid {{tn.border}}; background: {{tn.bg}}; color: {{tn.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{tn.label}}</button>
+</sc-for>
+</div>
+</sc-if>
+<span style="font-size: 14px; font-weight: 600">Tâche</span>
+<div role="group" aria-label="Tâche" style="display: flex; flex-direction: column; gap: 8px; flex-shrink: 0">
+<sc-for list="{{tacheTypes}}" as="tt" hint-placeholder-count="6">
+<button type="button" aria-pressed="{{tt.on}}" onClick="{{tt.pick}}" style="min-height: 44px; padding: 8px 14px; border-radius: 12px; border: 1px solid {{tt.border}}; background: {{tt.bg}}; color: {{tt.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; text-align: left; cursor: pointer">{{tt.label}}</button>
+</sc-for>
+</div>
+<sc-if value="{{tacheAutre}}" hint-placeholder-val="{{false}}">
+<label for="tacheTitre" style="font-size: 14px; font-weight: 600">Intitulé de la tâche</label>
+<input id="tacheTitre" type="text" value="{{tacheTitre}}" onChange="{{saisirTacheTitre}}" placeholder="Par exemple : accueillir le nouveau bassiste" style="min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; color: #16181D; background: #FFFFFF; box-sizing: border-box; width: 100%">
+</sc-if>
+<label for="tacheMsg" style="font-size: 14px; font-weight: 600">Message (tu peux le changer)</label>
+<textarea id="tacheMsg" rows="2" value="{{tacheMsg}}" onChange="{{saisirTacheMsg}}" style="min-height: 72px; padding: 10px 14px; border-radius: 12px; border: 1px solid #B9B3A6; font-family: inherit; font-size: 16px; line-height: 1.4; color: #16181D; background: #FFFFFF; resize: vertical; box-sizing: border-box; width: 100%"></textarea>
+<sc-if value="{{aErreurTache}}" hint-placeholder-val="{{false}}">
+<span role="alert" style="font-size: 13px; font-weight: 600; color: #A12626">{{erreurTache}}</span>
+</sc-if>
+<button type="button" onClick="{{envoyerTache}}" style="min-height: 48px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer">{{tacheBouton}}</button>
+<p style="margin: 0; font-size: 13px; line-height: 1.45; color: #5B5F6B">{{tacheNote}}</p>
+</div>
+</div>
+</sc-if>
 <sc-if value="{{sheetOuvert}}" hint-placeholder-val="{{false}}">
 <div style="position: absolute; inset: 0; background: rgba(22, 24, 29, 0.45); display: flex; flex-direction: column; justify-content: flex-end">
 <div role="dialog" aria-label="Choisir une personne" style="background: #FFFFFF; border-radius: 24px 24px 0 0; padding: 12px 20px 28px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100% - 24px); overflow-y: auto; box-sizing: border-box">
@@ -604,7 +743,9 @@ class Component extends DCLogic {
       { nom: 'Agnès Garnier', info: 'Pasteure' },
       { nom: 'Hélène Moreau', info: 'Ancienne de Saint-Maurice' }
     ];
-    var ROUGE = '#A12626', VERT = '#146C3A', GRIS = '#5B5F6B', AMBRE = '#8A5300';
+    var ROUGE = '#A12626', VERT = '#146C3A', GRIS = '#5B5F6B', AMBRE = '#8A5300', VIOLET = '#4338CA';
+    var MOI = coord ? 'Thomas' : 'Hélène';
+    function tachesDe(d, l, poste) { return (S.taches || []).filter(function (t) { return t.date === d && t.lieu === l && (!poste || t.poste === poste); }); }
 
     function cle(t, d, l, m, p) { return t + '|' + d + '|' + l + '|' + m + '|' + p; }
     function propEnAttente(k) { var p = S.propositions[k]; return p && !S.decisions[k] ? p : null; }
@@ -690,6 +831,7 @@ class Component extends DCLogic {
     function tag(t, c) { return { texte: t, bg: c.bg, fg: c.fg }; }
     function ligne(o) {
       return Object.assign({
+        peutTache: false, ajouterTache: null, tacheAria: '', aTache: false, tacheTexte: '', tacheColor: VIOLET,
         rempli: false, vide: true, nom: '', videTexte: 'À pourvoir', videColor: ROUGE,
         aSous: false, sous: '', sousColor: GRIS, peutChoisir: false, peutChoisirSous: false, ouvrir: null,
         aToggle: false, ouiOn: false, nonOn: false, ouiBg: 'transparent', ouiFg: '#3D4049', nonBg: 'transparent', nonFg: '#3D4049', pickOui: null, pickNon: null
@@ -967,11 +1109,19 @@ class Component extends DCLogic {
         else if (coord && prop) { sous = 'Proposé · en attente de validation par Hélène'; }
         else if (coord && S.decisions[k] === 'refusee' && arr.length === 0) { sous = 'Refusé par Hélène : propose quelqu’un d’autre'; sousColor = ROUGE; }
         else if (!coord && prop && arr.length === 0) { sous = 'À valider : ' + prop.coord + ' propose ' + prop.nom; }
+        var tl = tachesDe(dateDim, L.id, p.id).filter(function (t) { return arr.indexOf(t.nom) >= 0; });
+        var toutesFaites = tl.length > 0 && tl.every(function (t) { return t.fait; });
         return ligne({
           label: p.label, rempli: arr.length > 0, vide: arr.length === 0, nom: arr.join(', '),
           aSous: !!sous, sous: sous, sousColor: sousColor,
           peutChoisir: arr.length === 0 && dEdit && (DATA.pool[p.id] || []).length > 0,
-          ouvrir: ouvrirFeuille(p.id)
+          ouvrir: ouvrirFeuille(p.id),
+          peutTache: arr.length > 0 && dEdit,
+          tacheAria: 'Ajouter une tâche à ' + arr.join(' ou '),
+          ajouterTache: function () { self.setState({ tache: { date: dateDim, lieu: L.id, poste: p.id, noms: arr.slice() }, tacheNom: arr[0], tacheChoix: 0, tacheMsg: null, tacheTitre: '', erreurTache: '', sheet: null }); },
+          aTache: tl.length > 0,
+          tacheTexte: tl.map(function (t) { return (arr.length > 1 ? t.nom + ' : ' : 'Tâche : ') + t.titre.charAt(0).toLowerCase() + t.titre.slice(1) + (t.fait ? ' · faite ✓' : ' · à faire'); }).join(' ; '),
+          tacheColor: toutesFaites ? VERT : VIOLET
         });
       });
     } else {
@@ -1016,6 +1166,93 @@ class Component extends DCLogic {
     var nbAttente = attentes.length;
     var datesAttente = [];
     attentes.forEach(function (k) { var d = S.propositions[k].date; if (datesAttente.indexOf(d) < 0) datesAttente.push(d); });
+
+    // Tâches du culte affiché
+    var tachesCulte = (type === 'dimanche' && min === 'louange') ? tachesDe(dateDim, L.id).map(function (t) {
+      var P1 = PL.find(function (p) { return p.id === t.poste; });
+      return {
+        titre: t.titre, detail: t.nom + (P1 ? ' · ' + P1.label.toLowerCase() : '') + ' · demandé par ' + t.par,
+        etat: t.fait ? 'Faite' : 'À faire', bg: t.fait ? '#E7F5EC' : '#EEF0FF', fg: t.fait ? VERT : VIOLET
+      };
+    }) : [];
+    // Feuille « Ajouter une tâche »
+    var tache = s.tache || null;
+    var tacheOuverte = !!tache && tab === 'planning' && ecran === 'detail';
+    var TYPES_T = ((DATA.tachesTypes || {})[min] || []).concat(['Autre tâche']);
+    var tacheChoix = s.tacheChoix || 0;
+    var tacheAutre = tacheChoix === TYPES_T.length - 1;
+    var tacheNom = s.tacheNom || (tache ? tache.noms[0] : '');
+    var DEFAUT_TACHE = 'Peux-tu t’occuper de ça dimanche ? Merci !';
+    function puceT(label, on, pick) { return { label: label, on: on, bg: on ? VIOLET : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? VIOLET : '#D6D1C6', pick: pick }; }
+    var tacheTypes = TYPES_T.map(function (t, i) { return puceT(t, i === tacheChoix, function () { self.setState({ tacheChoix: i, erreurTache: '' }); }); });
+    var tacheNoms = tache ? tache.noms.map(function (n) { return puceT(n, n === tacheNom, function () { self.setState({ tacheNom: n }); }); }) : [];
+    var PT = tache ? PL.find(function (p) { return p.id === tache.poste; }) : null;
+
+    // Calendrier du mois
+    function jeSersLe(d) {
+      return type === 'dimanche' && LIEUX.some(function (L2) { var lo = louangeDe(d, L2.id); return PL.some(function (p) { return lo[p.id].indexOf(MOI) >= 0; }); });
+    }
+    function etatDuJour(d) {
+      if (type !== 'dimanche' || min !== 'louange') return '';
+      var ids = ecran === 'detail' ? [lieuId] : LIEUX.map(function (x) { return x.id; });
+      var manque = ids.some(function (id) { var lo = louangeDe(d, id); return PL.some(function (p) { return lo[p.id].length === 0; }); });
+      return manque ? 'manque' : 'complet';
+    }
+    function pointDuJour(d, sert) { var e = etatDuJour(d); return e === 'complet' ? (sert ? '#FFFFFF' : '#1F8A4C') : (e === 'manque' ? '#C2410C' : 'transparent'); }
+    function ariaDuJour(d, sert) {
+      var e = etatDuJour(d);
+      return (type === 'dimanche' ? 'Dimanche ' : (LIEUX[0].priJour + ' ')) + long(d) + (sert ? ', tu sers' : '') + (e === 'complet' ? ', complet' : (e === 'manque' ? ', postes à pourvoir' : ''));
+    }
+    function choisirJour(d) { return function () { self.setState(type === 'dimanche' ? { dateDim: d, sheet: null } : { datePri: d, sheet: null }); }; }
+    function leg(texte, fond, bord, rond) { return { texte: texte, fond: fond, bord: bord, taille: rond ? '10px' : '16px', rayon: rond ? '5px' : '5px' }; }
+    var DATES_CAL = type === 'dimanche' ? DIMS : JEUS;
+    var legendeCal = (type === 'dimanche' && min === 'louange')
+      ? [leg('Je sers', accent, accent), leg('Complet', '#1F8A4C', '#1F8A4C', true), leg('Postes à pourvoir', '#C2410C', '#C2410C', true), leg('Date affichée', '#FFFFFF', '#16181D')]
+      : [leg('Date affichée', '#FFFFFF', '#16181D')];
+
+    // Calendrier du mois (bouton « Mois » sur la bande des dates)
+    var moisOuvert = !!s.mois;
+    var MOIS_LONG = { '11': 'novembre', '12': 'décembre' };
+    var moisDispo = [];
+    DATES_CAL.forEach(function (d) { var m = d.split('/')[1]; if (moisDispo.indexOf(m) < 0) moisDispo.push(m); });
+    var moisAff = moisDispo.indexOf(s.moisAff) >= 0 ? s.moisAff : ((type === 'dimanche' ? dateDim : datePri) || DATES_CAL[0]).split('/')[1];
+    var iMois = moisDispo.indexOf(moisAff);
+    var moisCases = [];
+    var moNum = parseInt(moisAff, 10);
+    var decal = (new Date(2026, moNum - 1, 1).getDay() + 6) % 7;
+    var nbJ = new Date(2026, moNum, 0).getDate();
+    function caseVide(n) { return { actif: false, inactif: true, n: n, on: 'false', aria: '', pick: function () {}, border: 'transparent', bg: 'transparent', fg: '#B9B3A6', dot: 'transparent' }; }
+    for (var ci = 0; ci < decal; ci++) moisCases.push(caseVide(''));
+    for (var cj = 1; cj <= nbJ; cj++) {
+      (function (dd) {
+        if (DATES_CAL.indexOf(dd) < 0) { moisCases.push(caseVide(String(parseInt(dd, 10)))); return; }
+        var sert = jeSersLe(dd);
+        var on = dd === (type === 'dimanche' ? dateDim : datePri);
+        moisCases.push({
+          actif: true, inactif: false, n: String(parseInt(dd, 10)), on: on ? 'true' : 'false',
+          bg: sert ? accent : '#FFFFFF', fg: sert ? '#FFFFFF' : '#16181D',
+          border: on ? '#16181D' : (sert ? accent : '#E7E3DA'),
+          dot: pointDuJour(dd, sert),
+          aria: ariaDuJour(dd, sert),
+          pick: choisirJour(dd)
+        });
+      })((cj < 10 ? '0' + cj : '' + cj) + '/' + moisAff);
+    }
+    var moisNav = {
+      moisOuvert: moisOuvert,
+      moisFerme: !moisOuvert,
+      toggleMois: function () { self.setState({ mois: !(self.state && self.state.mois), moisAff: moisAff }); },
+      moisTitre: MOIS_LONG[moisAff].charAt(0).toUpperCase() + MOIS_LONG[moisAff].slice(1) + ' 2026',
+      moisPrecOff: iMois <= 0 ? 'true' : 'false',
+      moisSuivOff: iMois >= moisDispo.length - 1 ? 'true' : 'false',
+      moisPrecFg: iMois <= 0 ? '#C9C4B8' : '#16181D',
+      moisSuivFg: iMois >= moisDispo.length - 1 ? '#C9C4B8' : '#16181D',
+      moisPrec: function () { if (iMois > 0) self.setState({ moisAff: moisDispo[iMois - 1] }); },
+      moisSuiv: function () { if (iMois < moisDispo.length - 1) self.setState({ moisAff: moisDispo[iMois + 1] }); },
+      moisEntetes: ['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(function (l) { return { l: l }; }),
+      moisCases: moisCases,
+      moisLegende: legendeCal
+    };
 
     var candidats = [];
     var sheetTitre = '', sheetNote = '', sheetSous = '';
@@ -1181,6 +1418,24 @@ class Component extends DCLogic {
       showLieux: tab === 'planning' && ecran === 'lieux',
       showDetail: tab === 'planning' && ecran === 'detail',
       showCR: tab === 'planning' && ecran === 'cr',
+      aTachesCulte: tachesCulte.length > 0,
+      tachesCulte: tachesCulte,
+      tacheOuverte: tacheOuverte,
+      tacheSous: tache && PT ? PT.label + ' · ' + L.nom + ' · dim. ' + court(tache.date) : '',
+      tachePlusieurs: !!tache && tache.noms.length > 1,
+      tacheNoms: tacheNoms,
+      tacheTypes: tacheTypes,
+      tacheAutre: tacheAutre,
+      tacheTitre: s.tacheTitre || '',
+      saisirTacheTitre: function (e) { self.setState({ tacheTitre: e && e.target ? e.target.value : '', erreurTache: '' }); },
+      tacheMsg: s.tacheMsg != null ? s.tacheMsg : DEFAUT_TACHE,
+      saisirTacheMsg: function (e) { self.setState({ tacheMsg: e && e.target ? e.target.value : '' }); },
+      aErreurTache: !!s.erreurTache,
+      erreurTache: s.erreurTache || '',
+      tacheBouton: 'Envoyer la tâche à ' + tacheNom,
+      tacheNote: tacheNom + ' la verra sur son planning, dans le détail de son service, et pourra la cocher quand c’est fait.',
+      envoyerTache: function () { self.envoyerTache(tacheAutre ? null : TYPES_T[tacheChoix], DEFAUT_TACHE); },
+      fermerTache: function () { self.setState({ tache: null, erreurTache: '' }); },
       echangesAValider: echangesAValider,
       echangesAttente: echangesAttente,
       aCollecte: coord,
@@ -1274,6 +1529,9 @@ class Component extends DCLogic {
       mins: mins,
       showMinChips: type === 'dimanche',
       dates: dates,
+      moisOuvert: moisNav.moisOuvert, moisFerme: moisNav.moisFerme, toggleMois: moisNav.toggleMois, moisTitre: moisNav.moisTitre,
+      moisPrecOff: moisNav.moisPrecOff, moisSuivOff: moisNav.moisSuivOff, moisPrecFg: moisNav.moisPrecFg, moisSuivFg: moisNav.moisSuivFg,
+      moisPrec: moisNav.moisPrec, moisSuiv: moisNav.moisSuiv, moisEntetes: moisNav.moisEntetes, moisCases: moisNav.moisCases, moisLegende: moisNav.moisLegende,
       aTraiter: aTraiter,
       aTraiterColor: aTraiterColor,
       cartes: cartes,
@@ -1388,6 +1646,20 @@ class Component extends DCLogic {
     if (S.collecte['12']) S.collecte['12'].relances = (S.collecte['12'].relances || 0) + 1;
     this.flash({}, 'Rappel envoyé aux ' + n + ' personnes qui n’ont pas répondu.');
   }
+  envoyerTache(titreType, defaut) {
+    var s = this.state || {};
+    var t = s.tache;
+    if (!t) return;
+    var titre = titreType || (s.tacheTitre || '').trim();
+    if (!titre) { this.setState({ erreurTache: 'Écris l’intitulé de la tâche.' }); return; }
+    var nom = s.tacheNom || t.noms[0];
+    var S = partage();
+    S.taches.push({
+      id: 't' + (S.taches.length + 1) + '-' + t.date.replace('/', ''), date: t.date, lieu: t.lieu, poste: t.poste, nom: nom,
+      titre: titre, message: ((s.tacheMsg != null ? s.tacheMsg : defaut) || '').trim(), par: this._coord ? 'Thomas' : 'Hélène', fait: false
+    });
+    this.flash({ tache: null, erreurTache: '' }, 'Tâche envoyée à ' + nom + ' : ' + titre.charAt(0).toLowerCase() + titre.slice(1) + '.');
+  }
   envoyerCom(cle, coordNom) {
     var s = this.state || {};
     var t = (s.crCom || '').trim();
@@ -1461,6 +1733,7 @@ function partage(DATA) {
   }
   if (!S.mercis) S.mercis = [];
   if (!S.commentaires) S.commentaires = {};
+  if (!S.taches) S.taches = ((DATA && DATA.taches) || []).map(function (t) { return Object.assign({}, t); });
   if (!S.echanges) {
     S.echanges = {};
     ((DATA && DATA.echanges) || []).forEach(function (e) { S.echanges[e.date + '|' + e.lieu + '|' + e.poste] = Object.assign({}, e); });

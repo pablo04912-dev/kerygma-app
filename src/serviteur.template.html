@@ -31,6 +31,58 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <span style="font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">Serviteur · Louange</span>
 </div>
 </div>
+<section aria-label="Mes dimanches" style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 17px; font-weight: 700">Mes dimanches</span>
+<sc-if value="{{moisFerme}}" hint-placeholder-val="{{true}}">
+<nav aria-label="Dimanches" style="display: flex; flex-shrink: 0; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<button type="button" aria-expanded="false" aria-label="Voir le mois" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 10px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+<span style="font-size: 12px; font-weight: 600">Mois</span>
+</button>
+<sc-for list="{{mesDims}}" as="md" hint-placeholder-count="6">
+<button type="button" aria-label="{{md.aria}}" onClick="{{md.pick}}" style="flex: 0 0 auto; min-width: 64px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 1px solid {{md.border}}; background: {{md.bg}}; color: {{md.fg}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
+<span style="font-size: 12px; font-weight: 500">{{md.jour}}</span>
+<span style="font-size: 15px; font-weight: 700">{{md.label}}</span>
+<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 3px; background: {{md.dot}}"></span>
+</button>
+</sc-for>
+</nav>
+</sc-if>
+<sc-if value="{{moisOuvert}}" hint-placeholder-val="{{false}}">
+<section aria-label="Calendrier du mois" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 8px 4px 12px; display: flex; flex-direction: column; gap: 8px">
+<div style="display: flex; align-items: center; gap: 4px">
+<button type="button" aria-label="Mois précédent" aria-disabled="{{moisPrecOff}}" onClick="{{moisPrec}}" style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent; color: {{moisPrecFg}}; font-family: inherit; font-size: 20px; font-weight: 600; cursor: pointer">‹</button>
+<span style="flex: 1; min-width: 0; text-align: center; font-size: 16px; font-weight: 700">{{moisTitre}}</span>
+<button type="button" aria-label="Mois suivant" aria-disabled="{{moisSuivOff}}" onClick="{{moisSuiv}}" style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 12px; border: 0; background: transparent; color: {{moisSuivFg}}; font-family: inherit; font-size: 20px; font-weight: 600; cursor: pointer">›</button>
+<button type="button" aria-expanded="true" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-height: 44px; padding: 0 12px; border-radius: 12px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Réduire</button>
+</div>
+<div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 4px 2px; text-align: center">
+<sc-for list="{{moisEntetes}}" as="me" hint-placeholder-count="7">
+<span aria-hidden="true" style="font-size: 12px; font-weight: 600; color: #5B5F6B; padding: 2px 0">{{me.l}}</span>
+</sc-for>
+<sc-for list="{{moisCases}}" as="mc" hint-placeholder-count="35">
+<sc-if value="{{mc.actif}}" hint-placeholder-val="{{false}}">
+<button type="button" aria-label="{{mc.aria}}" aria-pressed="{{mc.on}}" onClick="{{mc.pick}}" style="min-width: 0; min-height: 44px; padding: 0; border-radius: 12px; border: 2px solid {{mc.border}}; background: {{mc.bg}}; color: {{mc.fg}}; font-family: inherit; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
+<span>{{mc.n}}</span>
+<span aria-hidden="true" style="width: 6px; height: 6px; border-radius: 3px; background: {{mc.dot}}"></span>
+</button>
+</sc-if>
+<sc-if value="{{mc.inactif}}" hint-placeholder-val="{{true}}">
+<span aria-hidden="true" style="min-height: 44px; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #B9B3A6">{{mc.n}}</span>
+</sc-if>
+</sc-for>
+</div>
+<div style="display: flex; flex-wrap: wrap; gap: 6px 14px; padding: 0 4px">
+<sc-for list="{{moisLegende}}" as="lg" hint-placeholder-count="3">
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #3D4049">
+<span aria-hidden="true" style="flex: 0 0 auto; width: {{lg.taille}}; height: {{lg.taille}}; border-radius: {{lg.rayon}}; background: {{lg.fond}}; border: 2px solid {{lg.bord}}; box-sizing: border-box"></span>
+<span>{{lg.texte}}</span>
+</span>
+</sc-for>
+</div>
+</section>
+</sc-if>
+</section>
 <sc-for list="{{mercis}}" as="mc" hint-placeholder-count="1">
 <section aria-label="Merci" style="background: #F1F8F3; border: 1px solid #BFE0CB; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
 <span style="font-size: 13px; font-weight: 700; color: #146C3A">{{mc.tag}}</span>
@@ -86,6 +138,9 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
 <span style="font-size: 16px; font-weight: 600">{{sv.titre}}</span>
 <span style="font-size: 14px; color: #5B5F6B">{{sv.sous}}</span>
+<sc-if value="{{sv.aTache}}" hint-placeholder-val="{{false}}">
+<span style="align-self: flex-start; font-size: 13px; font-weight: 600; padding: 3px 8px; border-radius: 8px; background: {{sv.tacheBg}}; color: {{sv.tacheFg}}">{{sv.tacheTexte}}</span>
+</sc-if>
 <sc-if value="{{sv.aNote}}" hint-placeholder-val="{{false}}">
 <span style="font-size: 13px; font-weight: 600; color: {{sv.noteColor}}">{{sv.note}}</span>
 </sc-if>
@@ -115,6 +170,22 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 <p style="margin: 0; font-size: 15px; line-height: 1.4; color: #5B5F6B">{{svSous}}</p>
 <p style="margin: 4px 0 0; font-size: 15px; font-weight: 600">{{svPoste}}</p>
 </div>
+<sc-if value="{{aMesTaches}}" hint-placeholder-val="{{false}}">
+<h2 style="margin: 6px 0 0; font-size: 17px; font-weight: 700">{{mesTachesTitre}}</h2>
+<sc-for list="{{mesTaches}}" as="mt" hint-placeholder-count="1">
+<section aria-label="Tâche" style="background: {{mt.fond}}; border: 1px solid {{mt.bord}}; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 17px; font-weight: 700">{{mt.titre}}</span>
+<sc-if value="{{mt.aMessage}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 15px; line-height: 1.45; color: #3D4049">« {{mt.message}} »</span>
+</sc-if>
+<span style="font-size: 13px; color: #5B5F6B">{{mt.de}}</span>
+<button type="button" role="checkbox" aria-checked="{{mt.fait}}" onClick="{{mt.cocher}}" style="align-self: flex-start; display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 0 14px 0 10px; border-radius: 12px; border: 1px solid {{mt.btnBord}}; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">
+<span aria-hidden="true" style="width: 22px; height: 22px; border-radius: 6px; border: 2px solid {{mt.caseBord}}; background: {{mt.caseFond}}; color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-size: 14px; box-sizing: border-box">{{mt.coche}}</span>
+<span>{{mt.libelle}}</span>
+</button>
+</section>
+</sc-for>
+</sc-if>
 <h2 style="margin: 6px 0 0; font-size: 17px; font-weight: 700">Qui sert ce culte</h2>
 <sc-for list="{{equipeCulte}}" as="eq" hint-placeholder-count="2">
 <section aria-label="{{eq.titre}}" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
@@ -420,6 +491,94 @@ class Component extends DCLogic {
       };
     });
 
+    // Tâches confiées par le coordinateur ou le responsable
+    function tachesSv(sv) { return (S.taches || []).filter(function (t) { return t.date === sv.date && t.lieu === sv.lieu.id && t.nom === NOM; }); }
+    function aFaire(d) { return (S.taches || []).some(function (t) { return t.date === d && t.nom === NOM && !t.fait; }); }
+    function prevuLe(d) { return tous.filter(function (sv) { return sv.date === d && (actif(sv) || garder[sv.cle]); }); }
+
+    // Bande « Mes dimanches » et calendrier du mois
+    function ouvrirJour(d) {
+      return function () {
+        var l = prevuLe(d);
+        if (l.length) self.setState({ vue: 'service', svc: l[0].cle });
+        else self.flash({}, 'Pas de service prévu le dimanche ' + long(d) + '.');
+      };
+    }
+    // confirmé (violet plein) ou à confirmer (violet clair)
+    function etatJour(d) {
+      var l = prevuLe(d);
+      if (!l.length) return '';
+      return l.some(function (sv) { return reponseDe(sv.cle) === 'dispo' || garder[sv.cle]; }) ? 'confirme' : 'attente';
+    }
+    var CLAIR = { bg: '#E4E6FB', fg: accent, border: '#C7CAF5' };
+    var mesDims = DIMS.map(function (d) {
+      var e = etatJour(d), sert = !!e;
+      return {
+        jour: 'dim.', label: court(d),
+        bg: e === 'confirme' ? accent : (e === 'attente' ? CLAIR.bg : '#FFFFFF'),
+        fg: e === 'confirme' ? '#FFFFFF' : (e === 'attente' ? CLAIR.fg : '#16181D'),
+        border: e === 'confirme' ? accent : (e === 'attente' ? CLAIR.border : '#E7E3DA'),
+        dot: aFaire(d) ? (e === 'confirme' ? '#FFFFFF' : accent) : 'transparent',
+        aria: 'Dimanche ' + long(d) + (e === 'confirme' ? ', tu sers' : (e === 'attente' ? ', service à confirmer' : ', pas de service')) + (aFaire(d) ? ', une tâche à faire' : ''),
+        pick: ouvrirJour(d)
+      };
+    });
+    function sertLeJour(d) { return prevuLe(d).length > 0; }
+    function pointJour(d, sert) { return aFaire(d) ? (etatJour(d) === 'confirme' ? '#FFFFFF' : accent) : 'transparent'; }
+    function ariaJour(d, sert) { var e = etatJour(d); return 'Dimanche ' + long(d) + (e === 'confirme' ? ', tu sers' : (e === 'attente' ? ', service à confirmer' : ', pas de service')) + (aFaire(d) ? ', une tâche à faire' : ''); }
+    function leg(texte, fond, bord, rond) { return { texte: texte, fond: fond, bord: bord, taille: rond ? '10px' : '16px', rayon: '5px' }; }
+    var legendeCal = [leg('Je sers', accent, accent), leg('À confirmer', '#E4E6FB', '#C7CAF5'), leg('Tâche à faire', accent, accent, true)];
+    var dateRef = (tous[0] && tous[0].date) || DIMS[0];
+
+    // Calendrier du mois (bouton « Mois » sur la bande des dates)
+    var moisOuvert = !!s.mois;
+    var MOIS_LONG = { '11': 'novembre', '12': 'décembre' };
+    var moisDispo = [];
+    DIMS.forEach(function (d) { var m = d.split('/')[1]; if (moisDispo.indexOf(m) < 0) moisDispo.push(m); });
+    var moisAff = moisDispo.indexOf(s.moisAff) >= 0 ? s.moisAff : ((dateRef) || DIMS[0]).split('/')[1];
+    var iMois = moisDispo.indexOf(moisAff);
+    var moisCases = [];
+    var moNum = parseInt(moisAff, 10);
+    var decal = (new Date(2026, moNum - 1, 1).getDay() + 6) % 7;
+    var nbJ = new Date(2026, moNum, 0).getDate();
+    function caseVide(n) { return { actif: false, inactif: true, n: n, on: 'false', aria: '', pick: function () {}, border: 'transparent', bg: 'transparent', fg: '#B9B3A6', dot: 'transparent' }; }
+    for (var ci = 0; ci < decal; ci++) moisCases.push(caseVide(''));
+    for (var cj = 1; cj <= nbJ; cj++) {
+      (function (dd) {
+        if (DIMS.indexOf(dd) < 0) { moisCases.push(caseVide(String(parseInt(dd, 10)))); return; }
+        var sert = sertLeJour(dd);
+        var on = false;
+        moisCases.push({
+          actif: true, inactif: false, n: String(parseInt(dd, 10)), on: on ? 'true' : 'false',
+          bg: sert ? accent : '#FFFFFF', fg: sert ? '#FFFFFF' : '#16181D',
+          border: on ? '#16181D' : (sert ? accent : '#E7E3DA'),
+          dot: pointJour(dd, sert),
+          aria: ariaJour(dd, sert),
+          pick: ouvrirJour(dd)
+        });
+      })((cj < 10 ? '0' + cj : '' + cj) + '/' + moisAff);
+    }
+    var moisNav = {
+      moisOuvert: moisOuvert,
+      moisFerme: !moisOuvert,
+      toggleMois: function () { self.setState({ mois: !(self.state && self.state.mois), moisAff: moisAff }); },
+      moisTitre: MOIS_LONG[moisAff].charAt(0).toUpperCase() + MOIS_LONG[moisAff].slice(1) + ' 2026',
+      moisPrecOff: iMois <= 0 ? 'true' : 'false',
+      moisSuivOff: iMois >= moisDispo.length - 1 ? 'true' : 'false',
+      moisPrecFg: iMois <= 0 ? '#C9C4B8' : '#16181D',
+      moisSuivFg: iMois >= moisDispo.length - 1 ? '#C9C4B8' : '#16181D',
+      moisPrec: function () { if (iMois > 0) self.setState({ moisAff: moisDispo[iMois - 1] }); },
+      moisSuiv: function () { if (iMois < moisDispo.length - 1) self.setState({ moisAff: moisDispo[iMois + 1] }); },
+      moisEntetes: ['L', 'M', 'M', 'J', 'V', 'S', 'D'].map(function (l) { return { l: l }; }),
+      moisCases: moisCases,
+      moisLegende: legendeCal
+    };
+
+    moisNav.moisCases.forEach(function (c) {
+      if (!c.actif) return;
+      var dd = (c.n.length < 2 ? '0' + c.n : c.n) + '/' + (moisNav.moisTitre.indexOf('Novembre') === 0 ? '11' : '12');
+      if (etatJour(dd) === 'attente') { c.bg = CLAIR.bg; c.fg = CLAIR.fg; c.border = CLAIR.border; }
+    });
     var services = tous.map(function (sv, i) {
       var st = statut(sv);
       return {
@@ -427,6 +586,10 @@ class Component extends DCLogic {
         sous: sv.poste.label + ' · ' + horaire(sv).toLowerCase(),
         statut: st.texte, statutBg: st.c.bg, statutFg: st.c.fg,
         aNote: !!st.note, note: st.note || '', noteColor: st.noteC || '#5B5F6B',
+        aTache: tachesSv(sv).length > 0 && !sv.remplacePar,
+        tacheTexte: (function () { var t = tachesSv(sv); var r = t.filter(function (x) { return !x.fait; }).length; return r ? (r > 1 ? r + ' tâches à faire' : '1 tâche à faire') : (t.length > 1 ? 'Tâches faites ✓' : 'Tâche faite ✓'); })(),
+        tacheBg: tachesSv(sv).some(function (x) { return !x.fait; }) ? '#EEF0FF' : '#E7F5EC',
+        tacheFg: tachesSv(sv).some(function (x) { return !x.fait; }) ? accent : '#146C3A',
         aRemplacer: !sv.remplacePar && reponseDe(sv.cle) === 'pasdispo' && !echangeEnCours(sv.cle),
         remplacer: ouvrirSheet('remplacant', sv.cle),
         ouvrir: function () { self.setState({ vue: 'service', svc: sv.cle }); },
@@ -545,6 +708,22 @@ class Component extends DCLogic {
       demandes: demandes,
       services: services,
       mercis: mercis,
+      mesDims: mesDims,
+      moisOuvert: moisNav.moisOuvert, moisFerme: moisNav.moisFerme, toggleMois: moisNav.toggleMois, moisTitre: moisNav.moisTitre,
+      moisPrecOff: moisNav.moisPrecOff, moisSuivOff: moisNav.moisSuivOff, moisPrecFg: moisNav.moisPrecFg, moisSuivFg: moisNav.moisSuivFg,
+      moisPrec: moisNav.moisPrec, moisSuiv: moisNav.moisSuiv, moisEntetes: moisNav.moisEntetes, moisCases: moisNav.moisCases, moisLegende: moisNav.moisLegende,
+      aMesTaches: !!svc && tachesSv(svc).length > 0,
+      mesTachesTitre: svc && tachesSv(svc).length > 1 ? 'Tes tâches' : 'Ta tâche',
+      mesTaches: svc ? tachesSv(svc).map(function (t) {
+        return {
+          titre: t.titre, message: t.message || '', aMessage: !!t.message, de: 'Demandée par ' + t.par,
+          fait: t.fait ? 'true' : 'false', libelle: t.fait ? 'Faite' : 'Marquer comme faite',
+          coche: t.fait ? '✓' : '', caseFond: t.fait ? '#146C3A' : '#FFFFFF', caseBord: t.fait ? '#146C3A' : '#B9B3A6',
+          btnBord: t.fait ? '#9CCFB0' : '#D6D1C6',
+          fond: t.fait ? '#F1F8F3' : '#F5F5FF', bord: t.fait ? '#BFE0CB' : '#D7D9F7',
+          cocher: function () { self.cocherTache(t.id); }
+        };
+      }) : [],
       demandesEchange: demandesEchange,
       dispoTexte: mesDispos ? 'Envoyées à Thomas. Tu peux encore les modifier.' : (collecte ? 'Thomas demande tes dispos de décembre pour préparer le planning.' : 'Pas encore envoyées : Thomas prépare le planning de décembre.'),
       dispoColor: mesDispos ? '#146C3A' : (collecte ? '#A12626' : '#8A5300'),
@@ -626,6 +805,13 @@ class Component extends DCLogic {
     S.echanges[k] = { date: parts[0], lieu: parts[1], poste: parts[2], de: 'Lucas', par: nom, etat: 'attente' };
     this.flash({ sheet: null }, 'Demande envoyée à ' + nom + '. Si ' + nom + ' accepte, ' + COORD[parts[1]] + ' valide l’échange et ton agenda se met à jour.');
   }
+  cocherTache(id) {
+    var S = partage();
+    var t = (S.taches || []).find(function (x) { return x.id === id; });
+    if (!t) return;
+    t.fait = !t.fait;
+    this.flash({}, t.fait ? 'Merci ! ' + t.par + ' voit que c’est fait.' : 'Tâche remise à faire.');
+  }
   repondreEchange(k, oui) {
     var S = partage();
     var e = S.echanges[k];
@@ -661,6 +847,7 @@ function partage(DATA) {
   }
   if (!S.mercis) S.mercis = [];
   if (!S.commentaires) S.commentaires = {};
+  if (!S.taches) S.taches = ((DATA && DATA.taches) || []).map(function (t) { return Object.assign({}, t); });
   if (!S.echanges) {
     S.echanges = {};
     ((DATA && DATA.echanges) || []).forEach(function (e) { S.echanges[e.date + '|' + e.lieu + '|' + e.poste] = Object.assign({}, e); });

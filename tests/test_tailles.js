@@ -34,7 +34,7 @@ assert(petites.length === 0, 'boutons sans hauteur de 44 px : ' + petites.length
 
 // 4. Les feuilles du bas défilent si elles sont plus hautes que l'écran (gros texte, petit téléphone).
 const feuilles = balises.filter(b => /role="dialog"/.test(b));
-assert(feuilles.length === 3 && feuilles.every(b => /max-height: calc\(100% - \d+px\); overflow-y: auto/.test(b)), 'feuilles qui défilent : ' + feuilles.length);
+assert(feuilles.length === 4 && feuilles.every(b => /max-height: calc\(100% - \d+px\); overflow-y: auto/.test(b)), 'feuilles qui défilent : ' + feuilles.length);
 
 console.log(`Tailles et cibles : ${ok} vérifications OK, ${ko} échec(s)`);
 process.exit(ko ? 1 : 0);
