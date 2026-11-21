@@ -8,6 +8,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 - Manuel a accepté l'invitation : il est collaborateur du dépôt.
 - `MESSAGES.md` : boîte à messages entre Pablo et Manuel (le Claude de chacun montre les messages en début de séance).
 - `docs/suivi-automatique.md` : texte d'une tâche programmée qui vérifie toutes les heures (9h-23h) et prévient seulement si l'autre a changé quelque chose.
+- Décisions de Pablo pour les espaces serviteur et coordinateur (3 états de réponse, indispos, échange validé par le coordinateur, fréquence max, planning proposé, espace louange) : ajoutées dans `CLAUDE.md`, section 6.
 - Nouvelle règle : envoi au fil de l'eau, dès qu'une modification est finie et testée (plus seulement en fin de séance).
 - `CLAUDE.md` : lecture de la boîte à messages en début de séance, `git pull` avant chaque réponse pendant la séance, explication de l'aperçu à droite.
 

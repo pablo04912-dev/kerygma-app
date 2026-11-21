@@ -66,6 +66,15 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 - Sainte Cène une fois sur deux : bouton Oui/Non. Le rôle "Louange" du programme est repris de la direction du planning louange.
 - Barre du bas (Planning, Équipe, Actus, Moi) sur tous les écrans connectés. Boutons d'au moins 44 px, lisibles par tous les âges.
 - **Prototype** : "Se connecter" ouvre directement le profil test. À retirer avant la vraie appli.
+- Contrôle des conflits entre lieux conservé (règles d'affichage précises à valider).
+- Boutons ergonomiques : 44 px minimum, sans les surdimensionner.
+- Réponse à une demande de service : 3 états, **en attente**, **dispo**, **pas dispo**.
+- Indispos saisies à l'avance par chaque serviteur ; le coordinateur peut lancer une collecte des indispos pour un mois. S'il place quand même quelqu'un d'indisponible, la demande le signale au serviteur.
+- Échange : le serviteur demande à un autre de le remplacer ; si l'autre accepte, le coordinateur valide (Oui/Non) ; le planning change et le coordinateur voit "X remplacé par Y (X pas dispo)".
+- Fréquence maximale par serviteur (par mois, par trimestre, en pause), avec avertissement si elle est dépassée.
+- Planning proposé automatiquement (plus tard) : le coordinateur le valide ou le modifie avant envoi.
+- Espace louange (plus tard) : bibliothèque de chants avec tonalités et liens audio pour répéter.
+- Les discussions restent sur WhatsApp ; l'appli gère plannings et annonces.
 - Le document de cadrage complet (avec les vrais noms) est dans le Drive "Kerygma App", dossier "01 Cadrage".
 
 ## 7. Style d'écriture
