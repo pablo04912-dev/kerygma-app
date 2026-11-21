@@ -9,7 +9,7 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 3. Lis les dernières entrées de `JOURNAL.md` et `git log --since="<date de la dernière entrée de la personne avec qui tu parles>" --stat`.
 4. Fais un **résumé court de ce que l'autre a fait sur l'appli** depuis la dernière séance de ton interlocuteur : écrans touchés, décisions, événements techniques, ce qui reste à faire. Pas de jargon.
 5. `npm install` (si besoin), `npm run build`, `npm test` : signale tout de suite si quelque chose est cassé.
-6. Montre l'aperçu (voir section 4), puis demande sur quoi on travaille.
+6. Montre l'aperçu (voir section 4) : la page complète « Kerygma prototype », plus 3 onglets, un par niveau (« Prototype responsable », « Prototype coordinateur », « Prototype serviteur »). Si ces onglets n'existent pas encore dans ton compte, crée-les ; sinon, republie-les. Puis demande sur quoi on travaille.
 
 ## 1 bis. Pendant la séance : rester à jour et envoyer au fil de l'eau
 
