@@ -17,6 +17,7 @@ assert(checkTags(src).length === 0, 'balises : ' + checkTags(src).join(' | '));
 // 1. Accueil de Hélène : louange, dimanche 22 nov, 3 lieux
 let x = check('état initial');
 assert(x.aValider.length === 1 && x.aValider[0].items.length === 2 && /Thomas propose pour Saint-Maurice · 29 novembre/.test(x.aValider[0].titre), 'bloc À valider avec les 2 propositions de Thomas');
+assert(x.protoLabel === 'Prototype responsable', 'étiquette en haut : ' + x.protoLabel);
 assert(x.aRetour && !x.coordHeader && x.initiale === 'H' && x.moiNom === 'Hélène Moreau' && x.eqMins, 'profil Hélène');
 assert(x.showLieux && !x.showDetail, 'écran 3 lieux au départ');
 assert(x.cartes.length === 3, '3 cartes');

@@ -23,6 +23,7 @@ assert(checkTags(L.r.src).length === 0, 'balises : ' + checkTags(L.r.src).join('
 
 // 1. Arrivée
 let x = L.v('arrivée Lucas');
+assert(/data-prototype[^>]*>Prototype serviteur</.test(L.r.src) && /<title>Kerygma, prototype serviteur<\/title>/.test(L.r.src), 'étiquette Prototype serviteur en haut');
 assert(x.showAccueil && x.aRepondre && x.repondreTitre === 'À répondre (3)', 'trois demandes : ' + x.repondreTitre);
 assert(x.services.length === 5, '5 services : ' + x.services.length);
 assert(x.services.map(s => s.statut).join() === 'Confirmé,En attente,Confirmé,En attente,En attente', 'statuts : ' + x.services.map(s => s.statut));

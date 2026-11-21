@@ -53,7 +53,7 @@ def main():
     planning = planning.replace("__DATA__", json_donnees)
     serviteur = serviteur.replace("__DATA__", json_donnees)
     responsable = planning.replace("__PROFIL__", "responsable")
-    coordinateur = planning.replace("__PROFIL__", "coordinateur").replace("espace de Hélène", "espace de Thomas")
+    coordinateur = planning.replace("__PROFIL__", "coordinateur").replace("prototype responsable</title>", "prototype coordinateur</title>")
     ecrire("build/Accueil.dc.html", accueil)
     ecrire("build/Planning.dc.html", responsable)
     ecrire("build/Coordinateur.dc.html", coordinateur)

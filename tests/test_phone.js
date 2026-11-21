@@ -72,6 +72,7 @@ function propre(label) {
   assert(!!lien && $('#email').value === '' , 'bouton Se connecter direct, champs vides');
   await click(lien, 'Se connecter');
   assert(/Bonjour Hélène/.test(txt()), 'connecté sur le profil de Hélène');
+  assert($('[data-prototype]') && $('[data-prototype]').textContent === 'Prototype responsable', 'étiquette Prototype responsable en haut');
   propre('espace Hélène');
   assert($$('nav[aria-label="Navigation principale"] button').length === 4, '4 boutons dans la barre du bas');
 
@@ -168,6 +169,7 @@ function propre(label) {
   }
   await entrer('coordinateur');
   assert(/Bonjour Thomas/.test(txt()) && /Coordinateur louange · Saint-Maurice/.test(txt()), 'espace de Thomas');
+  assert($('[data-prototype]').textContent === 'Prototype coordinateur', 'étiquette Prototype coordinateur en haut');
   // Hélène a déjà rempli elle-même la voix et la batterie du 29 nov : les propositions de Thomas sur ces postes sont remplacées
   assert(!/Les 3 lieux/.test(txt()) && !/en attente de validation par Hélène/.test(txt()), 'Thomas : son lieu seulement, plus rien en attente');
   propre('espace Thomas');
@@ -192,6 +194,7 @@ function propre(label) {
 
   await entrer('serviteur');
   assert(/Bonjour Lucas/.test(txt()) && /Serviteur · Louange/.test(txt()), 'espace de Lucas');
+  assert($('[data-prototype]').textContent === 'Prototype serviteur', 'étiquette Prototype serviteur en haut');
   const demande = $('[data-demande="20/12|stm|batterie"]');
   assert(!!demande && /Dimanche 20 décembre/.test(demande.textContent) && /Présence 9h · fin vers 13h/.test(demande.textContent), 'Lucas reçoit la demande validée');
   propre('espace Lucas');

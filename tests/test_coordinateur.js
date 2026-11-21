@@ -27,6 +27,8 @@ let x = T.v('arrivée Thomas');
 assert(!x.showLieux && x.showDetail, 'pas d’écran 3 lieux, directement le planning');
 assert(x.dTitre === 'Bonjour Thomas' && x.coordHeader && !x.aRetour, 'en-tête de Thomas, sans retour vers les 3 lieux');
 assert(/Louange · Saint-Maurice · dimanche 22 novembre/.test(x.dSous), 'sous-titre : ' + x.dSous);
+assert(x.protoLabel === 'Prototype coordinateur', 'étiquette en haut : ' + x.protoLabel);
+assert(/<title>Kerygma, prototype coordinateur<\/title>/.test(T.r.src), 'titre de la page');
 assert(x.initiale === 'T' && x.moiNom === 'Thomas' && !x.eqMins, 'identité Thomas');
 assert(x.dEdit && x.lignes.length === 7, 'Thomas modifie la louange de Saint-Maurice');
 assert(/^\d+%$/.test(x.dPct) && x.dPct === '57%', 'jauge : ' + x.dPct);
