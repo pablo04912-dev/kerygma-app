@@ -67,6 +67,14 @@ Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de 
 - Barre du bas (Planning, Équipe, Actus, Moi) sur tous les écrans connectés. Boutons d'au moins 44 px, lisibles par tous les âges.
 - **Prototype** : "Se connecter" ouvre directement le profil test. À retirer avant la vraie appli.
 - Contrôle des conflits entre lieux conservé (règles d'affichage précises à valider).
+- Liste "Choisir" (quand le coordinateur remplit un poste) : ceux qui ont **le moins servi en premier**, avec en petit "n'a pas servi depuis X jours", pour ne pas toujours prendre les mêmes. Les personnes impossibles à placer (déjà ailleurs à la même heure) sont grisées en bas.
+- "À traiter" (postes vides, absences, conflits) : visible par le coordinateur du ministère concerné et par les responsables au-dessus de lui.
+- Servir ensemble ou séparément : réglage pour couples, familles, frères et sœurs qui vivent ensemble (même culte ou même jour, ou au contraire jamais le même jour).
+- Tout doit pouvoir se faire sur téléphone **et** sur ordinateur, y compris remplir un planning.
+- L'appli respecte la taille de texte réglée dans le téléphone sans casser l'affichage.
+- Notifications sur iPhone : priorité (il faut ajouter l'appli à l'écran d'accueil ; prévoir un pas-à-pas).
+- Jauge de remplissage pour le coordinateur, bilan de l'année pour chaque serviteur. Pas de classements, de points ni de séries.
+- WhatsApp (envoyer depuis l'appli vers une communauté KERYGMA et ses groupes) : en suspens, question posée à Manuel.
 - Boutons ergonomiques : 44 px minimum, sans les surdimensionner.
 - Réponse à une demande de service : 3 états, **en attente**, **dispo**, **pas dispo**.
 - Indispos saisies à l'avance par chaque serviteur ; le coordinateur peut lancer une collecte des indispos pour un mois. S'il place quand même quelqu'un d'indisponible, la demande le signale au serviteur.
