@@ -228,7 +228,18 @@ globalThis.__kerygmaPartage = undefined;
 L = ouvrir();
 x = L.v('mes dimanches');
 x.servChips.find(c => c.label === 'Louange').pick(); x = L.v('louange seule');
-assert(x.mesDims.length === 6 && x.moisFerme, 'bande des dimanches');
+assert(x.mesDims.length === 58 && x.mesDims[57].label === '26 déc' && x.moisFerme, 'bande des dimanches jusqu’à fin 2027 : ' + x.mesDims.length);
+{
+  const marq = x.bandeDims.filter(b => b.marqueur);
+  assert(marq.length === 13 && marq[1].haut === 'janvier' && marq[1].bas === '2027' && marq[2].bas === 'Février' && marq[0].bas === 'Décembre', 'pastilles de mois : ' + marq.map(b => b.bas).join());
+  const iJan = x.bandeDims.indexOf(marq[1]);
+  assert(x.bandeDims[iJan - 1].label === '27 déc' && x.bandeDims[iJan + 1].label === '3 janv', '« 2027 » entre le 27 déc et le 3 janv');
+  marq[1].pick(); let y = L.v('janvier 2027');
+  assert(y.moisOuvert && y.moisTitre === 'Janvier 2027' && y.moisCases.filter(c => c.actif).length === 5, 'calendrier de janvier 2027 : ' + y.moisTitre);
+  y.moisPrec(); y = L.v('déc'); y.moisPrec(); y = L.v('nov');
+  assert(y.moisTitre === 'Novembre 2026' && y.moisPrecOff === 'true', 'retour à novembre 2026');
+  y.toggleMois(); x = L.v('calendrier refermé');
+}
 const md = n => x.mesDims.find(m => m.label === n);
 assert(md('29 nov').bg === '#4338CA' && md('29 nov').dot === '#FFFFFF' && /tu sers, une tâche à faire/.test(md('29 nov').aria), '29 nov : confirmé (violet) avec une tâche');
 assert(md('6 déc').bg === '#E4E6FB' && /à confirmer/.test(md('6 déc').aria), '6 déc : à confirmer (violet clair)');

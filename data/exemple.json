@@ -53,6 +53,12 @@
     ],
     "piano": [
      "Inès"
+    ],
+    "voix": [
+     "Pierre"
+    ],
+    "batterie": [
+     "Bérénice"
     ]
    },
    "cha": {
@@ -554,22 +560,6 @@
   "Inès": 2,
   "Hugo": 2
  },
- "propositions": [
-  {
-   "coord": "Thomas",
-   "date": "29/11",
-   "lieu": "stm",
-   "poste": "voix",
-   "nom": "Pierre"
-  },
-  {
-   "coord": "Thomas",
-   "date": "29/11",
-   "lieu": "stm",
-   "poste": "batterie",
-   "nom": "Bérénice"
-  }
- ],
  "presence": {
   "louange": {
    "stm": "9h",
@@ -685,6 +675,21 @@
   ],
   "29/11|stm|piano": [
    "Inès"
+  ],
+  "22/11|bou|voix": [
+   "Noé"
+  ],
+  "22/11|bou|gac": [
+   "Damien"
+  ],
+  "29/11|bou|direction": [
+   "Noé"
+  ],
+  "29/11|bou|gac": [
+   "Damien"
+  ],
+  "29/11|bou|piano": [
+   "Hugo"
   ]
  },
  "projection": {

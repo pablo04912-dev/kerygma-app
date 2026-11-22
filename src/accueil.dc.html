@@ -52,13 +52,11 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
 </sc-for>
 </main>
 <sc-if value="{{popup}}" hint-placeholder-val="{{false}}">
-<div style="position: absolute; inset: 0; background: rgba(22, 24, 29, 0.45); display: flex; flex-direction: column; justify-content: flex-end">
+<div data-fond onClick="{{fermer}}" style="position: absolute; inset: 0; background: rgba(22, 24, 29, 0.45); display: flex; flex-direction: column; justify-content: flex-end; z-index: 5">
 <div role="dialog" aria-label="Espace membre" style="background: #FFFFFF; border-radius: 24px 24px 0 0; padding: 14px 20px 24px; display: flex; flex-direction: column; gap: 12px; max-height: calc(100% - 40px); overflow-y: auto; box-sizing: border-box">
+<button type="button" data-poignee aria-label="Fermer" onClick="{{fermer}}" style="align-self: center; width: 88px; height: 44px; margin: -14px 0 -12px; padding: 0; border: 0; background: transparent; display: flex; align-items: center; justify-content: center; flex-shrink: 0; cursor: pointer"><span aria-hidden="true" style="display: block; width: 40px; height: 5px; border-radius: 3px; background: #D6D1C6"></span></button>
 <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
 <span style="font-family: 'Space Grotesk', Inter, sans-serif; font-size: 24px; font-weight: 700">Espace membre</span>
-<button type="button" aria-label="Fermer" onClick="{{fermer}}" style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 22px; border: 1px solid #E7E3DA; background: #FFFFFF; display: flex; align-items: center; justify-content: center; color: #16181D; cursor: pointer">
-<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
-</button>
 </div>
 <sc-if value="{{showTabs}}" hint-placeholder-val="{{true}}">
 <div role="group" aria-label="Connexion ou création de compte" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 14px; background: #ECE8DF">

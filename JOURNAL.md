@@ -2,6 +2,25 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-22 (après-midi) · Pablo (avec Claude) · brouillon puis envoi, validation du mois, 2027
+
+**Décisions**
+- Choisir quelqu'un ne l'invite plus tout de suite : brouillon (« Pas encore envoyé »), puis bouton « Envoyer le planning aux volontaires ». En quittant la page avec un brouillon : « Envoyer les invitations ? » Oui / Non, plus tard. Sans envoi, aucun volontaire n'est prévenu.
+- Thomas envoie lui-même ; plus de propositions validées une par une. Hélène valide le mois quand elle veut ; quand tout le monde a répondu dispo, elle reçoit « Tout est rempli … Tu peux valider si c'est bon pour toi ». Après validation, les deux peuvent encore modifier.
+- Hypothèse (à confirmer par Pablo) : les services confirmés entrent dans les agendas à la validation du mois.
+- Feuilles du bas : plus de bouton « Fermer », la zone grise les ferme (la feuille descend).
+- Planning louange : VOIX plus grand, Auto à droite sur la même ligne, mêmes espacements pour INSTRUMENTS.
+- Bande des dates jusqu'à fin 2027, avec une pastille par mois (« 2027 » pour janvier, puis « Février », « Mars »…).
+- Accueil du responsable : plus de « Dimanches suivants ». Le dimanche choisi, puis toujours le compte rendu de dimanche dernier, avec une bulle « Ajouter un commentaire » à droite de chaque lieu.
+
+**Fait**
+- Tout ce qui précède, avec les tests (brouillon, envoi, question en partant, validation du mois, bulles de commentaire, 2027). Données : la voix (Pierre) et la batterie (Bérénice) du 29/11 à Saint-Maurice sont maintenant envoyées ; les « propositions » d'exemple sont retirées.
+
+**À faire / à vérifier**
+- Confirmer le déclencheur des agendas (validation du mois, ou chaque réponse « dispo »).
+- Un volontaire retiré du planning devrait être prévenu (pas encore montré dans le prototype).
+- Tester sur iPhone : la feuille qui descend, le bouton d'envoi au-dessus de la barre du bas.
+
 ## 2026-11-22 (nuit, suite) · Pablo (avec Claude) · Voix / Instruments, Auto, barre flottante
 
 **Décisions**

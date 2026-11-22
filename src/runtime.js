@@ -82,7 +82,10 @@
           const fn = m ? resolve(m[1], scope) : null;
           if (typeof fn === 'function') {
             const ev = name.slice(2);
-            el.addEventListener(ev === 'change' ? 'input' : ev, fn);
+            // Fond gris d'une feuille : seul un toucher sur le fond la ferme, et elle descend d'un coup
+            if (ev === 'click' && n.hasAttribute('data-fond')) el.addEventListener('click', e => { if (e.target === el) fermerFeuille(el, () => fn(e)); });
+            else if (ev === 'click' && n.hasAttribute('data-poignee')) el.addEventListener('click', e => fermerFeuille(el.closest('[data-fond]'), () => fn(e)));
+            else el.addEventListener(ev === 'change' ? 'input' : ev, fn);
           }
           return;
         }
@@ -103,6 +106,15 @@
     return current + '|' + Object.keys(v).filter(k => /^(show|mode)/.test(k)).map(k => k + '=' + !!v[k]).join(',');
   }
   const KEEP = ['main', 'nav', '[role=dialog]'];
+  function sansMouvement() { return !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  // La feuille descend et le fond s'efface, puis on ferme pour de bon
+  function fermerFeuille(fond, fin) {
+    const d = fond && fond.querySelector('[role=dialog]');
+    if (!d || sansMouvement() || typeof d.animate !== 'function') { fin(); return; }
+    d.animate([{ transform: 'none' }, { transform: 'translateY(100%)' }], { duration: 220, easing: 'cubic-bezier(.4, 0, 1, 1)', fill: 'forwards' });
+    fond.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 220, fill: 'forwards' });
+    setTimeout(fin, 200);
+  }
   function render() {
     pending = false;
     if (!inst) return;
@@ -112,6 +124,8 @@
     lastSig = sig;
     const kept = {};
     KEEP.forEach(sel => app.querySelectorAll(sel).forEach((el, i) => { kept[sel + i] = [el.scrollTop, el.scrollLeft]; }));
+    // Feuilles déjà ouvertes (pour ne faire monter que les nouvelles)
+    const feuilles = new Set(Array.from(app.querySelectorAll('[role=dialog]')).map(d => d.getAttribute('aria-label')));
     // Éléments qui glissent d'une place à l'autre (bulle de la barre du bas)
     const avant = {};
     app.querySelectorAll('[data-glisse]').forEach(el => { avant[el.getAttribute('data-glisse')] = el.getBoundingClientRect(); });
@@ -119,6 +133,7 @@
     const focusId = act && app.contains(act) && act.id ? act.id : null;
     let s0 = null, s1 = null;
     if (focusId) { try { s0 = act.selectionStart; s1 = act.selectionEnd; } catch (e) { s0 = null; } }
+    const avaitFocus = !!app.querySelector('[data-focus="true"]');
     const frag = document.createDocumentFragment();
     build(TEMPLATES[current], vals, frag);
     app.replaceChildren(frag);
@@ -128,13 +143,35 @@
       el.scrollTop = k[0];
       el.scrollLeft = k[1];
     }));
-    const calme = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const calme = sansMouvement();
+    if (!calme) app.querySelectorAll('[role=dialog]').forEach(d => {
+      if (feuilles.has(d.getAttribute('aria-label')) || typeof d.animate !== 'function') return;
+      d.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 260, easing: 'cubic-bezier(.2, .8, .2, 1)' });
+      const fond = d.closest('[data-fond]');
+      if (fond) fond.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 200 });
+    });
     app.querySelectorAll('[data-glisse]').forEach(el => {
       const a = avant[el.getAttribute('data-glisse')];
       if (!a || calme || typeof el.animate !== 'function') return;
       const dx = a.left - el.getBoundingClientRect().left;
       if (Math.abs(dx) > 1) el.animate([{ transform: 'translateX(' + dx + 'px)' }, { transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.2, .8, .2, 1)' });
     });
+    // La date choisie reste visible dans la bande (par exemple après « 2027 »)
+    app.querySelectorAll('[data-visible="true"]').forEach(el => {
+      const p = el.parentElement;
+      if (!p || !p.getBoundingClientRect) return;
+      const pr = p.getBoundingClientRect(), er = el.getBoundingClientRect();
+      if (!pr.width) return;
+      if (er.left < pr.left) p.scrollLeft -= (pr.left - er.left) + 24;
+      else if (er.right > pr.right) p.scrollLeft += (er.right - pr.right) + 24;
+    });
+    // Champ à ouvrir directement (par exemple « Ajouter un commentaire ») : focus et défilement, une seule fois
+    const aFocus = app.querySelector('[data-focus="true"]');
+    if (aFocus && !avaitFocus && !focusId) {
+      aFocus.focus({ preventScroll: true });
+      if (aFocus.scrollIntoView) aFocus.scrollIntoView({ block: 'center', behavior: calme ? 'auto' : 'smooth' });
+      return;
+    }
     if (focusId) {
       const f = document.getElementById(focusId);
       if (f) {
@@ -151,6 +188,12 @@
     render();
     if (inst.componentDidMount) inst.componentDidMount();
   }
+  // Échap ferme la feuille ouverte (clavier d'ordinateur)
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    const fonds = app.querySelectorAll('[data-fond]');
+    if (fonds.length) fonds[fonds.length - 1].click();
+  });
   app.addEventListener('click', e => {
     const a = e.target.closest('a[href]');
     if (!a) return;
