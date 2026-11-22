@@ -85,19 +85,31 @@ function propre(label) {
   assert(!$('section[aria-label="À valider"]') && !!$('section[aria-label="Comptes rendus"]'), 'la validation n’est plus sur la page d’accueil');
 
   // Dates, lieux, détail
-  const dates = () => $$('nav[aria-label="Dates"] button:not([aria-label="Voir le mois"]):not([data-marqueur])');
-  const marqueurs = () => $$('nav[aria-label="Dates"] button[data-marqueur]');
-  assert(dates().length === 58 && marqueurs().map(b => b.textContent.replace(/\s+/g, ' ').trim()).slice(0, 3).join() === 'Décembre,janvier 2027,Février', 'bande des dates jusqu’à fin 2027, pastilles de mois : ' + marqueurs().slice(0, 3).map(b => b.textContent.replace(/\s+/g, ' ').trim()));
-  await click(marqueurs()[1], 'pastille 2027');
-  assert(/Dimanche 3 janvier/.test(txt()) && dates().find(b => b.getAttribute('aria-pressed') === 'true').textContent.indexOf('3 janv') >= 0, '« 2027 » ouvre le dimanche 3 janvier');
-  await click(dates()[1], 'date 29 nov');
-  assert(dates()[1].getAttribute('aria-pressed') === 'true', '29 nov sélectionné');
+  const dates = () => $$('nav[aria-label="Dates"] button:not([aria-label="Voir le mois"]):not([data-marqueur]):not([data-fleche])');
   const cartes = () => $$('main > button');
+  const personne = () => $$('section[aria-label="Postes"] button').filter(b => b.textContent.trim() === 'Aucun');
+  const marqueurs = () => $$('nav[aria-label="Dates"] button[data-marqueur]');
+  const jourB = (l) => dates().find(b => b.textContent.replace(/\s+/g, ' ').trim().endsWith(l));
+  const nomsMarq = () => marqueurs().map(b => b.textContent.replace(/\s+/g, ' ').trim()).join();
+  const fleche = (sens) => $('nav[aria-label="Dates"] button[aria-label^="Deux mois ' + sens + '"]');
+  assert(dates().length === 9 && nomsMarq() === 'Novembre,Décembre' && !!fleche('avant') && !!fleche('après'), 'bande : novembre et décembre, flèches avant et après : ' + nomsMarq());
+  assert($('[data-bande] > button[aria-label="Voir le mois"]') && !$('nav[aria-label="Dates"] button[aria-label="Voir le mois"]'), '« Mois » reste fixe, à gauche de la bande');
+  await click(fleche('après'), 'deux mois après');
+  assert(nomsMarq() === 'janvier 2027,Février' && /Dimanche 3 janvier/.test(txt()) && dates()[0].getAttribute('aria-pressed') === 'true' && $('nav[aria-label="Dates"]').scrollLeft === 0, 'janvier et février 2027, on revient au début');
+  await click(fleche('avant'), 'deux mois avant');
+  assert(nomsMarq() === 'Novembre,Décembre' && /Ce dimanche 22 novembre/.test(txt()), 'retour au dimanche le plus proche');
+  await click(fleche('avant'), 'le passé');
+  assert(nomsMarq() === 'Septembre,Octobre' && /Dimanche 25 octobre/.test(txt()), 'septembre et octobre : le dernier dimanche passé');
+  await click(cartes()[0], 'Saint-Maurice le 25 octobre');
+  assert(/Dimanche passé/.test(txt()) && !personne().length && /Tania/.test(txt()), 'dimanche passé : on voit qui a servi, sans rien modifier');
+  await click($('button[aria-label="Retour aux 3 lieux"]'), 'retour');
+  await click(fleche('après'), 'retour à novembre');
+  await click(jourB('29 nov'), 'date 29 nov');
+  assert(jourB('29 nov').getAttribute('aria-pressed') === 'true', '29 nov sélectionné');
   assert(cartes().length === 3, '3 cartes de lieux');
   await click(cartes()[0], 'carte Saint-Maurice');
-  assert($('h1').textContent === 'Saint-Maurice' && dates()[1].getAttribute('aria-pressed') === 'true', 'détail Saint-Maurice, la date reste');
+  assert($('h1').textContent === 'Saint-Maurice' && jourB('29 nov').getAttribute('aria-pressed') === 'true', 'détail Saint-Maurice, la date reste');
   propre('détail');
-  const personne = () => $$('section[aria-label="Postes"] button').filter(b => b.textContent.trim() === 'Aucun');
   assert($$('section[aria-label="Postes"] h2').map(h => h.textContent).join() === 'Voix,Instruments' && !!btn('+Ajouter une voix') && !!btn('+Ajouter un instrument') && !/sur 7 postes/.test(txt()), 'parties Voix et Instruments, boutons « + », plus de compteur');
   const enteteVoix = $('section[aria-label="Postes"] h2').parentElement;
   assert(!!$('button[aria-label^="Auto"]', enteteVoix) && enteteVoix.children.length === 2, 'Auto sur la même ligne que VOIX, à droite');
@@ -198,7 +210,7 @@ function propre(label) {
   assert($('[data-prototype]').textContent === 'Prototype coordinateur', 'étiquette Prototype coordinateur en haut');
   assert(!/Les 3 lieux/.test(txt()) && !/en attente de validation/.test(txt()) && /Hélène validera le mois/.test(txt()), 'Thomas : son lieu seulement, c’est Hélène qui valide le mois');
   propre('espace Thomas');
-  await click(dates()[4], 'Thomas 20 déc');
+  await click(jourB('20 déc'), 'Thomas 20 déc');
   await click($('section[aria-label="Postes"] button[aria-label="Choisir batterie"]'), 'Choisir batterie');
   const lucasRow = $$('[role=dialog] [data-candidat="libre"]').find(r => /Lucas/.test(r.querySelector('span span').textContent));
   assert(!!lucasRow && !!btn('Choisir', lucasRow), 'Thomas voit « Choisir »');
@@ -208,7 +220,7 @@ function propre(label) {
   assert(/Planning envoyé : 1 volontaire reçoit la demande\. Hélène est prévenue\./.test(txt()) && /Demande envoyée/.test(txt()), 'Thomas envoie lui-même, sans validation');
   propre('après envoi de Thomas');
   // Tâche pour Lucas le 13 déc, et calendrier du mois
-  await click(dates()[3], 'Thomas 13 déc');
+  await click(jourB('13 déc'), 'Thomas 13 déc');
   await click($('button[aria-label="Donner une tâche à Lucas"]'), 'Tâche Lucas');
   const fT = $('[role=dialog][aria-label="Tâche"]');
   assert(!!fT && /Tâche pour Lucas/.test(fT.textContent) && /Guitare acoustique · Saint-Maurice · Dimanche 13 décembre/.test(fT.textContent) && btn('Aucune tâche', fT).getAttribute('aria-pressed') === 'true', 'feuille « Tâche », Aucune tâche par défaut');
@@ -225,7 +237,7 @@ function propre(label) {
   propre('calendrier Thomas');
   assert(!/Date affichée/.test(cal.textContent) && !btn('Réduire', cal), 'plus de « Date affichée » ni de bouton « Réduire » en texte');
   await click($('button[aria-label="Réduire le calendrier"]'), 'réduire');
-  assert(!$('section[aria-label="Calendrier du mois"]') && dates().length === 58, 'retour à la bande des dates');
+  assert(!$('section[aria-label="Calendrier du mois"]') && dates().length === 9, 'retour à la bande des dates');
   // Compte rendu du dernier dimanche
   await click(nav('À faire'), 'À faire Thomas');
   const changements = $$('section[aria-label="Changement du planning"]');
@@ -282,7 +294,9 @@ function propre(label) {
   assert(!!blocCR && /Saint-Maurice · 10h30\s*Thomas · 1 absent\s*Ajouter un commentaire/.test(blocCR.textContent.replace(/\s+/g, ' ')), 'Hélène reçoit le compte rendu de Thomas');
   await click($('button[aria-label="Ajouter un commentaire pour Saint-Maurice"]'), 'ajouter un commentaire');
   assert(doc.activeElement && doc.activeElement.id === 'crCom', 'la bulle ouvre le compte rendu, curseur dans le commentaire');
-  assert(/Rempli par Thomas/.test(txt()) && /Belle louange/.test(txt()) && /Chloé/.test(txt()), 'Hélène lit le compte rendu');
+  assert(/Compte rendu · Thomas/.test(txt()) && !/Rempli par/.test(txt()) && /Belle louange/.test(txt()) && /Chloé/.test(txt()), 'Hélène lit le compte rendu : « Compte rendu · Thomas »');
+  const rubAm = $('section[aria-label="À améliorer"]');
+  assert(!!rubAm && /À améliorer\s*Aucun/.test(rubAm.textContent) && !/Très bon service : merci/.test(txt()), 'rubrique vide : « Aucun » à droite ; le merci de Thomas à l’équipe reste entre eux');
   propre('lecture compte rendu');
   // Hélène commente le service pour Thomas et écrit à Lucas
   const tc = $('#crCom'); tc.focus(); tc.value = 'Belle louange, bravo pour la préparation';
@@ -317,7 +331,7 @@ function propre(label) {
   assert(!!demande0 && /Dimanche 20 décembre/.test(demande0.textContent) && /Présence 9h · fin vers 13h/.test(demande0.textContent), 'Lucas reçoit la demande envoyée par Thomas dans « À faire »');
   propre('À faire Lucas');
   await click(nav('Planning'), 'planning Lucas');
-  assert($$('nav[aria-label="Dimanches"] button[data-marqueur]').length === 13, 'Lucas : pastilles de mois dans « Mes dimanches »');
+  assert($$('nav[aria-label="Dimanches"] button[data-marqueur]').length === 2 && !!$('nav[aria-label="Dimanches"] button[aria-label^="Deux mois après"]'), 'Lucas : 2 mois à la fois dans « Mes dimanches », flèche « après »');
   const d13 = $('button[aria-label^="Dimanche 13 décembre"]');
   assert(!!d13 && /tu sers, une tâche à faire/.test(d13.getAttribute('aria-label')), 'le 13 déc signale la tâche dans « Mes dimanches »');
   await click(d13, 'ouvrir le 13 déc');
@@ -366,11 +380,11 @@ function propre(label) {
   await click(btn('Oui, valider', exAdrien), 'valider l’échange');
   assert(/Échange validé : Lucas remplace Adrien le 22 novembre/.test(txt()), 'échange validé');
   await click(nav('Planning'), 'planning Thomas');
-  await click(dates()[0], 'Thomas 22 nov');
+  await click(jourB('22 nov'), 'Thomas 22 nov');
   const voix22 = $$('section[aria-label="Postes"] [data-ligne]').find(d => /Lucas/.test(d.textContent) && /Voix/.test(d.textContent));
   assert(voix22 && /Lucas/.test(voix22.textContent) && /Échange : Adrien → Lucas \(Adrien pas dispo\)/.test(voix22.textContent), 'planning du 22 nov changé');
   propre('après échange');
-  await click(dates()[3], 'Thomas 13 déc');
+  await click(jourB('13 déc'), 'Thomas 13 déc');
   assert(/Tâche faite : faire la balance son à 9h avec Hugo ✓/.test(txt()), 'Thomas voit la tâche faite');
   // Collecte des dispos
   await click(nav('Équipe'), 'Thomas équipe');

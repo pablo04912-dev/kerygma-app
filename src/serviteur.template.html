@@ -38,11 +38,15 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 <section aria-label="Mes dimanches" style="display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 17px; font-weight: 700">Mes dimanches</span>
 <sc-if value="{{moisFerme}}" hint-placeholder-val="{{true}}">
-<nav aria-label="Dimanches" style="display: flex; flex-shrink: 0; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<div data-bande style="display: flex; flex-shrink: 0; align-items: flex-start; gap: 8px; margin-right: -20px">
 <button type="button" aria-expanded="false" aria-label="Voir le mois" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 10px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
 <span style="font-size: 12px; font-weight: 600">Mois</span>
 </button>
+<nav aria-label="Dimanches" data-fenetre="{{fenetreCle}}" style="flex: 1 1 auto; min-width: 0; display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 2px 0">
+<sc-if value="{{aFenPrec}}" hint-placeholder-val="{{false}}">
+<button type="button" data-fleche aria-label="{{fenPrecAria}}" onClick="{{fenPrec}}" style="flex: 0 0 auto; width: 52px; min-height: 56px; padding: 0; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+</sc-if>
 <sc-for list="{{bandeDims}}" as="md" hint-placeholder-count="6">
 <sc-if value="{{md.marqueur}}" hint-placeholder-val="{{false}}">
 <button type="button" data-marqueur aria-label="{{md.aria}}" onClick="{{md.pick}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 0; background: #EEF0FF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
@@ -60,7 +64,11 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </button>
 </sc-if>
 </sc-for>
+<sc-if value="{{aFenSuiv}}" hint-placeholder-val="{{false}}">
+<button type="button" data-fleche aria-label="{{fenSuivAria}}" onClick="{{fenSuiv}}" style="flex: 0 0 auto; width: 52px; min-height: 56px; padding: 0; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+</sc-if>
 </nav>
+</div>
 </sc-if>
 <sc-if value="{{moisOuvert}}" hint-placeholder-val="{{false}}">
 <section aria-label="Calendrier du mois" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 8px 4px 12px; display: flex; flex-direction: column; gap: 8px">
@@ -573,16 +581,27 @@ class Component extends DCLogic {
       };
     });
     // Bande « Mes dimanches » : une pastille au début de chaque mois (« 2027 » pour janvier)
+    // Bande « Mes dimanches » : 2 mois à la fois, flèches pour les 2 mois d'avant ou d'après ; une pastille au début de chaque mois
+    function fenetreDe(d) { return anneeDe(d) + '-' + Math.floor((parseInt(d.split('/')[1], 10) - 1) / 2); }
+    var FENETRES = [];
+    DIMS.forEach(function (d) { var f = fenetreDe(d); if (FENETRES.indexOf(f) < 0) FENETRES.push(f); });
+    var fenetre = FENETRES.indexOf(s.fenetre) >= 0 ? s.fenetre : FENETRES[0], iFen = FENETRES.indexOf(fenetre);
+    function nomFenetre(f) {
+      var l = DIMS.filter(function (d) { return fenetreDe(d) === f; }), an = anneeDe(l[0]);
+      return MOIS[l[0].split('/')[1]] + ' et ' + MOIS[l[l.length - 1].split('/')[1]] + (an !== 2026 ? ' ' + an : '');
+    }
     var bandeDims = [];
     mesDims.forEach(function (x, i) {
       var d = DIMS[i], m = moisCle(d);
-      if (i > 0 && m !== moisCle(DIMS[i - 1])) {
-        var an = m.split('-')[0], nomM = MOIS[m.split('-')[1]], janvier = m.split('-')[1] === '01';
-        bandeDims.push({ marqueur: true, date: false, haut: janvier ? 'janvier' : '', bas: janvier ? an : nomM.charAt(0).toUpperCase() + nomM.slice(1), aria: 'Aller en ' + nomM + ' ' + an,
+      if (fenetreDe(d) !== fenetre) return;
+      if (!bandeDims.length || m !== moisCle(DIMS[i - 1])) {
+        var an = m.split('-')[0], nomM = MOIS[m.split('-')[1]], autreAn = an !== '2026' && !bandeDims.length;
+        bandeDims.push({ marqueur: true, date: false, haut: autreAn ? nomM : '', bas: autreAn ? an : nomM.charAt(0).toUpperCase() + nomM.slice(1), aria: 'Voir le mois de ' + nomM + ' ' + an,
           pick: function () { self.setState({ mois: true, moisAff: m }); }, jour: '', label: '', bg: '', fg: '', border: '', dot: 'transparent' });
       }
       bandeDims.push(Object.assign({ marqueur: false, date: true, haut: '', bas: '' }, x));
     });
+    var fenPrec = iFen > 0 ? FENETRES[iFen - 1] : null, fenSuiv = iFen < FENETRES.length - 1 ? FENETRES[iFen + 1] : null;
     function sertLeJour(d) { return prevuLe(d).length > 0; }
     function pointJour(d, sert) { return aFaire(d) ? (etatJour(d) === 'confirme' ? '#FFFFFF' : accent) : 'transparent'; }
     function ariaJour(d, sert) { var e = etatJour(d); return 'Dimanche ' + long(d) + (e === 'confirme' ? ', tu sers' : (e === 'attente' ? ', service à confirmer' : ', pas de service')) + (aFaire(d) ? ', une tâche à faire' : ''); }
@@ -790,6 +809,9 @@ class Component extends DCLogic {
       mercis: mercis,
       mesDims: mesDims,
       bandeDims: bandeDims,
+      fenetreCle: fenetre,
+      aFenPrec: !!fenPrec, fenPrec: function () { if (fenPrec) self.setState({ fenetre: fenPrec }); }, fenPrecAria: fenPrec ? 'Deux mois avant : ' + nomFenetre(fenPrec) : '',
+      aFenSuiv: !!fenSuiv, fenSuiv: function () { if (fenSuiv) self.setState({ fenetre: fenSuiv }); }, fenSuivAria: fenSuiv ? 'Deux mois après : ' + nomFenetre(fenSuiv) : '',
       moisOuvert: moisNav.moisOuvert, moisFerme: moisNav.moisFerme, toggleMois: moisNav.toggleMois, moisTitre: moisNav.moisTitre,
       moisPrecOff: moisNav.moisPrecOff, moisSuivOff: moisNav.moisSuivOff, moisPrecFg: moisNav.moisPrecFg, moisSuivFg: moisNav.moisSuivFg,
       moisPrec: moisNav.moisPrec, moisSuiv: moisNav.moisSuiv, moisEntetes: moisNav.moisEntetes, moisCases: moisNav.moisCases, moisLegende: moisNav.moisLegende,

@@ -1,4 +1,5 @@
 const { load, checkHoles, checkTags, assert, report, timers } = require('./dc_harness.js');
+const jour = (v, l) => v.dates.find(d => d.label === l); // un dimanche de la bande, par son libellé
 const file = process.argv[2];
 globalThis.__kerygmaPartage = undefined;
 const { c, tpl, src } = load(file, {});
@@ -24,7 +25,7 @@ assert(x.showLieux && !x.showDetail, 'écran 3 lieux au départ');
 assert(x.cartes.length === 3, '3 cartes');
 assert(x.cartes.map(k => k.manque).join(' | ') === 'Inès, Adrien, Bérénice | Marco, Joëlle, Héloïse, Thaïs, Ismaël | Kenza, Noé, Damien' && !x.cartes.some(k => k.aCompte), 'cartes louange : qui sert, sans compteur : ' + x.cartes.map(k => k.manque).join(' | '));
 assert(x.cartes.every(k => k.edit), 'Hélène modifie les 3 lieux en louange');
-assert(x.dates[0].on && x.dates[0].label === '22 nov', 'date par défaut 22 nov');
+assert(jour(x, '22 nov').on && jour(x, '22 nov').label === '22 nov', 'date par défaut 22 nov');
 assert(x.aSecTitre && x.secTitre === 'Ce dimanche 22 novembre' && !x.aTraiterVisible, 'titre « Ce dimanche 22 novembre », plus de postes vides : ' + x.secTitre);
 assert(x.nav.planning.current === 'page' && x.nav.equipe.current === 'false', 'nav planning active');
 assert(x.nav.afaire.aBadge && x.nav.afaire.badge === '1' && /1 chose à faire/.test(x.nav.afaire.aria), 'pastille À faire : 1 (le planning de Boulogne à valider)');
@@ -35,8 +36,8 @@ assert(x.nav.aIndic && x.nav.indicPos === '0', 'bulle grise sous Planning');
 assert(x.types[0].ligne === x.accent && x.types[1].ligne === 'transparent', 'onglets Culte / Prière soulignés');
 
 // 2. Changer de date sur l'accueil
-x.dates[1].pick(); x = check('date 29/11');
-assert(x.dates[1].on, '29 nov sélectionné');
+jour(x, '29 nov').pick(); x = check('date 29/11');
+assert(jour(x, '29 nov').on, '29 nov sélectionné');
 assert(x.aCRs && x.crListeTitre === 'Compte rendu de dimanche dernier', 'quel que soit le dimanche choisi, le compte rendu de dimanche dernier reste en 2e');
 assert(x.secTitre === 'Dimanche 29 novembre' && x.cartes[0].manque === 'Olivier, Pierre, Inès, Bérénice, Lucas' && !x.cartes[0].aAValider && x.cartes[0].aTaches && x.cartes[0].tachesTexte === '1 tâche', 'carte du 29/11 : équipe, tâche : ' + x.cartes[0].manque);
 
@@ -45,7 +46,7 @@ x.cartes[0].ouvrir(); x = check('détail stm 29/11');
 assert(x.showDetail && !x.showLieux, 'écran détail');
 assert(x.dTitre === 'Saint-Maurice', 'titre détail');
 assert(/29 novembre/.test(x.dSous), 'la date suit dans le détail : ' + x.dSous);
-assert(x.dates[1].on, 'bandeau de dates conservé avec 29 nov');
+assert(jour(x, '29 nov').on, 'bandeau de dates conservé avec 29 nov');
 assert(x.lignes.length === 5 && x.groupesPostes.map(g => g.titre + ':' + g.lignes.map(l => l.label).join('/')).join(' | ') === 'Voix:Direction/Voix | Instruments:Piano/Batterie/Guitare acoustique', 'postes de base : ' + x.groupesPostes.map(g => g.titre + ':' + g.lignes.map(l => l.label).join('/')).join(' | '));
 assert(!x.aDCompte && !x.aBarreDetail && x.groupesPostes.every(g => g.aAjout), 'plus de compteur ni de « Modifiable » ; « + » dans chaque partie');
 assert(x.groupesPostes[0].aAuto && !x.groupesPostes[1].aAuto, 'Auto sur la ligne VOIX, à droite');
@@ -55,7 +56,7 @@ assert(voix.rempli && voix.nom === 'Pierre' && voix.etat === 'normal' && !voix.a
 assert(x.aMois && x.moisBlocTitre === 'Planning de novembre · Saint-Maurice' && /3 réponses en attente/.test(x.moisEtat) && x.aValiderMois && x.validerMoisLabel === 'Valider le planning de novembre' && !x.aEnvoi, 'bloc du mois : réponses en attente, on peut valider quand on veut : ' + x.moisEtat);
 
 // 4. Changer de date dans le détail : on reste dans Saint-Maurice
-x.dates[0].pick(); x = check('détail stm 22/11');
+jour(x, '22 nov').pick(); x = check('détail stm 22/11');
 assert(x.showDetail && x.dTitre === 'Saint-Maurice' && /^Ce dimanche 22 novembre · Louange/.test(x.dSous), 'date changée dans le détail : ' + x.dSous);
 const piano = x.lignes.find(l => l.label === 'Piano');
 assert(piano.vide && piano.peutChoisir && piano.etat === 'aucun' && piano.nomTexte === 'Aucun', 'piano vide le 22/11 : « Aucun » par défaut');
@@ -71,7 +72,7 @@ x.fermer(); x = check('feuille fermée');
 assert(!x.sheetOuvert, 'fermer la feuille');
 
 // 6. Voix le 29/11 à Saint-Maurice : conflits avec Champigny, compatibles avec Boulogne
-x.dates[1].pick(); x = check('stm 29/11');
+jour(x, '29 nov').pick(); x = check('stm 29/11');
 x.lignes.find(l => l.label === 'Voix').ouvrir(); x = check('feuille voix 29/11');
 const byName = n => x.candidats.find(k => k.nom === n);
 assert(byName('Emma') && byName('Emma').bloque && /Champigny/.test(byName('Emma').info), 'Emma en conflit (voix à Champigny 10h30)');
@@ -125,7 +126,7 @@ assert(!x.aToast, 'toast disparaît');
 
 // 8. Le choix se répercute sur Boulogne : Noé est maintenant aussi le matin à Saint-Maurice
 x.retour(); x = check('retour 3 lieux');
-assert(x.showLieux && x.dates[1].on, 'retour aux 3 lieux, date 29/11 conservée');
+assert(x.showLieux && jour(x, '29 nov').on, 'retour aux 3 lieux, date 29/11 conservée');
 assert(/Noé/.test(x.cartes[0].manque), 'Noé apparaît sur la carte de Saint-Maurice : ' + x.cartes[0].manque);
 x.cartes[2].ouvrir(); x = check('détail Boulogne 29/11');
 x.lignes.find(l => l.label === 'Voix').ouvrir(); x = check('feuille voix Boulogne');
@@ -138,7 +139,7 @@ x.mins[0].pick(); x = check('programme 29/11');
 assert(x.cartes[0].edit && x.cartes[1].lecture && x.cartes[2].lecture, 'programme : Saint-Maurice modifiable, autres en lecture');
 assert(x.cartes[0].compte === '5/5', 'programme stm 29/11 complet : ' + x.cartes[0].compte);
 assert(!x.cartes[1].aCompte && /pas encore rempli/.test(x.cartes[1].manque), 'Champigny sans programme');
-x.dates[2].pick(); x = check('programme 06/12');
+jour(x, '6 déc').pick(); x = check('programme 06/12');
 assert(x.cartes[0].compte === '1/5', 'programme 06/12 : seule la louange est reprise : ' + x.cartes[0].compte);
 x.cartes[0].ouvrir(); x = check('détail programme stm 06/12');
 const lou = x.lignes.find(l => l.label === 'Louange (direction)');
@@ -175,9 +176,9 @@ assert(cene.nonOn && !cene.rempli && cene.nomTexte === 'Pas ce dimanche' && !/su
 cene.pickOui(); x = check('cène oui à nouveau');
 assert(x.lignes.find(l => l.label === 'Sainte Cène').nom === 'Samir Girard', 'le nom revient si on remet Oui');
 x.lignes.find(l => l.label === 'Sainte Cène').pickNon(); x = check('cène non 2');
-x.dates[3].pick(); x = check('autre dimanche');
+jour(x, '13 déc').pick(); x = check('autre dimanche');
 assert(x.lignes.find(l => l.label === 'Sainte Cène').nonOn, 'le choix Oui/Non est propre à chaque dimanche');
-x.dates[2].pick(); x = check('retour 6 déc');
+jour(x, '6 déc').pick(); x = check('retour 6 déc');
 x.retour(); x = check('retour programme');
 x.cartes[1].ouvrir(); x = check('détail programme Champigny');
 assert(x.dLecture && x.lignes.every(l => !l.peutChoisir) && x.dANote, 'Champigny en lecture seule, sans bouton Choisir');
@@ -218,7 +219,7 @@ x.types = undefined;
 x = check('re-render');
 x.retour(); x = check('retour prière');
 x.types[0].pick(); x = check('retour dimanche');
-assert(x.dates[2].on && x.dates[2].label === '6 déc', 'date du dimanche conservée (6 déc)');
+assert(jour(x, '6 déc').on && jour(x, '6 déc').label === '6 déc', 'date du dimanche conservée (6 déc)');
 
 // 11. Onglets du bas
 x.nav.equipe.pick(); x = check('équipe');
@@ -245,7 +246,7 @@ if (vide) { vide.ouvrir(); x = check('feuille'); assert(x.sheetOuvert, 'feuille 
   globalThis.__kerygmaPartage = undefined;
   const r = load(file, {});
   let y = r.c.renderVals();
-  y.dates[1].pick(); y = r.c.renderVals();
+  jour(y, '29 nov').pick(); y = r.c.renderVals();
   y.cartes[0].ouvrir(); y = r.c.renderVals();
   y.lignes.find(l => l.label === 'Voix').ouvrir(); y = r.c.renderVals();
   const emma = y.candidats.find(k => k.nom === 'Emma');
@@ -389,28 +390,49 @@ assert(alt.accent === '#0F766E' && alt.mins[1].bg === '#0F766E', 'tweak couleur'
   assert(!y.nav.afaire.aBadge && y.aFaireVide && S.validations['bou|2026-11'] && S.notifs.some(n => n.pour === 'Marco' && n.mois === '2026-11'), 'plus rien à faire, Marco prévenu');
 }
 
-// 15. Bande des dates jusqu'à fin 2027, avec une pastille par mois
+// 15. Bande des dates : 2 mois à la fois, flèches avant / après, « Mois » fixe, dimanches passés en lecture
 {
   globalThis.__kerygmaPartage = undefined;
   const r = load(file, {});
-  let y = r.c.renderVals();
-  assert(y.dates.length === 58 && y.dates[57].label === '26 déc', 'dimanches jusqu’au 26 décembre 2027 : ' + y.dates.length);
-  const marq = y.bande.filter(b => b.marqueur);
-  assert(marq.length === 13 && marq[0].bas === 'Décembre' && marq[1].haut === 'janvier' && marq[1].bas === '2027' && marq[2].bas === 'Février' && marq[3].bas === 'Mars' && marq[12].bas === 'Décembre', 'pastilles : ' + marq.map(b => b.bas).join());
-  const iJ = y.bande.indexOf(marq[1]);
-  assert(y.bande[iJ - 1].label === '27 déc' && y.bande[iJ + 1].label === '3 janv', '« 2027 » juste après le 27 décembre');
-  marq[1].pick(); y = r.c.renderVals();
-  assert(y.secTitre === 'Dimanche 3 janvier' && y.dates.find(d => d.on).label === '3 janv', '« 2027 » ouvre le premier dimanche de janvier : ' + y.secTitre);
-  y.bande.filter(b => b.marqueur)[2].pick(); y = r.c.renderVals();
-  assert(y.secTitre === 'Dimanche 7 février', 'Février : ' + y.secTitre);
-  y.toggleMois(); y = r.c.renderVals();
-  assert(y.moisTitre === 'Février 2027' && y.moisCases.filter(c => c.actif).map(c => c.n).join() === '7,14,21,28', 'calendrier février 2027 : ' + y.moisTitre);
-  y.moisSuiv(); y = r.c.renderVals();
-  assert(y.moisTitre === 'Mars 2027', 'mois suivant : ' + y.moisTitre);
-  assert(/data-marqueur/.test(src) && /data-visible="\{\{d\.visible\}\}"/.test(src), 'pastilles de mois et date choisie gardée visible');
-  y.cartes[0].ouvrir(); y = r.c.renderVals();
-  assert(checkHoles(tpl, y).length === 0 && y.lignes.length === 5 && y.lignes.every(l => l.vide), 'un dimanche de 2027 : postes de base, tous sur Aucun');
-  steps += 6;
+  const V = l => { const y = r.c.renderVals(); const e = checkHoles(tpl, y); assert(e.length === 0, l + ' : ' + e.join(' | ')); steps++; return y; };
+  let y = V('départ 15');
+  const libs = v => v.bande.map(b => b.marqueur ? '[' + (b.haut ? b.haut + ' ' : '') + b.bas + ']' : b.label).join(' ');
+  assert(libs(y) === '[Novembre] 1 nov 8 nov 15 nov 22 nov 29 nov [Décembre] 6 déc 13 déc 20 déc 27 déc', 'novembre et décembre : ' + libs(y));
+  assert(y.aFenPrec && y.aFenSuiv && y.fenSuivAria === 'Deux mois après : janvier et février 2027' && y.fenPrecAria === 'Deux mois avant : septembre et octobre', 'flèches : ' + y.fenPrecAria + ' / ' + y.fenSuivAria);
+  assert(/<div data-bande[^>]*>\s*<button[^>]*aria-label="Voir le mois"[\s\S]*?<\/button>\s*<nav aria-label="Dates"/.test(src), '« Mois » reste fixe, hors de la bande qui défile');
+  assert(/data-fenetre="\{\{fenetreCle\}\}"/.test(src) && /data-visible="\{\{d\.visible\}\}"/.test(src), 'la bande se replace quand on change de 2 mois');
+  // Flèche « après » : janvier et février 2027, on revient au début
+  y.fenSuiv(); y = V('janvier-février 2027');
+  assert(libs(y) === '[janvier 2027] 3 janv 10 janv 17 janv 24 janv 31 janv [Février] 7 févr 14 févr 21 févr 28 févr', 'janvier et février 2027 : ' + libs(y));
+  assert(y.secTitre === 'Dimanche 3 janvier' && y.dates[0].on, 'le premier dimanche de janvier est choisi');
+  y.fenSuiv(); y = V('mars-avril 2027');
+  assert(y.bande[0].haut === 'mars' && y.bande[0].bas === '2027' && y.secTitre === 'Dimanche 7 mars', 'mars 2027 : ' + y.secTitre);
+  y.bande.find(b => b.marqueur && b.bas === 'Avril').pick(); y = V('avril');
+  assert(y.secTitre === 'Dimanche 4 avril', 'la pastille Avril va au premier dimanche d’avril : ' + y.secTitre);
+  y.toggleMois(); y = V('calendrier avril');
+  assert(y.moisTitre === 'Avril 2027' && y.moisCases.filter(c => c.actif).map(c => c.n).join() === '4,11,18,25', 'calendrier avril 2027 : ' + y.moisTitre);
+  y.toggleMois(); y = V('calendrier fermé');
+  // Flèche « avant » : on revient au dimanche le plus proche (ce dimanche 22 novembre)
+  y.fenPrec(); y = V('retour janvier'); y.fenPrec(); y = V('retour novembre');
+  assert(y.secTitre === 'Ce dimanche 22 novembre' && jour(y, '22 nov').on, 'retour au dimanche le plus proche : ' + y.secTitre);
+  // Le passé : septembre et octobre, en lecture
+  y.fenPrec(); y = V('septembre-octobre');
+  assert(libs(y) === '[Septembre] 6 sept 13 sept 20 sept 27 sept [Octobre] 4 oct 11 oct 18 oct 25 oct' && y.secTitre === 'Dimanche 25 octobre', 'le dernier dimanche passé est choisi : ' + y.secTitre);
+  assert(y.cartes[0].manque === 'Tania, Pierre, Chloé, Bérénice, Inès' && !y.cartes[0].lecture, 'qui a servi le 25 octobre : ' + y.cartes[0].manque);
+  assert(y.aCRs && y.crListeTitre === 'Compte rendu de dimanche dernier', 'le compte rendu de dimanche dernier reste là');
+  y.cartes[0].ouvrir(); y = V('détail 25 oct');
+  assert(y.dLecture && y.dLectureTexte === 'Dimanche passé' && !y.aEnvoi && !y.aMois && y.lignes.every(l => !l.peutChoisir) && !y.groupesPostes[0].aAuto, 'dimanche passé : on consulte, on ne modifie plus');
+  assert(y.lignes.find(l => l.label === 'Direction').nom === 'Tania', 'Tania à la direction le 25 octobre');
+  // Tout au début (janvier 2026), pas de flèche « avant » ; tout à la fin (décembre 2027), pas de flèche « après »
+  for (let i = 0; i < 6 && y.aFenPrec; i++) { y.fenPrec(); y = V('avant ' + i); }
+  assert(!y.aFenPrec && y.dates[0].label === '4 janv', 'premier dimanche : 4 janvier 2026');
+  for (let i = 0; i < 12 && y.aFenSuiv; i++) { y.fenSuiv(); y = V('après ' + i); }
+  assert(!y.aFenSuiv && y.dates[y.dates.length - 1].label === '26 déc' && y.bande[0].bas === '2027', 'dernier dimanche : 26 décembre 2027');
+  y.cartes[0].ouvrir(); y = V('détail 2027');
+  assert(y.lignes.length === 5 && y.lignes.every(l => l.vide && l.peutChoisir), 'un dimanche de 2027 : postes de base, tous sur Aucun');
+  // La prière garde sa bande (jeudis), sans flèches
+  y.retour(); y = V('retour'); y.types[1].pick(); y = V('prière');
+  assert(!y.aFenPrec && !y.aFenSuiv && !y.bande.some(b => b.marqueur) && y.dates[0].label === '26 nov', 'prière : les jeudis, sans flèches');
 }
 
 console.log(steps + ' états vérifiés');

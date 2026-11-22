@@ -134,6 +134,7 @@
     let s0 = null, s1 = null;
     if (focusId) { try { s0 = act.selectionStart; s1 = act.selectionEnd; } catch (e) { s0 = null; } }
     const avaitFocus = !!app.querySelector('[data-focus="true"]');
+    const fenetresAvant = Array.from(app.querySelectorAll('[data-fenetre]')).map(el => el.getAttribute('data-fenetre'));
     const frag = document.createDocumentFragment();
     build(TEMPLATES[current], vals, frag);
     app.replaceChildren(frag);
@@ -156,14 +157,23 @@
       const dx = a.left - el.getBoundingClientRect().left;
       if (Math.abs(dx) > 1) el.animate([{ transform: 'translateX(' + dx + 'px)' }, { transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.2, .8, .2, 1)' });
     });
-    // La date choisie reste visible dans la bande (par exemple après « 2027 »)
+    // Bande des dates : à l'ouverture ou quand on change de 2 mois, la date choisie se place au début
+    // (si c'est la première date des 2 mois, on revient tout au début) ; sinon elle reste simplement visible.
     app.querySelectorAll('[data-visible="true"]').forEach(el => {
       const p = el.parentElement;
       if (!p || !p.getBoundingClientRect) return;
       const pr = p.getBoundingClientRect(), er = el.getBoundingClientRect();
       if (!pr.width) return;
-      if (er.left < pr.left) p.scrollLeft -= (pr.left - er.left) + 24;
+      const nouvelle = p.hasAttribute('data-fenetre') && fenetresAvant.indexOf(p.getAttribute('data-fenetre')) < 0;
+      if (nouvelle) {
+        const dates = Array.from(p.querySelectorAll('[data-visible]'));
+        const debut = er.left - pr.left + p.scrollLeft;
+        p.scrollLeft = dates[0] === el ? 0 : Math.max(0, debut - 36);
+      } else if (er.left < pr.left) p.scrollLeft -= (pr.left - er.left) + 24;
       else if (er.right > pr.right) p.scrollLeft += (er.right - pr.right) + 24;
+    });
+    app.querySelectorAll('[data-fenetre]').forEach(p => {
+      if (fenetresAvant.indexOf(p.getAttribute('data-fenetre')) < 0 && !p.querySelector('[data-visible="true"]')) p.scrollLeft = 0;
     });
     // Champ à ouvrir directement (par exemple « Ajouter un commentaire ») : focus et défilement, une seule fois
     const aFocus = app.querySelector('[data-focus="true"]');

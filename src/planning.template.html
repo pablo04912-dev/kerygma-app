@@ -47,11 +47,15 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </div>
 </sc-if>
 <sc-if value="{{moisFerme}}" hint-placeholder-val="{{true}}">
-<nav aria-label="Dates" style="display: flex; flex-shrink: 0; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<div data-bande style="display: flex; flex-shrink: 0; align-items: flex-start; gap: 8px; margin-right: -20px">
 <button type="button" aria-expanded="false" aria-label="Voir le mois" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 10px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
 <span style="font-size: 12px; font-weight: 600">Mois</span>
 </button>
+<nav aria-label="Dates" data-fenetre="{{fenetreCle}}" style="flex: 1 1 auto; min-width: 0; display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 2px 0">
+<sc-if value="{{aFenPrec}}" hint-placeholder-val="{{false}}">
+<button type="button" data-fleche aria-label="{{fenPrecAria}}" onClick="{{fenPrec}}" style="flex: 0 0 auto; width: 52px; min-height: 56px; padding: 0; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+</sc-if>
 <sc-for list="{{bande}}" as="d" hint-placeholder-count="5">
 <sc-if value="{{d.marqueur}}" hint-placeholder-val="{{false}}">
 <button type="button" data-marqueur aria-label="{{d.aria}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 0; background: #EEF0FF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
@@ -68,7 +72,11 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </button>
 </sc-if>
 </sc-for>
+<sc-if value="{{aFenSuiv}}" hint-placeholder-val="{{false}}">
+<button type="button" data-fleche aria-label="{{fenSuivAria}}" onClick="{{fenSuiv}}" style="flex: 0 0 auto; width: 52px; min-height: 56px; padding: 0; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+</sc-if>
 </nav>
+</div>
 </sc-if>
 <sc-if value="{{moisOuvert}}" hint-placeholder-val="{{false}}">
 <section aria-label="Calendrier du mois" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 8px 4px 12px; display: flex; flex-direction: column; gap: 8px">
@@ -187,11 +195,15 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 <p style="margin: 0; font-size: 15px; line-height: 1.4; color: #5B5F6B">{{dSous}}</p>
 </div>
 <sc-if value="{{moisFerme}}" hint-placeholder-val="{{true}}">
-<nav aria-label="Dates" style="display: flex; flex-shrink: 0; gap: 8px; overflow-x: auto; margin: 0 -20px; padding: 0 20px 2px">
+<div data-bande style="display: flex; flex-shrink: 0; align-items: flex-start; gap: 8px; margin-right: -20px">
 <button type="button" aria-expanded="false" aria-label="Voir le mois" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 10px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
 <span style="font-size: 12px; font-weight: 600">Mois</span>
 </button>
+<nav aria-label="Dates" data-fenetre="{{fenetreCle}}" style="flex: 1 1 auto; min-width: 0; display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 2px 0">
+<sc-if value="{{aFenPrec}}" hint-placeholder-val="{{false}}">
+<button type="button" data-fleche aria-label="{{fenPrecAria}}" onClick="{{fenPrec}}" style="flex: 0 0 auto; width: 52px; min-height: 56px; padding: 0; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+</sc-if>
 <sc-for list="{{bande}}" as="d" hint-placeholder-count="5">
 <sc-if value="{{d.marqueur}}" hint-placeholder-val="{{false}}">
 <button type="button" data-marqueur aria-label="{{d.aria}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 0; background: #EEF0FF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
@@ -208,7 +220,11 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </button>
 </sc-if>
 </sc-for>
+<sc-if value="{{aFenSuiv}}" hint-placeholder-val="{{false}}">
+<button type="button" data-fleche aria-label="{{fenSuivAria}}" onClick="{{fenSuiv}}" style="flex: 0 0 auto; width: 52px; min-height: 56px; padding: 0; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+</sc-if>
 </nav>
+</div>
 </sc-if>
 <sc-if value="{{moisOuvert}}" hint-placeholder-val="{{false}}">
 <section aria-label="Calendrier du mois" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 8px 4px 12px; display: flex; flex-direction: column; gap: 8px">
@@ -262,7 +278,7 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 <sc-if value="{{dLecture}}" hint-placeholder-val="{{false}}">
 <span style="flex: 0 0 auto; display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #F1EFEA; color: #5B5F6B">
 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
-<span>Lecture seule</span>
+<span>{{dLectureTexte}}</span>
 </span>
 </sc-if>
 </div>
@@ -347,7 +363,7 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 <sc-if value="{{showCR}}" hint-placeholder-val="{{false}}">
 <div style="display: flex; flex-direction: column; gap: 4px">
 <button type="button" aria-label="{{crRetourLabel}}" onClick="{{retourCR}}" style="align-self: flex-start; width: 44px; height: 44px; margin-left: -10px; padding: 0; border-radius: 12px; border: 0; background: transparent; color: {{accent}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
-<span style="font-size: 13px; font-weight: 700; color: #5B5F6B">Compte rendu</span>
+<span style="font-size: 13px; font-weight: 700; color: #5B5F6B">{{crHaut}}</span>
 <h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 30px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">{{crTitre}}</h1>
 <p style="margin: 0; font-size: 15px; line-height: 1.4; color: #3D4049">{{crSous}}</p>
 </div>
@@ -425,7 +441,6 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </sc-if>
 <sc-if value="{{crLecture}}" hint-placeholder-val="{{false}}">
 <section aria-label="Présences" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
-<span style="font-size: 14px; color: #5B5F6B">{{crPar}}</span>
 <div style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 2px 12px; font-size: 15px">
 <span style="color: #5B5F6B">Présents</span>
 <span style="font-weight: 600; text-align: right">{{crPresentsTexte}}</span>
@@ -437,8 +452,16 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </section>
 <sc-for list="{{crTextes}}" as="ct" hint-placeholder-count="3">
 <section aria-label="{{ct.titre}}" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px">
+<sc-if value="{{ct.aTexte}}" hint-placeholder-val="{{true}}">
 <span style="font-size: 14px; font-weight: 700; color: {{ct.color}}">{{ct.titre}}</span>
 <span style="font-size: 15px; line-height: 1.45; color: #16181D">{{ct.texte}}</span>
+</sc-if>
+<sc-if value="{{ct.vide}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; justify-content: space-between; align-items: baseline; gap: 12px">
+<span style="font-size: 14px; font-weight: 700; color: {{ct.color}}">{{ct.titre}}</span>
+<span style="font-size: 15px; font-weight: 600; color: #5B5F6B">Aucun</span>
+</div>
+</sc-if>
 </section>
 </sc-for>
 <sc-if value="{{crAMerci}}" hint-placeholder-val="{{false}}">
@@ -844,11 +867,11 @@ class Component extends DCLogic {
 
     var MOIS = { '01': 'janvier', '02': 'février', '03': 'mars', '04': 'avril', '05': 'mai', '06': 'juin', '07': 'juillet', '08': 'août', '09': 'septembre', '10': 'octobre', '11': 'novembre', '12': 'décembre' };
     var MOIS_C = { '01': 'janv', '02': 'févr', '03': 'mars', '04': 'avr', '05': 'mai', '06': 'juin', '07': 'juil', '08': 'août', '09': 'sept', '10': 'oct', '11': 'nov', '12': 'déc' };
-    // Tous les dimanches du 22 novembre 2026 à fin 2027 (aucun « jj/mm » ne revient deux fois)
+    // Tous les dimanches de 2026 et 2027 (aucun « jj/mm » ne revient deux fois : un dimanche de 2026 tombe un lundi en 2027)
     var DIMS = [], ANNEE = {};
     (function () {
       function deux(n) { return (n < 10 ? '0' : '') + n; }
-      for (var t = Date.UTC(2026, 10, 22); t <= Date.UTC(2027, 11, 26); t += 7 * 864e5) {
+      for (var t = Date.UTC(2026, 0, 4); t <= Date.UTC(2027, 11, 26); t += 7 * 864e5) {
         var x = new Date(t), d = deux(x.getUTCDate()) + '/' + deux(x.getUTCMonth() + 1);
         DIMS.push(d); ANNEE[d] = x.getUTCFullYear();
       }
@@ -861,7 +884,8 @@ class Component extends DCLogic {
     function court(d) { return jourDe(d) + ' ' + MOIS_C[d.split('/')[1]]; }
     function long(d) { return jourDe(d) + ' ' + MOIS[d.split('/')[1]]; }
     // « Ce dimanche » pour le dimanche de la semaine en cours, sinon « Dimanche 15 novembre »
-    var CE_DIMANCHE = DIMS[0];
+    var CE_DIMANCHE = '22/11';
+    function passe(d) { return dateNum(d) < dateNum(CE_DIMANCHE); }
     function nomDimanche(d) { return d === CE_DIMANCHE ? 'Ce dimanche' : 'Dimanche ' + long(d); }
     function titreDimanche(d) { return (d === CE_DIMANCHE ? 'Ce dimanche ' : 'Dimanche ') + long(d); }
     function veille(d) {
@@ -932,7 +956,7 @@ class Component extends DCLogic {
     function uniques(a) { return a.filter(function (n, i) { return n && a.indexOf(n) === i; }); }
     // Liste envoyée d'un poste : ce que les volontaires ont reçu
     function listeEnvoyee(d, l, pid) {
-      var base = (DATA.louange[d] && DATA.louange[d][l]) || {};
+      var base = (DATA.louange[d] && DATA.louange[d][l]) || (HIST[d] && HIST[d][l]) || {};
       var aff = S.affectations[cle('dimanche', d, l, 'louange', pid)];
       var arr = aff ? aff.noms.slice() : (base[pid] || []).slice();
       var ex = S.echanges[d + '|' + l + '|' + pid];
@@ -996,6 +1020,7 @@ class Component extends DCLogic {
     }
     function datePriDe(L) { return L.priVeille ? veille(datePri) : datePri; }
     function peutModifier(t, m, l) {
+      if (t === 'dimanche' && passe(dateDim)) return false; // un dimanche passé se consulte, il ne se modifie plus
       if (coord) return t === 'dimanche' && m === 'louange' && l === 'stm';
       if (t === 'priere') return l === 'stm';
       if (m === 'louange') return true;
@@ -1008,7 +1033,7 @@ class Component extends DCLogic {
     var INDISPOS = DATA.indispos || {};
     var FREQMAX = DATA.freqMax || {};
     function dateNum(d) { var p = d.split('/'); return Date.UTC(anneeDe(d), parseInt(p[1], 10) - 1, parseInt(p[0], 10)); }
-    var TOUS_DIMS = Object.keys(HIST).concat(DIMS).sort(function (a, b) { return dateNum(a) - dateNum(b); });
+    var TOUS_DIMS = DIMS.concat(Object.keys(HIST).filter(function (d) { return DIMS.indexOf(d) < 0; })).sort(function (a, b) { return dateNum(a) - dateNum(b); });
     var CR_DATE = Object.keys(HIST).sort(function (a, b) { return dateNum(a) - dateNum(b); }).pop() || '15/11';
     function equipeDim(d, l) { return HIST[d] ? (HIST[d][l] || {}) : louangeDe(d, l); }
     function sertLe(n, d) {
@@ -1072,7 +1097,25 @@ class Component extends DCLogic {
     }
     function ouvrirFeuille(id, slot) { return function () { self.setState({ sheet: id, slot: slot || null, texte: '', erreur: '' }); }; }
 
-    var dates = (type === 'dimanche' ? DIMS : JEUS).map(function (d) {
+    // Bande des dates : 2 mois à la fois (janv.-févr., mars-avr., …, nov.-déc.), flèches pour les 2 mois d'avant ou d'après
+    function fenetreDe(d) { return anneeDe(d) + '-' + Math.floor((parseInt(d.split('/')[1], 10) - 1) / 2); }
+    var FENETRES = [];
+    DIMS.forEach(function (d) { var f = fenetreDe(d); if (FENETRES.indexOf(f) < 0) FENETRES.push(f); });
+    function dimsFenetre(f) { return DIMS.filter(function (d) { return fenetreDe(d) === f; }); }
+    // Le dimanche le plus proche d'aujourd'hui dans une liste (ce dimanche, sinon le premier à venir ou le dernier passé)
+    function plusProche(liste) {
+      var t = dateNum(CE_DIMANCHE), best = liste[0];
+      liste.forEach(function (d) { if (Math.abs(dateNum(d) - t) < Math.abs(dateNum(best) - t)) best = d; });
+      return best;
+    }
+    function nomFenetre(f) {
+      var l = dimsFenetre(f), m1 = MOIS[l[0].split('/')[1]], m2 = MOIS[l[l.length - 1].split('/')[1]], an = anneeDe(l[0]);
+      return m1 + ' et ' + m2 + (an !== 2026 ? ' ' + an : '');
+    }
+    var fenetre = fenetreDe(dateDim), iFen = FENETRES.indexOf(fenetre);
+    var surDimanche = type === 'dimanche';
+    function allerFenetre(f) { return function () { self.setState({ dateDim: plusProche(dimsFenetre(f)), sheet: null }); }; }
+    var dates = (type === 'dimanche' ? dimsFenetre(fenetre) : JEUS).map(function (d) {
       var on = d === (type === 'dimanche' ? dateDim : datePri);
       return {
         d: d, visible: on ? 'true' : 'false',
@@ -1085,17 +1128,21 @@ class Component extends DCLogic {
         pick: function () { self.setState(type === 'dimanche' ? { dateDim: d, sheet: null } : { datePri: d, sheet: null }); }
       };
     });
+    // Une pastille au début de chaque mois (avec l'année si ce n'est pas 2026) ; elle va au dimanche le plus proche de ce mois
     var bande = [];
     dates.forEach(function (x, i) {
       var m = moisCle(x.d);
-      if (i > 0 && m !== moisCle(dates[i - 1].d)) {
+      if (surDimanche && (i === 0 || m !== moisCle(dates[i - 1].d))) {
         var an = m.split('-')[0], nomM = MOIS[m.split('-')[1]];
-        var janvier = m.split('-')[1] === '01';
-        bande.push({ marqueur: true, date: false, haut: janvier ? 'janvier' : '', bas: janvier ? an : nomM.charAt(0).toUpperCase() + nomM.slice(1),
-          aria: 'Aller en ' + nomM + ' ' + an, pick: x.pick, jour: '', label: '', on: false, bg: '', fg: '', border: '', visible: 'false' });
+        var autreAn = an !== '2026' && i === 0; // l'année sur la première pastille des 2 mois (« janvier 2027 »)
+        var cible = plusProche(dates.filter(function (y) { return moisCle(y.d) === m; }).map(function (y) { return y.d; }));
+        bande.push({ marqueur: true, date: false, haut: autreAn ? nomM : '', bas: autreAn ? an : nomM.charAt(0).toUpperCase() + nomM.slice(1),
+          aria: 'Aller en ' + nomM + ' ' + an, pick: function () { self.setState({ dateDim: cible, sheet: null }); }, jour: '', label: '', on: false, bg: '', fg: '', border: '', visible: 'false' });
       }
       bande.push(Object.assign({ marqueur: false, date: true, haut: '', bas: '', aria: '' }, x));
     });
+    var fenPrec = surDimanche && iFen > 0 ? FENETRES[iFen - 1] : null;
+    var fenSuiv = surDimanche && iFen < FENETRES.length - 1 ? FENETRES[iFen + 1] : null;
     var types = [
       { id: 'dimanche', label: 'Culte du dimanche' },
       { id: 'priere', label: 'Réunion de prière' }
@@ -1143,7 +1190,7 @@ class Component extends DCLogic {
         titre: titre,
         sous: sous,
         edit: edit,
-        lecture: !edit,
+        lecture: !edit && !(type === 'dimanche' && passe(dateDim)),
         aCompte: r.aCompte,
         compte: r.n + '/' + r.total,
         pct: r.total ? Math.round(r.n / r.total * 100) + '%' : '0%',
@@ -1175,7 +1222,7 @@ class Component extends DCLogic {
     DIMS.forEach(function (d) { NOMS_MOIS[moisCle(d)] = nomMoisCle(moisCle(d)); });
     function moisDe(d) { return moisCle(d); }
     function etatMois(l, m) {
-      var dims = DIMS.filter(function (d) { return moisDe(d) === m; });
+      var dims = DIMS.filter(function (d) { return moisDe(d) === m && !passe(d); });
       var attente = 0, nonDispo = 0, personnes = 0;
       dims.forEach(function (d) {
         postesDe(d, l).forEach(function (p) {
@@ -1193,12 +1240,13 @@ class Component extends DCLogic {
     var moisAValider = [];
     if (!coord) LIEUX.forEach(function (LV) {
       Object.keys(NOMS_MOIS).forEach(function (m) {
+        if (!DIMS.some(function (d) { return moisDe(d) === m && !passe(d); })) return; // mois passés : plus rien à valider
         var e = etatMois(LV.id, m);
         if (e.rempli && !e.valide) moisAValider.push({
           titre: 'Planning de ' + NOMS_MOIS[m] + ' · ' + LV.nom,
           texte: 'Chaque volontaire a répondu dispo. Tu peux valider si c’est bon pour toi.',
           valider: function () { self.validerMois(LV.id, m, NOMS_MOIS[m]); },
-          voir: function () { self.setState({ tab: 'planning', ecran: 'detail', lieu: LV.id, dateDim: DIMS.filter(function (d) { return moisDe(d) === m; })[0], type: 'dimanche', min: 'louange' }); }
+          voir: function () { self.setState({ tab: 'planning', ecran: 'detail', lieu: LV.id, dateDim: DIMS.filter(function (d) { return moisDe(d) === m && !passe(d); })[0], type: 'dimanche', min: 'louange' }); }
         });
       });
     });
@@ -1323,7 +1371,8 @@ class Component extends DCLogic {
     var CR_CLE = CR_DATE + '|' + LC.id + '|louange';
     var defautMsgT = DEBUTS[0];
     var crComsListe = (S.commentaires[CR_CLE] || []);
-    var crComs = crComsListe.map(function (c) { return { de: c.de === 'Hélène' && !coord ? 'Toi (Hélène)' : c.de + ', ' + c.role, texte: c.texte }; });
+    // Chacun ne voit que ses propres commentaires, ou ceux qui lui sont adressés (coordinateur)
+    var crComs = crComsListe.filter(function (c) { return coord || c.de === MOI; }).map(function (c) { return { de: c.de === 'Hélène' && !coord ? 'Toi (Hélène)' : c.de + ', ' + c.role, texte: c.texte }; });
     var comsAutres = crComsListe.filter(function (c) { return c.de !== 'Thomas'; });
     var msgMode = s.msgMode || 'equipe';
     var msgChoisis = s.msgChoisis || {};
@@ -1347,11 +1396,12 @@ class Component extends DCLogic {
     });
     var msgsPrivesCR = [];
     (S.mercis || []).forEach(function (m) { if (crVu && m.de === crVu.par && m.mode === 'prive' && m.date === CR_DATE && m.lieu === LC.id) m.noms.forEach(function (n) { if (msgsPrivesCR.indexOf(n) < 0) msgsPrivesCR.push(n); }); });
+    // Les 3 rubriques sont toujours là ; « Aucun » à droite quand le coordinateur n'a rien écrit
     var crTextes = crVu ? [
       { titre: 'Ce qui s’est bien passé', texte: crVu.bien, color: VERT },
       { titre: 'Problèmes', texte: crVu.problemes, color: ROUGE },
       { titre: 'À améliorer', texte: crVu.ameliorer, color: AMBRE }
-    ].filter(function (t) { return t.texte; }) : [];
+    ].map(function (t) { var v = (t.texte || '').trim(); return { titre: t.titre, texte: v, color: t.color, aTexte: !!v, vide: !v }; }) : [];
     var crPresentsNoms = crVu ? prevuCR(LC.id).map(function (pp) { return pp.nom; }).filter(function (n) { return (crVu.absents || []).indexOf(n) < 0; }) : [];
 
     var L = LIEUX.find(function (x) { return x.id === lieuId; }) || LIEUX[0];
@@ -1475,7 +1525,7 @@ class Component extends DCLogic {
     var envoi = type === 'dimanche' && min === 'louange' && dEdit ? brouillonsLieu(L.id) : [];
     var nbChangements = envoi.reduce(function (a, c) { return a + c.ajoutes.length + c.retires.length; }, 0);
     var moisCourant = moisDe(dateDim);
-    var em = type === 'dimanche' && min === 'louange' ? etatMois(L.id, moisCourant) : null;
+    var em = passe(dateDim) && type === 'dimanche' ? null : (type === 'dimanche' && min === 'louange' ? etatMois(L.id, moisCourant) : null);
 
     // Feuille « Tâche » : une tâche par personne et par culte, modifiable
     var tache = s.tache || null;
@@ -1889,6 +1939,7 @@ class Component extends DCLogic {
       retourCR: function () { self.setState(coord ? { tab: 'afaire', ecran: 'detail' } : { ecran: 'lieux' }); },
       crRetourLabel: coord ? 'Retour à À faire' : 'Retour aux 3 lieux',
       crTitre: LC.nom,
+      crHaut: s.ecran === 'cr' && !coord ? 'Compte rendu · ' + (crVu ? crVu.par : LC.coord) : 'Compte rendu',
       crSous: nomDimanche(CR_DATE) + ' · Louange · ' + LC.heure,
       crForm: coord && !crVu,
       crLecture: !!crVu,
@@ -1941,12 +1992,11 @@ class Component extends DCLogic {
       erreurMsg: s.erreurMsg || '',
       envoyerMsg: function () { self.envoyerMsg(CR_DATE, LC, crPrevu.map(function (pp) { return pp.nom; })); },
       msgEnvoyes: msgEnvoyes,
-      crPar: crVu ? 'Rempli par ' + crVu.par + ', coordinateur de ' + LC.nom : '',
       crPresentsTexte: crPresentsNoms.length ? crPresentsNoms.join(', ') : 'Personne',
       crAbsentsTexte: crVu && nbAbs(crVu) ? crVu.absents.join(', ') : 'Aucun',
       crAbsentsColor: crVu && nbAbs(crVu) ? ROUGE : VERT,
       crTextes: crTextes,
-      crAMerci: !!crVu && (!!crVu.merci || msgsPrivesCR.length > 0),
+      crAMerci: !!crVu && crVu.par === MOI && (!!crVu.merci || msgsPrivesCR.length > 0),
       crMerciTexte: crVu ? ((crVu.merci ? 'Très bon service : merci envoyé à toute l’équipe.' : '') + (msgsPrivesCR.length ? (crVu.merci ? ' ' : '') + crVu.par + ' a aussi écrit à ' + msgsPrivesCR.join(', ') + '.' : '')) : '',
       showEquipe: tab === 'equipe',
       showActus: tab === 'actus',
@@ -1956,6 +2006,9 @@ class Component extends DCLogic {
       showMinChips: type === 'dimanche',
       dates: dates,
       bande: bande,
+      fenetreCle: surDimanche ? fenetre : 'priere',
+      aFenPrec: !!fenPrec, fenPrec: fenPrec ? allerFenetre(fenPrec) : null, fenPrecAria: fenPrec ? 'Deux mois avant : ' + nomFenetre(fenPrec) : '',
+      aFenSuiv: !!fenSuiv, fenSuiv: fenSuiv ? allerFenetre(fenSuiv) : null, fenSuivAria: fenSuiv ? 'Deux mois après : ' + nomFenetre(fenSuiv) : '',
       moisOuvert: moisNav.moisOuvert, moisFerme: moisNav.moisFerme, toggleMois: moisNav.toggleMois, moisTitre: moisNav.moisTitre,
       moisPrecOff: moisNav.moisPrecOff, moisSuivOff: moisNav.moisSuivOff, moisPrecFg: moisNav.moisPrecFg, moisSuivFg: moisNav.moisSuivFg,
       moisPrec: moisNav.moisPrec, moisSuiv: moisNav.moisSuiv, moisEntetes: moisNav.moisEntetes, moisCases: moisNav.moisCases, moisLegende: moisNav.moisLegende, aLegende: moisNav.aLegende,
@@ -1977,6 +2030,7 @@ class Component extends DCLogic {
       dCompteColor: rd.aCompte ? (rd.vides ? ROUGE : VERT) : GRIS,
       dEdit: dEdit,
       dLecture: !dEdit,
+      dLectureTexte: type === 'dimanche' && passe(dateDim) ? 'Dimanche passé' : 'Lecture seule',
       lignes: lignes,
       dANote: !!dNote,
       dNote: dNote,

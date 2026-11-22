@@ -5,6 +5,9 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 ## 2026-11-22 (après-midi) · Pablo (avec Claude) · brouillon puis envoi, validation du mois, 2027
 
 **Décisions**
+- (15h) Bande des dates : « Mois » fixe, 2 mois à la fois, flèches ‹ et › pour les 2 mois d'avant ou d'après ; on tombe sur le dimanche le plus proche. Dimanches passés consultables, plus modifiables.
+- (15h) Compte rendu lu par le responsable : « Compte rendu · Sylvie » en haut, plus de « Rempli par… » ; les 3 rubriques toujours là, « Aucun » à droite si vide.
+- (15h) Messages privés : seuls l'expéditeur et les destinataires les voient (le responsable ne voit plus le merci du coordinateur à son équipe).
 - Choisir quelqu'un ne l'invite plus tout de suite : brouillon (« Pas encore envoyé »), puis bouton « Envoyer le planning aux volontaires ». En quittant la page avec un brouillon : « Envoyer les invitations ? » Oui / Non, plus tard. Sans envoi, aucun volontaire n'est prévenu.
 - Thomas envoie lui-même ; plus de propositions validées une par une. Hélène valide le mois quand elle veut ; quand tout le monde a répondu dispo, elle reçoit « Tout est rempli … Tu peux valider si c'est bon pour toi ». Après validation, les deux peuvent encore modifier.
 - Hypothèse (à confirmer par Pablo) : les services confirmés entrent dans les agendas à la validation du mois.

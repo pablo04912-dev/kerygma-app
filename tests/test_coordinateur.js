@@ -1,6 +1,7 @@
 // Profil coordinateur (Thomas, louange Saint-Maurice) et validation par Hélène.
 // Usage : node tests/test_coordinateur.js build/Coordinateur.dc.html build/Planning.dc.html
 const { load, checkHoles, checkTags, assert, report, timers } = require('./dc_harness.js');
+const jour = (v, l) => v.dates.find(d => d.label === l); // un dimanche de la bande, par son libellé
 const fichierCoord = process.argv[2];
 const fichierHelene = process.argv[3];
 let steps = 0;
@@ -36,7 +37,7 @@ assert(x.aValider === undefined && x.aPropAttente === undefined && x.moisAValide
 assert(x.aMois && x.moisBlocTitre === 'Planning de novembre · Saint-Maurice' && /Hélène validera le mois/.test(x.moisEtat) && !x.aValiderMois, 'bloc du mois : Thomas ne valide pas : ' + x.moisEtat);
 
 // 2. 29 nov : le planning envoyé
-x.dates[1].pick(); x = T.v('29/11');
+jour(x, '29 nov').pick(); x = T.v('29/11');
 const voix = x.lignes.find(l => l.label === 'Voix');
 assert(voix.rempli && voix.nom === 'Pierre' && voix.etat === 'normal' && !voix.aSous, 'Pierre aux voix, en attente de réponse');
 
@@ -56,7 +57,7 @@ assert(Object.keys(globalThis.__kerygmaPartage.invitations).length === 0 && glob
 {
   const Hb = ouvrir(fichierHelene);
   let hb = Hb.v('Hélène pendant le brouillon');
-  hb.dates[1].pick(); hb = Hb.v('29/11'); hb.cartes[0].ouvrir(); hb = Hb.v('stm');
+  jour(hb, '29 nov').pick(); hb = Hb.v('29/11'); hb.cartes[0].ouvrir(); hb = Hb.v('stm');
   assert(!hb.lignes.find(l => l.label === 'Basse') || hb.lignes.find(l => l.label === 'Basse').vide, 'le brouillon de Thomas reste chez Thomas');
   assert(!hb.aEnvoi && /pas encore envoyés/.test(hb.moisEtat), 'Hélène voit seulement qu’il y a des choix pas encore envoyés : ' + hb.moisEtat);
 }
@@ -78,7 +79,7 @@ const H = ouvrir(fichierHelene);
 let h = H.v('Hélène');
 assert(h.notifs.length === 1 && h.notifs[0].titre === 'Planning · Dimanche 29 novembre · Saint-Maurice' && h.notifs[0].texte === 'Thomas a envoyé le planning aux volontaires. Basse : ' + nomBasse + '.' && h.nav.afaire.badge === '2', 'Hélène prévenue : ' + (h.notifs[0] || {}).texte);
 h.cartes[0].ouvrir(); h = H.v('Hélène détail');
-h.dates[1].pick(); h = H.v('Hélène 29/11');
+jour(h, '29 nov').pick(); h = H.v('Hélène 29/11');
 assert(h.lignes.find(l => l.label === 'Basse').nom === nomBasse && h.lignes.find(l => l.label === 'Basse').sous === 'Demande envoyée', 'la basse chez Hélène');
 assert(h.aValiderMois && /4 réponses en attente/.test(h.moisEtat), 'Hélène peut valider même si tout n’est pas rempli : ' + h.moisEtat);
 h.validerMois(); h = H.v('validé');
@@ -170,7 +171,7 @@ assert(S9.comptesRendus['15/11|stm|louange'] && S9.comptesRendus['15/11|stm|loua
 assert(S9.mercis.length === 2 && S9.mercis[1].mode === 'equipe' && S9.mercis[1].noms.indexOf('Lucas') >= 0 && S9.mercis[1].noms.indexOf('Chloé') < 0, 'merci à l’équipe présente');
 assert(S9.mercis[1].texte === 'Quel beau service dimanche ! Belle unité.', 'texte envoyé');
 c.ouvrirCR(); c = T3.v('revoir');
-assert(c.crLecture && !c.crForm && c.crAbsentsTexte === 'Chloé' && c.crTextes.length === 2, 'Thomas relit son compte rendu');
+assert(c.crLecture && !c.crForm && c.crAbsentsTexte === 'Chloé' && c.crTextes.length === 3 && c.crTextes.filter(t => t.aTexte).length === 2, 'Thomas relit son compte rendu');
 c.retourCR(); c = T3.v('retour');
 assert(c.showAFaire, 'retour à « À faire »');
 
@@ -189,9 +190,10 @@ e.retourCR(); e = H3.v('retour');
 e.crListe[0].ouvrir(); e = H3.v('ouvre Saint-Maurice');
 assert(e.crFocusAttr === 'false', 'toucher le lieu ouvre le compte rendu sans le clavier');
 assert(!e.crEnAttente && e.crPeutCommenter, 'Hélène peut commenter un compte rendu reçu');
-assert(e.showCR && e.crLecture && e.crRetourLabel === 'Retour aux 3 lieux' && /Rempli par Thomas/.test(e.crPar), 'Hélène lit le compte rendu de Thomas');
+assert(e.showCR && e.crLecture && e.crRetourLabel === 'Retour aux 3 lieux' && e.crHaut === 'Compte rendu · Thomas' && e.crPar === undefined, 'Hélène lit le compte rendu de Thomas : ' + e.crHaut);
 assert(e.crPresentsTexte === 'Inès, Adrien, Camille, Bérénice, Lucas' && e.crAbsentsTexte === 'Chloé', 'présents et absents');
-assert(e.crTextes.map(t => t.titre).join() === 'Ce qui s’est bien passé,Problèmes' && e.crAMerci && e.crMerciTexte === 'Très bon service : merci envoyé à toute l’équipe. Thomas a aussi écrit à Lucas.', 'commentaires et messages : ' + e.crMerciTexte);
+assert(e.crTextes.map(t => t.titre + (t.vide ? ' : Aucun' : '')).join() === 'Ce qui s’est bien passé,Problèmes,À améliorer : Aucun', 'les 3 rubriques, « Aucun » quand c’est vide : ' + e.crTextes.map(t => t.titre + (t.vide ? ' : Aucun' : '')).join());
+assert(!e.crAMerci, 'les messages de Thomas à l’équipe ou à Lucas restent entre eux : Hélène ne les voit pas');
 // Commentaire général pour Thomas
 e.envoyerCom(); e = H3.v('commentaire vide');
 assert(e.aErreurCom, 'commentaire vide refusé');
@@ -235,7 +237,7 @@ c2.retourCR(); c2 = T3.v('retour Thomas');
 e.retourCR(); e = H3.v('retour 3 lieux');
 assert(e.showLieux, 'retour aux 3 lieux');
 e.crListe[1].ouvrir(); e = H3.v('Champigny');
-assert(e.crLecture && e.crTextes.length === 3 && e.crAbsentsTexte === 'Pierre' && /toute l’équipe/.test(e.crMerciTexte), 'compte rendu de Sylvie (exemple)');
+assert(e.crLecture && e.crTextes.length === 3 && e.crAbsentsTexte === 'Pierre' && !e.crAMerci && e.crHaut === 'Compte rendu · Sylvie', 'compte rendu de Sylvie (exemple)');
 e.mins[0].pick(); e.retourCR(); e = H3.v('programme');
 assert(!e.aCRs, 'comptes rendus louange masqués sur le programme du culte');
 
@@ -248,12 +250,12 @@ assert(/Bérénice n’est pas dispo et a demandé à Thaïs de prendre sa place
 assert(g.echangesAttente.length === 1 && /Adrien a demandé à Lucas/.test(g.echangesAttente[0].texte) && /Pas encore de réponse de Lucas/.test(g.echangesAttente[0].texte), 'échange en attente de réponse');
 g.echangesAValider[0].oui(); g = T4.v('échange validé');
 assert(g.echangesAValider.length === 0 && /Échange validé : Thaïs remplace Bérénice le 6 décembre/.test(g.toast), 'toast : ' + g.toast);
-g.dates[2].pick(); g = T4.v('6 déc');
+jour(g, '6 déc').pick(); g = T4.v('6 déc');
 const bat = g.lignes.find(l => l.label === 'Batterie');
 assert(bat.nom === 'Thaïs' && bat.sous === 'Échange : Bérénice → Thaïs (Bérénice pas dispo)' && bat.sousColor === '#146C3A', 'planning changé : ' + bat.nom + ' / ' + bat.sous);
 const H4 = ouvrir(fichierHelene);
 let h4 = H4.v('Hélène voit l’échange');
-h4.dates[2].pick(); h4 = H4.v('Hélène 6 déc');
+jour(h4, '6 déc').pick(); h4 = H4.v('Hélène 6 déc');
 h4.cartes[0].ouvrir(); h4 = H4.v('Hélène stm 6 déc');
 assert(h4.lignes.find(l => l.label === 'Batterie').nom === 'Thaïs' && /Bérénice → Thaïs/.test(h4.lignes.find(l => l.label === 'Batterie').sous), 'Hélène voit l’échange validé');
 assert(h4.echangesAValider.length === 0, 'Hélène n’a pas d’échange à valider (c’est le coordinateur)');
@@ -262,7 +264,7 @@ g = T4.v('deuxième échange');
 assert(g.echangesAValider.length === 1 && g.echangesAValider[0].titre === 'Piano · dimanche 13 décembre', 'nouvel échange à valider');
 g.echangesAValider[0].non(); g = T4.v('échange refusé');
 assert(globalThis.__kerygmaPartage.echanges['13/12|stm|piano'].etat === 'refusee' && /Hugo garde son service du 13 décembre/.test(g.toast), 'refus : ' + g.toast);
-g.dates[3].pick(); g = T4.v('13 déc');
+jour(g, '13 déc').pick(); g = T4.v('13 déc');
 assert(g.lignes.find(l => l.label === 'Piano').nom === 'Hugo', 'refusé : le planning ne change pas');
 globalThis.__kerygmaPartage.echanges['06/12|cha|voix'] = { date: '06/12', lieu: 'cha', poste: 'voix', de: 'Joëlle', par: 'Mona', etat: 'accepte' };
 g = T4.v('échange à Champigny');
@@ -287,7 +289,7 @@ assert(/5 réponses sur 15/.test(g.colTexte) && resume('Lucas') === 'Dispo tous 
 assert(!H4.v('Hélène équipe').aCollecte, 'collecte réservée au coordinateur');
 // Les dispos reçues apparaissent dans la liste Choisir
 g.nav.planning.pick(); g = T4.v('planning');
-g.dates[5].pick(); g = T4.v('27 déc');
+jour(g, '27 déc').pick(); g = T4.v('27 déc');
 globalThis.__kerygmaPartage.dispos['Thaïs'] = { '27/12': 'sibesoin' };
 g.lignes.find(l => l.label === 'Batterie').ouvrir(); g = T4.v('Choisir batterie 27 déc');
 const tagsDe = n => ((g.candLibres.find(c => c.nom === n) || {}).tags || []).map(t => t.texte);
@@ -298,7 +300,7 @@ assert(tagsDe('Thaïs').indexOf('Si besoin seulement') >= 0, 'Thaïs : si besoin
 globalThis.__kerygmaPartage = undefined;
 const T5 = ouvrir(fichierCoord);
 let k = T5.v('Thomas tâches');
-k.dates[1].pick(); k = T5.v('29 nov');
+jour(k, '29 nov').pick(); k = T5.v('29 nov');
 const gac = k.lignes.find(l => l.label === 'Guitare acoustique');
 assert(gac.aTache && gac.tacheTexte === 'Tâche : installer et brancher le matériel' && gac.tacheColor === '#5B5F6B' && gac.etat === 'ok', 'tâche de démonstration, en petit et gris ; Lucas a confirmé : ' + gac.tacheTexte);
 assert(k.aTachesCulte === undefined && k.tachesCulte === undefined, 'plus de résumé des tâches du culte');
@@ -328,7 +330,7 @@ assert(!k.tacheOuverte && tS().length === 1, 'fermer sans enregistrer');
 // Hélène voit la tâche sur la ligne et peut en donner une
 const H5 = ouvrir(fichierHelene);
 let h5 = H5.v('Hélène tâches');
-h5.dates[1].pick(); h5 = H5.v('29');
+jour(h5, '29 nov').pick(); h5 = H5.v('29');
 h5.cartes[0].ouvrir(); h5 = H5.v('stm 29');
 assert(/installer le matériel à 8h45/.test(h5.lignes.find(l => l.label === 'Guitare acoustique').tacheTexte), 'Hélène voit la tâche');
 h5.lignes.find(l => l.label === 'Piano').ajouterTache(); h5 = H5.v('Hélène feuille');
@@ -372,13 +374,13 @@ k.toggleMois(); k = T5.v('mois ouvert');
 assert(k.moisOuvert && !k.moisFerme && k.moisTitre === 'Novembre 2026', 'mois du dimanche affiché : ' + k.moisTitre);
 assert(k.moisEntetes.map(e => e.l).join('') === 'LMMJVSD' && k.moisCases.length === 36 && k.moisCases.slice(0, 6).every(c => c.inactif), 'grille : lundi en premier, 1er novembre un dimanche');
 const actifs = k.moisCases.filter(c => c.actif);
-assert(actifs.map(c => c.n).join() === '22,29' && actifs[1].on === 'true' && actifs[0].on === 'false', 'dimanches cliquables, 29 sélectionné');
-assert(actifs.every(c => c.bg === '#FFFFFF' && !c.aPoint) && !/pourvoir/.test(actifs[1].aria), 'plus de vert ni de rouge');
-assert(k.moisLegende.length === 0, 'pas de légende quand Thomas ne sert pas');
-assert(k.moisPrecOff === 'true' && k.moisSuivOff === 'false', 'flèches');
-k.moisPrec(); k = T5.v('pas avant novembre');
-assert(k.moisTitre === 'Novembre 2026', 'reste en novembre');
-k.moisSuiv(); k = T5.v('décembre');
+assert(actifs.map(c => c.n).join() === '1,8,15,22,29' && actifs[4].on === 'true' && actifs[3].on === 'false', 'dimanches cliquables (passés compris), 29 sélectionné');
+assert(actifs.filter(c => c.n !== '8').every(c => c.bg === '#FFFFFF' && !c.aPoint) && !/pourvoir/.test(actifs[4].aria), 'plus de vert ni de rouge');
+assert(actifs[1].bg === '#4338CA' && /tu sers/.test(actifs[1].aria) && k.moisLegende[0].texte === 'Je sers', 'Thomas a servi le 8 novembre : en violet');
+assert(k.moisPrecOff === 'false' && k.moisSuivOff === 'false', 'flèches');
+k.moisPrec(); k = T5.v('octobre');
+assert(k.moisTitre === 'Octobre 2026', 'on peut remonter dans le passé');
+k.moisSuiv(); k = T5.v('novembre'); k.moisSuiv(); k = T5.v('décembre');
 assert(k.moisTitre === 'Décembre 2026' && k.moisCases.filter(c => c.actif).map(c => c.n).join() === '6,13,20,27' && k.moisSuivOff === 'false', 'décembre, puis 2027');
 k.moisCases.find(c => c.n === '13' && c.actif).pick(); k = T5.v('13 déc');
 assert(/Dimanche 13 décembre/.test(k.dSous) && k.moisOuvert && k.moisCases.find(c => c.n === '13' && c.actif).on === 'true', 'choisir un dimanche dans le mois');
@@ -409,7 +411,7 @@ assert(h6.lignes.find(l => l.label === 'Piano').nom === pianiste, 'le pianiste e
 // Lucas en pause : Auto ne le propose plus
 globalThis.__kerygmaPartage.prefs.Lucas = { freq: 0 };
 a = T6.v('pause Lucas');
-a.dates[4].pick(); a = T6.v('20 déc');
+jour(a, '20 déc').pick(); a = T6.v('20 déc');
 a.lancerAuto(); a = T6.v('auto 20 déc');
 assert(a.lignes.filter(l => l.etat === 'brouillon').every(l => l.nomTexte !== 'Lucas'), 'Lucas en pause n’est pas proposé');
 
