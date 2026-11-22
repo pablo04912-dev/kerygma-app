@@ -26,11 +26,13 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 <span data-taille-fixe style="text-align: center; font-family: 'Space Grotesk', Inter, sans-serif; font-weight: 700; font-size: 24px; letter-spacing: 5px; padding-left: 5px">KERYGMA</span>
 <button type="button" data-taille-fixe aria-label="Mon profil" aria-current="{{profilCurrent}}" onClick="{{ouvrirMoi}}" style="width: 44px; height: 44px; padding: 0; border-radius: 22px; border: {{profilBord}}; background: #16181D; color: #FFFFFF; font-family: inherit; font-weight: 600; font-size: 16px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-sizing: border-box">L</button>
 </div>
-<main style="flex: 1; overflow-y: auto; padding: 8px 20px 20px; display: flex; flex-direction: column; gap: 12px">
+<main style="flex: 1; overflow-y: auto; padding: 8px 20px 104px; display: flex; flex-direction: column; gap: 12px">
 <sc-if value="{{showAccueil}}" hint-placeholder-val="{{true}}">
 <div style="display: flex; flex-direction: column; gap: 8px">
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px">
-<span style="font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">Serviteur · Louange</span>
+<div role="group" aria-label="Choisir le service" style="display: flex; flex-wrap: wrap; justify-content: center; gap: 8px">
+<sc-for list="{{servChips}}" as="sc" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{sc.on}}" onClick="{{sc.pick}}" style="min-height: 44px; padding: 0 18px; border-radius: 999px; border: 1px solid {{sc.border}}; background: {{sc.bg}}; color: {{sc.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{sc.label}}</button>
+</sc-for>
 </div>
 </div>
 <section aria-label="Mes dimanches" style="display: flex; flex-direction: column; gap: 8px">
@@ -301,29 +303,32 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 <a href="Accueil.dc.html" style="display: flex; align-items: center; justify-content: center; min-height: 52px; border-radius: 14px; border: 1px solid #D6D1C6; background: #FFFFFF; color: #16181D; text-decoration: none; font-size: 15px; font-weight: 600">Se déconnecter</a>
 </sc-if>
 </main>
-<nav aria-label="Navigation principale" style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; padding: 8px 8px 20px; background: #FFFFFF; border-top: 1px solid #E7E3DA">
-<button type="button" data-taille-fixe aria-current="{{nav.planning.current}}" onClick="{{nav.planning.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.planning.color}}; cursor: pointer">
+<nav aria-label="Navigation principale" style="position: absolute; left: 12px; right: 12px; bottom: 14px; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.72); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%); border: 1px solid rgba(22, 24, 29, 0.08); box-shadow: 0 10px 30px rgba(22, 24, 29, 0.14)">
+<sc-if value="{{nav.aIndic}}" hint-placeholder-val="{{true}}">
+<span aria-hidden="true" data-glisse="onglet" style="position: absolute; top: 6px; bottom: 6px; left: calc(6px + (100% - 12px) * {{nav.indicPos}}); width: calc((100% - 12px) / 4); border-radius: 999px; background: rgba(22, 24, 29, 0.07)"></span>
+</sc-if>
+<button type="button" data-taille-fixe aria-current="{{nav.planning.current}}" onClick="{{nav.planning.pick}}" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 54px; border: 0; border-radius: 999px; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.planning.color}}; cursor: pointer">
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
 <span>Planning</span>
 </button>
-<button type="button" data-taille-fixe aria-current="{{nav.equipe.current}}" onClick="{{nav.equipe.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.equipe.color}}; cursor: pointer">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.1.7 3.5 2.8 3.5 5.7"></path></svg>
-<span>Équipe</span>
-</button>
-<button type="button" data-taille-fixe aria-current="{{nav.actus.current}}" onClick="{{nav.actus.pick}}" style="display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.actus.color}}; cursor: pointer">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M7.5 8.5h9M7.5 12h9M7.5 15.5h5"></path></svg>
-<span>Actus</span>
-</button>
-<button type="button" data-taille-fixe aria-current="{{nav.afaire.current}}" aria-label="{{nav.afaire.aria}}" onClick="{{nav.afaire.pick}}" style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 52px; border: 0; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.afaire.color}}; cursor: pointer">
+<button type="button" data-taille-fixe aria-current="{{nav.afaire.current}}" aria-label="{{nav.afaire.aria}}" onClick="{{nav.afaire.pick}}" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 54px; border: 0; border-radius: 999px; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.afaire.color}}; cursor: pointer">
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="4" width="15" height="17" rx="2.5"></rect><path d="M9 4V2.8h6V4M8.5 12l2.2 2.2 4.8-4.8"></path></svg>
 <span>À faire</span>
 <sc-if value="{{nav.afaire.aBadge}}" hint-placeholder-val="{{true}}">
 <span aria-hidden="true" data-taille-fixe style="position: absolute; top: 0; left: 50%; margin-left: 6px; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: #D92D20; color: #FFFFFF; font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; box-sizing: border-box">{{nav.afaire.badge}}</span>
 </sc-if>
 </button>
+<button type="button" data-taille-fixe aria-current="{{nav.actus.current}}" onClick="{{nav.actus.pick}}" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 54px; border: 0; border-radius: 999px; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.actus.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M7.5 8.5h9M7.5 12h9M7.5 15.5h5"></path></svg>
+<span>Actus</span>
+</button>
+<button type="button" data-taille-fixe aria-current="{{nav.equipe.current}}" onClick="{{nav.equipe.pick}}" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 54px; border: 0; border-radius: 999px; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.equipe.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.1.7 3.5 2.8 3.5 5.7"></path></svg>
+<span>Équipe</span>
+</button>
 </nav>
 <sc-if value="{{aToast}}" hint-placeholder-val="{{false}}">
-<div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 92px; background: #16181D; color: #FFFFFF; border-radius: 14px; padding: 14px 16px; font-size: 15px; line-height: 1.4">{{toast}}</div>
+<div role="status" style="position: absolute; left: 16px; right: 16px; bottom: 96px; z-index: 2; background: #16181D; color: #FFFFFF; border-radius: 14px; padding: 14px 16px; font-size: 15px; line-height: 1.4">{{toast}}</div>
 </sc-if>
 <sc-if value="{{sheetOuvert}}" hint-placeholder-val="{{false}}">
 <div style="position: absolute; inset: 0; background: rgba(22, 24, 29, 0.45); display: flex; flex-direction: column; justify-content: flex-end">
@@ -437,11 +442,23 @@ class Component extends DCLogic {
         PL.forEach(function (p) {
           var k0 = d + '|' + L.id + '|' + p.id;
           var ex0 = S.echanges[k0];
-          if (eq[p.id].indexOf(NOM) >= 0) tous.push({ cle: k0, date: d, lieu: L, poste: p });
-          else if (ex0 && ex0.de === NOM && ex0.etat === 'validee') tous.push({ cle: k0, date: d, lieu: L, poste: p, remplacePar: ex0.par });
+          if (eq[p.id].indexOf(NOM) >= 0) tous.push({ cle: k0, date: d, lieu: L, poste: p, min: 'louange' });
+          else if (ex0 && ex0.de === NOM && ex0.etat === 'validee') tous.push({ cle: k0, date: d, lieu: L, poste: p, remplacePar: ex0.par, min: 'louange' });
         });
+        // Autre service de Lucas : la projection
+        if ((((DATA.projection || {})[d] || {})[L.id] || []).indexOf(NOM) >= 0) tous.push({ cle: d + '|' + L.id + '|projection', date: d, lieu: L, poste: { id: 'projection', label: 'Projection' }, min: 'projection' });
       });
     });
+    // Onglets de services : Tout, ou un seul service
+    var MINS_SV = [];
+    tous.forEach(function (sv) { if (MINS_SV.indexOf(sv.min) < 0) MINS_SV.push(sv.min); });
+    var serv = MINS_SV.indexOf(s.serv) >= 0 ? s.serv : 'tout';
+    var NOMS_MIN = { louange: 'Louange', projection: 'Projection' };
+    var servChips = (MINS_SV.length > 1 ? ['tout'].concat(MINS_SV) : []).map(function (m) {
+      var on = m === serv;
+      return { label: m === 'tout' ? 'Tout' : NOMS_MIN[m], on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6', pick: function () { self.setState({ serv: m }); } };
+    });
+    function visible(sv) { return serv === 'tout' || sv.min === serv; }
     // Échange demandé par Lucas pour ce service (attente, accepte, refusee, refusepar)
     function monEchange(k) { var e = S.echanges[k]; return e && e.de === NOM && e.etat !== 'validee' ? e : null; }
     function echangeEnCours(k) { var e = monEchange(k); return !!e && (e.etat === 'attente' || e.etat === 'accepte'); }
@@ -507,7 +524,7 @@ class Component extends DCLogic {
     // Tâches confiées par le coordinateur ou le responsable
     function tachesSv(sv) { return (S.taches || []).filter(function (t) { return t.date === sv.date && t.lieu === sv.lieu.id && t.nom === NOM; }); }
     function aFaire(d) { return (S.taches || []).some(function (t) { return t.date === d && t.nom === NOM && !t.fait; }); }
-    function prevuLe(d) { return tous.filter(function (sv) { return sv.date === d && (actif(sv) || garder[sv.cle]); }); }
+    function prevuLe(d) { return tous.filter(function (sv) { return visible(sv) && sv.date === d && (actif(sv) || garder[sv.cle]); }); }
 
     // Bande « Mes dimanches » et calendrier du mois
     function ouvrirJour(d) {
@@ -592,7 +609,8 @@ class Component extends DCLogic {
       var dd = (c.n.length < 2 ? '0' + c.n : c.n) + '/' + (moisNav.moisTitre.indexOf('Novembre') === 0 ? '11' : '12');
       if (etatJour(dd) === 'attente') { c.bg = CLAIR.bg; c.fg = CLAIR.fg; c.border = CLAIR.border; }
     });
-    var services = tous.map(function (sv, i) {
+    var tousV = tous.filter(visible);
+    var services = tousV.map(function (sv, i) {
       var st = statut(sv);
       return {
         titre: 'Dim. ' + court(sv.date) + ' · ' + sv.lieu.nom,
@@ -606,7 +624,7 @@ class Component extends DCLogic {
         aRemplacer: !sv.remplacePar && reponseDe(sv.cle) === 'pasdispo' && !echangeEnCours(sv.cle),
         remplacer: ouvrirSheet('remplacant', sv.cle),
         ouvrir: function () { self.setState({ vue: 'service', svc: sv.cle }); },
-        sep: i === tous.length - 1 ? 'transparent' : '#EFEBE3'
+        sep: i === tousV.length - 1 ? 'transparent' : '#EFEBE3'
       };
     });
 
@@ -619,6 +637,8 @@ class Component extends DCLogic {
         return { label: p.label, nom: noms, color: eq[p.id].indexOf(NOM) >= 0 ? accent : '#16181D' };
       });
       out.push({ titre: 'Louange', items: items, vide: items.length === 0, videTexte: 'Personne de prévu pour le moment' });
+      var proj = ((DATA.projection || {})[sv.date] || {})[sv.lieu.id] || [];
+      if (proj.length) out.push({ titre: 'Projection', items: [{ label: 'Projection', nom: proj.join(', '), color: proj.indexOf(NOM) >= 0 ? accent : '#16181D' }], vide: false, videTexte: '' });
       if (sv.lieu.id === 'stm') {
         var pr = DATA.programme[sv.date] || {};
         var itemsP = PR.filter(function (r) { return pr[r.id]; }).map(function (r) { return { label: r.label, nom: pr[r.id], color: '#16181D' }; });
@@ -670,11 +690,21 @@ class Component extends DCLogic {
       return { label: label, on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6', pick: pick };
     }
     var freqs = ['1 fois par mois', '2 fois par mois', '3 fois par mois', 'Chaque semaine', '1 fois par trimestre', 'En pause'].map(function (f) {
-      return puce(f, f === freq, function () { self.flash({ freq: f }, 'Fréquence enregistrée : ' + f.toLowerCase() + '.'); });
+      return puce(f, f === freq, function () {
+        // Partagé : le bouton Auto du coordinateur en tient compte
+        var P = S.prefs[NOM] = S.prefs[NOM] || {};
+        P.freq = { '1 fois par mois': 1, '2 fois par mois': 2, '3 fois par mois': 3, 'Chaque semaine': 5, '1 fois par trimestre': 1, 'En pause': 0 }[f];
+        self.flash({ freq: f }, 'Fréquence enregistrée : ' + f.toLowerCase() + '.');
+      });
     });
     var lie = DEMO.lie || { nom: '', lien: '' };
     var ensembles = ['Même culte', 'Même jour', 'Jamais le même jour', 'Pas de préférence'].map(function (e) {
-      return puce(e, e === ensemble, function () { self.flash({ ensemble: e }, 'Préférence enregistrée avec ' + lie.nom + ' : ' + e.toLowerCase() + '.'); });
+      return puce(e, e === ensemble, function () {
+        var P = S.prefs[NOM] = S.prefs[NOM] || {};
+        P.lie = lie.nom;
+        P.ensemble = { 'Même culte': 'culte', 'Même jour': 'jour', 'Jamais le même jour': 'jamais', 'Pas de préférence': '' }[e];
+        self.flash({ ensemble: e }, 'Préférence enregistrée avec ' + lie.nom + ' : ' + e.toLowerCase() + '.');
+      });
     });
 
     var sheetOuvert = !!sheet && (tab === 'planning' || tab === 'afaire');
@@ -774,7 +804,7 @@ class Component extends DCLogic {
       erreurDispos: s.erreurDispos || '',
       equipes: equipes,
       actus: actus,
-      moiPostes: 'Serviteur louange · ' + postesDe.join(', '),
+      moiPostes: 'Serviteur louange · ' + postesDe.join(', ') + (MINS_SV.indexOf('projection') >= 0 ? ' ; projection' : ''),
       freqs: freqs,
       lieTexte: lie.nom ? 'Personne de ton foyer : ' + lie.nom + ' (' + lie.lien + '). Le coordinateur en tient compte.' : '',
       ensembles: ensembles,
@@ -782,7 +812,8 @@ class Component extends DCLogic {
       agendaColor: agenda ? '#146C3A' : '#5B5F6B',
       connecterGoogle: function () { self.flash({ agenda: 'google' }, 'Prototype : dans la vraie appli, tu choisis ton compte Google, puis tes services arrivent tout seuls dans ton agenda.'); },
       connecterIphone: function () { self.flash({ agenda: 'iphone' }, 'Prototype : dans la vraie appli, l’iPhone te propose de t’abonner à l’agenda KERYGMA.'); },
-      nav: { planning: navItem('planning'), equipe: navItem('equipe'), actus: navItem('actus'), afaire: navAFaire },
+      servChips: servChips,
+      nav: { planning: navItem('planning'), equipe: navItem('equipe'), actus: navItem('actus'), afaire: navAFaire, aIndic: tab !== 'moi', indicPos: ({ planning: '0', afaire: '0.25', actus: '0.5', equipe: '0.75' })[tab] || '0' },
       showAFaire: tab === 'afaire',
       aFaireVide: demandes.length === 0 && demandesEchange.length === 0,
       ouvrirMoi: function () { self.setState({ tab: 'moi', vue: 'accueil', sheet: null }); },
@@ -886,6 +917,8 @@ function partage(DATA) {
   if (!S.reponses) S.reponses = {};
   if (!S.affectations) S.affectations = {};
   if (!S.notifs) S.notifs = [];
+  if (!S.ajouts) S.ajouts = {};
+  if (!S.prefs) S.prefs = {};
   return S;
 }
 </script>

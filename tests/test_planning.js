@@ -21,21 +21,22 @@ assert(x.protoLabel === 'Prototype responsable', 'étiquette en haut : ' + x.pro
 assert(x.aRetour && !x.coordHeader && x.initiale === 'H' && x.moiNom === 'Hélène Moreau' && x.eqMins, 'profil Hélène');
 assert(x.showLieux && !x.showDetail, 'écran 3 lieux au départ');
 assert(x.cartes.length === 3, '3 cartes');
-assert(x.cartes.map(k => k.compte).join() === '4/7,4/7,3/7', 'comptes louange 22/11 : ' + x.cartes.map(k => k.compte));
+assert(x.cartes.map(k => k.manque).join(' | ') === 'Inès, Adrien, Bérénice | Marco, Joëlle, Héloïse, Thaïs, Ismaël | Kenza, Noé, Damien' && !x.cartes.some(k => k.aCompte), 'cartes louange : qui sert, sans compteur : ' + x.cartes.map(k => k.manque).join(' | '));
 assert(x.cartes.every(k => k.edit), 'Hélène modifie les 3 lieux en louange');
 assert(x.dates[0].on && x.dates[0].label === '22 nov', 'date par défaut 22 nov');
-assert(/postes vides sur les 3 lieux/.test(x.aTraiter), 'résumé à traiter : ' + x.aTraiter);
+assert(x.aSecTitre && x.secTitre === 'Ce dimanche 22 novembre' && !x.aTraiterVisible, 'titre « Ce dimanche 22 novembre », plus de postes vides : ' + x.secTitre);
 assert(x.nav.planning.current === 'page' && x.nav.equipe.current === 'false', 'nav planning active');
 assert(x.nav.afaire.aBadge && x.nav.afaire.badge === '1' && /1 chose à faire/.test(x.nav.afaire.aria), 'pastille À faire : 1 (la proposition de Thomas)');
-assert(/^Ce dimanche : 10 postes vides sur les 3 lieux$/.test(x.aTraiter), '« Ce dimanche » pour le dimanche de la semaine : ' + x.aTraiter);
-assert(x.crListeTitre === 'Dimanche 15 novembre', 'comptes rendus : juste la date : ' + x.crListeTitre);
-assert(x.mins.map(m => m.label).join() === 'Programme du culte,Louange' && x.mins[1].on, 'Programme du culte en premier, Louange choisi');
+assert(x.crListeTitre === 'Compte rendu de dimanche dernier', 'comptes rendus : ' + x.crListeTitre);
+assert(x.mins.map(m => m.label).join() === 'Programme culte,Louange' && x.mins[1].on, 'Programme culte en premier, Louange choisi');
+assert(x.aSuivants && x.suivants.map(d => d.titre).join() === 'Dimanche 29 novembre,Dimanche 6 décembre' && x.suivants[0].lieux[0].equipe === 'Olivier, Inès, Lucas', 'dimanches suivants : ' + x.suivants.map(d => d.titre));
+assert(x.nav.aIndic && x.nav.indicPos === '0', 'bulle grise sous Planning');
 assert(x.types[0].ligne === x.accent && x.types[1].ligne === 'transparent', 'onglets Culte / Prière soulignés');
 
 // 2. Changer de date sur l'accueil
 x.dates[1].pick(); x = check('date 29/11');
 assert(x.dates[1].on, '29 nov sélectionné');
-assert(x.cartes.map(k => k.compte).join() === '3/7,3/7,3/7', 'comptes 29/11 : ' + x.cartes.map(k => k.compte));
+assert(x.secTitre === 'Dimanche 29 novembre' && x.cartes[0].manque === 'Olivier, Inès, Lucas' && x.cartes[0].aAValider && x.cartes[0].aValiderTexte === '2 à valider' && x.cartes[0].aTaches && x.cartes[0].tachesTexte === '1 tâche', 'carte du 29/11 : équipe, tâche, à valider : ' + x.cartes[0].manque);
 
 // 3. Ouvrir Saint-Maurice : la date reste
 x.cartes[0].ouvrir(); x = check('détail stm 29/11');
@@ -43,16 +44,17 @@ assert(x.showDetail && !x.showLieux, 'écran détail');
 assert(x.dTitre === 'Saint-Maurice', 'titre détail');
 assert(/29 novembre/.test(x.dSous), 'la date suit dans le détail : ' + x.dSous);
 assert(x.dates[1].on, 'bandeau de dates conservé avec 29 nov');
-assert(x.lignes.length === 7, '7 postes');
+assert(x.lignes.length === 5 && x.groupesPostes.map(g => g.titre + ':' + g.lignes.map(l => l.label).join('/')).join(' | ') === 'Voix:Direction/Voix | Instruments:Piano/Batterie/Guitare acoustique', 'postes de base : ' + x.groupesPostes.map(g => g.titre + ':' + g.lignes.map(l => l.label).join('/')).join(' | '));
+assert(!x.aDCompte && x.aAuto && x.aBarreDetail && x.groupesPostes.every(g => g.aAjout), 'plus de compteur ni de « Modifiable » ; bouton Auto ; « + » dans chaque partie');
 const voix = x.lignes.find(l => l.label === 'Voix');
 assert(voix.vide && voix.peutChoisir, 'voix vide et choisissable le 29/11');
 assert(voix.aSous && voix.sous === 'À valider : Thomas propose Pierre', 'proposition de Thomas visible chez Hélène : ' + voix.sous);
 
 // 4. Changer de date dans le détail : on reste dans Saint-Maurice
 x.dates[0].pick(); x = check('détail stm 22/11');
-assert(x.showDetail && x.dTitre === 'Saint-Maurice' && /^Ce dimanche · Louange/.test(x.dSous), 'date changée dans le détail : ' + x.dSous);
+assert(x.showDetail && x.dTitre === 'Saint-Maurice' && /^Ce dimanche 22 novembre · Louange/.test(x.dSous), 'date changée dans le détail : ' + x.dSous);
 const piano = x.lignes.find(l => l.label === 'Piano');
-assert(piano.vide && piano.peutChoisir, 'piano vide le 22/11');
+assert(piano.vide && piano.peutChoisir && piano.etat === 'aucun' && piano.nomTexte === 'Aucun', 'piano vide le 22/11 : « Aucun » par défaut');
 
 // 5. Choisir pour le piano : vérification des conflits
 piano.ouvrir(); x = check('feuille piano');
@@ -96,14 +98,14 @@ assert(!x.sheetOuvert, 'feuille fermée après choix');
 assert(x.aToast && /Noé/.test(x.toast), 'toast invitation');
 const voix2 = x.lignes.find(l => l.label === 'Voix');
 assert(voix2.rempli && voix2.nom === 'Noé' && voix2.aSous && voix2.sous === 'Invitation envoyée', 'Noé affiché invité');
-assert(/4 sur 7/.test(x.dCompte), 'compteur détail 4/7 : ' + x.dCompte);
+assert(!x.aDCompte, 'pas de compteur');
 timers[timers.length - 1].fn(); x = check('toast effacé');
 assert(!x.aToast, 'toast disparaît');
 
 // 8. Le choix se répercute sur Boulogne : Noé est maintenant aussi le matin à Saint-Maurice
 x.retour(); x = check('retour 3 lieux');
 assert(x.showLieux && x.dates[1].on, 'retour aux 3 lieux, date 29/11 conservée');
-assert(x.cartes[0].compte === '4/7', 'carte Saint-Maurice passe à 4/7');
+assert(/Noé/.test(x.cartes[0].manque), 'Noé apparaît sur la carte de Saint-Maurice : ' + x.cartes[0].manque);
 x.cartes[2].ouvrir(); x = check('détail Boulogne 29/11');
 x.lignes.find(l => l.label === 'Voix').ouvrir(); x = check('feuille voix Boulogne');
 const rubB = x.candidats.find(k => k.nom === 'Noé');
@@ -253,22 +255,64 @@ assert(alt.accent === '#0F766E' && alt.mins[1].bg === '#0F766E', 'tweak couleur'
   assert(dir.etat === 'ok' && dir.iconeOk && dir.nomTexte === 'Inès' && dir.nomFond === '#E7F5EC', 'Inès a confirmé : bulle verte avec coche');
   const bat = y.lignes.find(l => l.label === 'Batterie');
   assert(bat.etat === 'normal' && !bat.iconeOk && bat.peutTache && bat.tacheOff === 'false', 'Bérénice pas encore confirmée : neutre, tâche possible');
-  let bas = y.lignes.find(l => l.label === 'Basse');
-  assert(bas.vide && bas.nomTexte === 'Personne' && bas.peutChoisir && !bas.peutTache && bas.tacheOff === 'true', 'basse : « Personne », tâche grisée');
-  // « Aucun » : personne à la basse ce dimanche, le poste compte comme rempli
-  bas.ouvrir(); y = V('feuille basse');
-  assert(y.aOptionAucun && !y.aSheetNote && y.aucunTexte === 'Personne à ce poste ce dimanche', 'option Aucun, sans petit message');
-  y.choisirAucun(); y = V('aucun basse');
-  bas = y.lignes.find(l => l.label === 'Basse');
-  assert(!bas.vide && bas.etat === 'aucun' && bas.nomTexte === 'Aucun' && !bas.peutTache, 'basse : Aucun');
-  assert(/5 sur 7/.test(y.dCompte) && /Thomas est prévenu/.test(y.toast), 'Aucun compte comme rempli : ' + y.dCompte + ' / ' + y.toast);
+  let pia = y.lignes.find(l => l.label === 'Piano');
+  assert(pia.vide && pia.nomTexte === 'Aucun' && pia.etat === 'aucun' && pia.peutChoisir && !pia.peutTache && pia.tacheOff === 'true', 'piano : « Aucun », tâche grisée');
+  pia.ouvrir(); y = V('feuille piano');
+  assert(!y.aOptionAucun && !y.aSheetNote && !y.aRetirerPoste, 'poste vide : pas d’option Aucun ni de petit message');
+  y.candLibres.find(k => k.nom === 'Hugo').choisir(); y = V('Hugo au piano');
+  assert(y.lignes.find(l => l.label === 'Piano').nom === 'Hugo' && /Thomas est prévenu/.test(y.toast), 'Hugo au piano, Thomas prévenu');
+  // « Aucun » : retirer quelqu'un
+  y.lignes.find(l => l.label === 'Piano').ouvrir(); y = V('feuille piano 2');
+  assert(y.aOptionAucun && y.aucunTexte === 'Retirer Hugo : personne à ce poste', 'option Aucun pour retirer Hugo');
+  y.choisirAucun(); y = V('aucun piano');
+  pia = y.lignes.find(l => l.label === 'Piano');
+  assert(pia.vide && pia.nomTexte === 'Aucun' && !pia.peutTache && /Aucun/.test(y.toast), 'piano : de nouveau Aucun');
   // Changer une personne : Hélène remplace Bérénice, Thomas est prévenu
   y.lignes.find(l => l.label === 'Batterie').ouvrir(); y = V('feuille batterie');
   y.candLibres.find(k => k.nom === 'Thaïs' || k.nom === 'Lucas').choisir(); y = V('batterie changée');
   const nb = y.lignes.find(l => l.label === 'Batterie');
   assert(nb.nom !== 'Bérénice' && nb.rempli && nb.sous === 'Invitation envoyée', 'Bérénice remplacée : ' + nb.nom);
   const S = globalThis.__kerygmaPartage;
-  assert(S.notifs.length === 2 && S.notifs.every(n => n.pour === 'Thomas' && n.par === 'Hélène') && S.notifs[1].avant === 'Bérénice', 'Thomas prévenu des 2 changements');
+  assert(S.notifs.length === 3 && S.notifs.every(n => n.pour === 'Thomas' && n.par === 'Hélène') && S.notifs[2].avant === 'Bérénice', 'Thomas prévenu des 3 changements');
+  // « + » : ajouter une basse, une 2e voix et un instrument personnalisé, puis retirer
+  y.groupesPostes[1].ajouter(); y = V('ajouter instrument');
+  assert(y.ajoutOuvert && y.ajoutTitre === 'Ajouter un instrument' && y.ajoutChoix.map(c => c.label).join() === 'Basse,Guitare électrique', 'feuille « Ajouter un instrument »');
+  y.ajoutChoix[0].pick(); y = V('basse ajoutée');
+  let basse = y.lignes.find(l => l.label === 'Basse');
+  assert(!y.ajoutOuvert && basse && basse.nomTexte === 'Aucun' && basse.groupe === 'instr' && /Basse ajouté/.test(y.toast), 'basse ajoutée, sur Aucun');
+  y.groupesPostes[0].ajouter(); y = V('ajouter voix');
+  assert(y.ajoutTitre === 'Ajouter une voix' && y.ajoutChoix.map(c => c.label).join() === 'Voix', 'feuille « Ajouter une voix »');
+  y.ajoutChoix[0].pick(); y = V('2e voix');
+  assert(y.groupesPostes[0].lignes.map(l => l.label + ':' + (l.nom || 'Aucun')).join() === 'Direction:Inès,Voix:Adrien,Voix:Aucun', '2e voix : ' + y.groupesPostes[0].lignes.map(l => l.label + ':' + (l.nom || 'Aucun')).join());
+  y.groupesPostes[1].ajouter(); y = V('instrument perso');
+  y.ajouterPerso(); y = V('perso vide');
+  assert(y.aErreurAjout && y.ajoutOuvert, 'nom obligatoire');
+  y.saisirAjout({ target: { value: 'violon' } }); y.ajouterPerso(); y = V('violon');
+  const violon = y.lignes.find(l => l.label === 'Violon');
+  assert(violon && violon.groupe === 'instr' && violon.peutChoisir, 'instrument personnalisé « Violon »');
+  violon.ouvrir(); y = V('feuille violon');
+  assert(y.sheetTitre === 'Violon' && y.candLibres.length > 10 && y.aRetirerPoste, 'violon : toute l’équipe louange proposée, on peut retirer le poste');
+  y.retirerPoste(); y = V('violon retiré');
+  assert(!y.lignes.find(l => l.label === 'Violon') && y.toast === 'Poste retiré.', 'violon retiré');
+  y.groupesPostes[0].lignes[2].ouvrir(); y = V('feuille 2e voix');
+  assert(y.aRetirerPoste, 'la 2e voix peut être retirée');
+  y.retirerPoste(); y = V('2e voix retirée');
+  assert(y.groupesPostes[0].lignes.length === 2, 'retour à une voix');
+  // Bouton Auto : propose des noms pour les places vides (basse et piano)
+  y.lancerAuto(); y = V('auto');
+  const sug = y.lignes.filter(l => l.etat === 'suggere');
+  assert(y.aAutoBandeau && sug.length === 2 && sug.every(l => l.sous === 'Proposé par Auto' && l.nomTexte) && /Auto propose 2 noms/.test(y.autoTexte) && y.autoBouton === 'Envoyer les demandes', 'Auto propose 2 noms : ' + sug.map(l => l.label + ' ' + l.nomTexte).join(', '));
+  assert(y.lignes.find(l => l.label === 'Basse').nomTexte === 'Yasmine', 'basse : Yasmine (seule bassiste)');
+  const pianoAuto = y.lignes.find(l => l.label === 'Piano').nomTexte;
+  assert(['Inès', 'Lucas'].indexOf(pianoAuto) < 0, 'Auto ne met pas quelqu’un qui sert déjà ce culte : ' + pianoAuto);
+  y.annulerAuto(); y = V('auto annulé');
+  assert(!y.aAutoBandeau && !y.lignes.some(l => l.etat === 'suggere'), 'Annuler efface les propositions');
+  y.lancerAuto(); y = V('auto 2');
+  y.appliquerAuto(); y = V('auto envoyé');
+  assert(!y.aAutoBandeau && y.lignes.find(l => l.label === 'Basse').nom === 'Yasmine' && /Demandes envoyées à 2 personnes/.test(y.toast), 'Auto : demandes envoyées : ' + y.toast);
+  assert(S.notifs[S.notifs.length - 1].resume && /avec Auto/.test(S.notifs[S.notifs.length - 1].resume), 'Thomas prévenu du remplissage Auto');
+  y.lancerAuto(); y = V('auto plein');
+  assert(!y.aAutoBandeau && /Tous les postes ont déjà quelqu’un/.test(y.toast), 'plus rien à remplir');
   // Tâche : une seule par personne, « Aucune tâche » par défaut, modifiable
   y.lignes.find(l => l.label === 'Voix').ajouterTache(); y = V('feuille tâche');
   assert(y.tacheOuverte && y.tacheTitreFeuille === 'Tâche pour Adrien' && y.tacheAucune === 'true' && y.tacheTexte === '', 'feuille tâche : Aucune tâche par défaut');
@@ -287,11 +331,11 @@ assert(alt.accent === '#0F766E' && alt.mins[1].bg === '#0F766E', 'tweak couleur'
   assert(y.tacheAucune === 'true' && y.tacheTexte === '', 'Aucune tâche choisie');
   y.enregistrerTache(); y = V('tâche retirée');
   assert(!y.lignes.find(l => l.label === 'Voix').aTache && /retirée/.test(y.toast), 'tâche retirée');
-  // Calendrier : cases entières colorées, plus de « Date affichée »
+  // Calendrier : plus de vert ni de rouge (« Aucun » n'est pas « à pourvoir »)
   y.toggleMois(); y = V('mois');
   const c22 = y.moisCases.find(k => k.actif && k.n === '22');
-  assert(c22.bg === '#FBE2DA' && !c22.aPoint && c22.border === '#16181D', 'case du 22 : rouge clair (postes à pourvoir), bord noir car affichée');
-  assert(y.moisLegende.map(l => l.texte).join() === 'Complet,Postes à pourvoir' && y.aLegende, 'légende : ' + y.moisLegende.map(l => l.texte).join());
+  assert(c22.bg === '#FFFFFF' && !c22.aPoint && c22.border === '#16181D', 'case du 22 : blanche, bord noir car affichée');
+  assert(y.moisLegende.length === 0 && !y.aLegende, 'pas de légende quand Hélène ne sert pas');
   // « À faire » : la proposition de Thomas
   y.nav.afaire.pick(); y = V('à faire');
   assert(y.showAFaire && !y.aFaireVide && y.aValider.length === 1, 'onglet À faire avec la proposition');

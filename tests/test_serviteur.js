@@ -29,6 +29,13 @@ assert(x.nav.afaire.badge === '4' && x.nav.afaire.aBadge, 'pastille À faire : 3
 x.nav.afaire.pick(); x = L.v('À faire Lucas');
 assert(x.showAFaire && !x.showAccueil && !x.aFaireVide && x.demandesEchange.length === 1, 'demandes et échange dans « À faire »');
 x.nav.planning.pick(); x = L.v('retour planning');
+// Onglets de services : Tout (louange + projection), puis un seul service
+assert(x.servChips.map(c => c.label).join() === 'Tout,Projection,Louange' && x.servChips[0].on, 'onglets Tout / Projection / Louange : ' + x.servChips.map(c => c.label));
+assert(x.services.length === 7 && x.services.filter(sv => /^Projection/.test(sv.sous)).length === 2, 'Tout : 7 services dont 2 en projection : ' + x.services.length);
+x.servChips.find(c => c.label === 'Projection').pick(); x = L.v('projection');
+assert(x.services.length === 2 && x.services.every(sv => / · Boulogne$/.test(sv.titre) && sv.statut === 'Confirmé'), 'Projection : ses 2 services à Boulogne');
+assert(x.mesDims.filter(m => /tu sers/.test(m.aria)).map(m => m.label).join() === '22 nov,20 déc', 'Mes dimanches suit l’onglet choisi');
+x.servChips.find(c => c.label === 'Louange').pick(); x = L.v('louange');
 assert(x.services.length === 5, '5 services : ' + x.services.length);
 assert(x.services.map(s => s.statut).join() === 'Confirmé,En attente,Confirmé,En attente,En attente', 'statuts : ' + x.services.map(s => s.statut));
 const d6 = x.demandes.find(d => d.titre === 'Dimanche 6 décembre');
@@ -81,6 +88,7 @@ assert(x.sheetOuvert && x.sheetRemplacant, 'la liste se rouvre');
 x.fermer(); x = L.v('fermer 2');
 
 // 6. Qui sert ce culte
+x.servChips.find(c => c.label === 'Louange').pick(); x = L.v('louange 6');
 x.services[0].ouvrir(); x = L.v('détail 29 nov');
 assert(x.showService && !x.showAccueil && x.svTitre === 'Dimanche 29 novembre', 'détail du service');
 assert(/Saint-Maurice · culte 10h30 · présence 9h · fin vers 13h/.test(x.svSous), 'horaires : ' + x.svSous);
@@ -88,6 +96,10 @@ assert(x.equipeCulte.length === 2 && x.equipeCulte[0].titre === 'Louange' && x.e
 assert(x.equipeCulte[0].items.some(i => i.nom === 'Lucas' && i.color === '#4338CA'), 'Lucas repéré dans l’équipe');
 x.retour(); x = L.v('retour');
 assert(x.showAccueil, 'retour aux services');
+x.servChips.find(c => c.label === 'Tout').pick(); x = L.v('tout');
+x.services.find(sv => sv.titre === 'Dim. 22 nov · Boulogne').ouvrir(); x = L.v('détail projection');
+assert(x.showService && x.equipeCulte.some(g => g.titre === 'Projection' && g.items[0].nom === 'Lucas' && g.items[0].color === '#4338CA'), 'service de projection : Lucas dans la projection du culte');
+x.retour(); x = L.v('retour projection');
 
 // 7. Grille des dispos
 x.ouvrirDispos(); x = L.v('grille');
@@ -161,7 +173,7 @@ assert(/Adrien n’est pas dispo et te demande de prendre sa place \(voix\)/.tes
 x.demandesEchange[0].accepter(); x = L.v('accepté');
 assert(x.demandesEchange.length === 1 && x.demandesEchange[0].accepte && !x.demandesEchange[0].enAttente && /Thomas doit valider/.test(x.demandesEchange[0].etat), 'en attente de Thomas');
 assert(/Thomas doit valider l’échange/.test(x.toast) && globalThis.__kerygmaPartage.echanges['22/11|stm|voix'].etat === 'accepte', 'échange accepté');
-assert(!x.services.some(sv => /22 nov/.test(sv.titre)), 'pas encore dans ses services');
+assert(!x.services.some(sv => /22 nov · Saint-Maurice/.test(sv.titre)), 'pas encore dans ses services');
 globalThis.__kerygmaPartage.echanges['22/11|stm|voix'].etat = 'validee';
 x = L.v('validé par Thomas');
 assert(x.demandesEchange.length === 0, 'plus de demande');
@@ -215,6 +227,7 @@ assert(y.grille.map(g => g.etat).join() === 'Dispo,Si besoin,Dispo,Pas dispo', '
 globalThis.__kerygmaPartage = undefined;
 L = ouvrir();
 x = L.v('mes dimanches');
+x.servChips.find(c => c.label === 'Louange').pick(); x = L.v('louange seule');
 assert(x.mesDims.length === 6 && x.moisFerme, 'bande des dimanches');
 const md = n => x.mesDims.find(m => m.label === n);
 assert(md('29 nov').bg === '#4338CA' && md('29 nov').dot === '#FFFFFF' && /tu sers, une tâche à faire/.test(md('29 nov').aria), '29 nov : confirmé (violet) avec une tâche');

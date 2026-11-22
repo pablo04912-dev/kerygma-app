@@ -581,7 +581,9 @@
   "nom": "Lucas",
   "reponses": {
    "29/11|stm|gac": "dispo",
-   "13/12|stm|gac": "dispo"
+   "13/12|stm|gac": "dispo",
+   "22/11|bou|projection": "dispo",
+   "20/12|bou|projection": "dispo"
   },
   "lie": {
    "nom": "Inès",
@@ -684,5 +686,17 @@
   "29/11|stm|piano": [
    "Inès"
   ]
+ },
+ "projection": {
+  "22/11": {
+   "bou": [
+    "Lucas"
+   ]
+  },
+  "20/12": {
+   "bou": [
+    "Lucas"
+   ]
+  }
  }
 }

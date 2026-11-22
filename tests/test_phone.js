@@ -71,12 +71,15 @@ function propre(label) {
   const lien = Array.from($$('[role=dialog] a')).find(a => /Se connecter/.test(a.textContent));
   assert(!!lien && $('#email').value === '' , 'bouton Se connecter direct, champs vides');
   await click(lien, 'Se connecter');
-  const surAccueil = () => /Ancienne · Saint-Maurice/.test(txt()) && /sur les 3 lieux/.test(txt()) && !txt().includes('Bonjour');
+  const surAccueil = () => /Ancienne · Saint-Maurice/.test(txt()) && /Compte rendu de dimanche dernier/.test(txt()) && !txt().includes('Bonjour');
   assert(surAccueil(), 'connecté sur le profil de Hélène, sans « Bonjour »');
   assert($('[data-prototype]') && $('[data-prototype]').textContent === 'Prototype responsable', 'étiquette Prototype responsable en haut');
   propre('espace Hélène');
   const nav = (nom) => $$('nav[aria-label="Navigation principale"] button').find(x => x.textContent.replace(/\s+/g, ' ').trim().replace(/ ?\d+$/, '') === nom);
-  assert($$('nav[aria-label="Navigation principale"] button').length === 4 && !nav('Moi') && !!nav('À faire'), '4 boutons en bas : Planning, Équipe, Actus, À faire');
+  assert($$('nav[aria-label="Navigation principale"] button').map(b => b.textContent.replace(/\s+/g, ' ').trim().replace(/ ?\d+$/, '')).join() === 'Planning,À faire,Actus,Équipe' && !nav('Moi'), '4 boutons en bas, dans l’ordre Planning, À faire, Actus, Équipe');
+  assert(!!$('nav[aria-label="Navigation principale"] [data-glisse="onglet"]'), 'bulle grise sous l’onglet actif');
+  assert(/Ce dimanche 22 novembre/.test(txt()) && /Dimanches suivants/.test(txt()) && txt().indexOf('Ce dimanche 22 novembre') < txt().indexOf('Compte rendu de dimanche dernier') && txt().indexOf('Compte rendu de dimanche dernier') < txt().indexOf('Dimanches suivants'), 'accueil : ce dimanche, puis le compte rendu, puis les dimanches suivants');
+  assert(!/Modifiable/.test(txt()) && !/postes vides/.test(txt()), 'plus de « Modifiable » ni de postes vides');
   assert(/^À faire\s*1$/.test(nav('À faire').textContent.replace(/\s+/g, ' ').trim()) && nav('À faire').getAttribute('aria-label') === 'À faire, 1 chose à faire', 'pastille rouge : 1 chose à faire');
   assert(!$('section[aria-label="À valider"]') && !!$('section[aria-label="Comptes rendus"]'), 'la validation n’est plus sur la page d’accueil');
 
@@ -89,9 +92,10 @@ function propre(label) {
   await click(cartes()[0], 'carte Saint-Maurice');
   assert($('h1').textContent === 'Saint-Maurice' && dates()[1].getAttribute('aria-pressed') === 'true', 'détail Saint-Maurice, la date reste');
   propre('détail');
-  const personne = () => $$('section[aria-label="Postes"] button').filter(b => b.textContent.trim() === 'Personne');
+  const personne = () => $$('section[aria-label="Postes"] button').filter(b => b.textContent.trim() === 'Aucun');
   const choisir = personne();
-  assert(choisir.length > 0 && $$('section[aria-label="Postes"] button[aria-disabled="true"]').every(b => b.textContent.trim() === 'Tâche'), 'boutons « Personne », Tâche grisé sur les postes vides');
+  assert(choisir.length > 0 && $$('section[aria-label="Postes"] button[aria-disabled="true"]').every(b => b.textContent.trim() === 'Tâche'), 'postes vides sur « Aucun », Tâche grisé');
+  assert($$('section[aria-label="Postes"] h2').map(h => h.textContent).join() === 'Voix,Instruments' && !!btn('+Ajouter une voix') && !!btn('+Ajouter un instrument') && !!$('button[aria-label^="Auto"]') && !/sur 7 postes/.test(txt()), 'parties Voix et Instruments, boutons « + » et Auto, plus de compteur');
   await click(choisir[0], 'Choisir');
   const dialog = $('[role=dialog]');
   assert(!!dialog, 'feuille de choix ouverte');
@@ -110,7 +114,7 @@ function propre(label) {
   propre('après invitation forcée');
   const choisir2 = personne();
   await click(choisir2[0], 'Choisir 2');
-  assert(!!$('[role=dialog] [data-candidat="aucun"]') && !/moins servi/.test($('[role=dialog]').textContent), 'option « Aucun » en haut, plus de petit message');
+  assert(!$('[role=dialog] [data-candidat="aucun"]') && !/moins servi/.test($('[role=dialog]').textContent), 'poste vide : pas d’option « Aucun », plus de petit message');
   const libre = $('[role=dialog] [data-candidat="libre"]');
   const nomInvite = libre.querySelector('span span').textContent;
   await click(btn('Inviter', libre), 'inviter');
@@ -120,7 +124,7 @@ function propre(label) {
   assert(surAccueil(), 'retour aux 3 lieux');
 
   // Programme du culte et Sainte Cène
-  await click(btn('Programme du culte'), 'programme');
+  await click(btn('Programme culte'), 'programme');
   await click(cartes()[0], 'programme Saint-Maurice');
   const oui = $$('button').find(b => b.textContent.trim() === 'Oui');
   await click(oui, 'Sainte Cène oui');
@@ -279,7 +283,10 @@ function propre(label) {
   await sortir();
 
   await entrer('serviteur');
-  assert(!/Bonjour/.test(txt()) && /Serviteur · Louange/.test(txt()), 'espace de Lucas');
+  assert(!/Bonjour/.test(txt()) && $$('[role=group][aria-label="Choisir le service"] button').map(b => b.textContent.trim()).join() === 'Tout,Projection,Louange', 'espace de Lucas, onglets Tout / Projection / Louange');
+  await click(btn('Projection'), 'onglet projection');
+  assert($$('section[aria-label="Mes services"] button').every(b => !/Saint-Maurice|Champigny/.test(b.textContent)) && /Projection/.test($('section[aria-label="Mes services"]').textContent), 'onglet Projection : seulement la projection');
+  await click(btn('Tout'), 'onglet tout');
   assert($('[data-prototype]').textContent === 'Prototype serviteur', 'étiquette Prototype serviteur en haut');
   propre('espace Lucas');
   await click(nav('À faire'), 'À faire Lucas');

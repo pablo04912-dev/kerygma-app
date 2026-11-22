@@ -2,6 +2,23 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-22 (nuit, suite) · Pablo (avec Claude) · Voix / Instruments, Auto, barre flottante
+
+**Décisions**
+- Planning louange : parties VOIX (Direction, Voix) et INSTRUMENTS (Piano, Batterie, Guitare acoustique), « + » pour ajouter une voix ou un instrument (basse, guitare électrique, personnalisé). Par défaut « Aucun », qui n'est pas « à pourvoir » : plus de « Manque », de compteur, de vert/rouge dans le calendrier louange, ni de « Modifiable ».
+- Bouton Auto (responsable et coordinateur) : propose des noms d'après l'historique, les indispos, la fréquence max et « servir ensemble » ; on envoie (ou on propose à Hélène) ou on annule.
+- Accueil du responsable : Ce dimanche 22 novembre, puis Compte rendu de dimanche dernier, puis Dimanches suivants. Puce « Programme culte ».
+- Barre du bas : Planning, À faire, Actus, Équipe ; capsule flottante translucide avec bulle grise qui glisse (façon Instagram), noms gardés, violet gardé.
+- Lucas : onglets Tout / Projection / Louange à la place de « Serviteur · Louange ».
+- Création de compte (vraie appli) : questionnaire de départ (fréquence, services, rôles, famille), rôles confirmés par les responsables.
+
+**Fait**
+- Tout ce qui précède. Les préférences de Lucas (fréquence, servir ensemble) sont partagées et prises en compte par Auto. Exemple de services de projection pour Lucas.
+
+**À faire / à vérifier**
+- Tester sur iPhone : barre flottante (flou), clavier dans « Tâche » et « Ajouter ».
+- Le directeur peut aussi faire voix ou guitare : pour l'instant Auto ne met jamais deux fois la même personne dans un culte ; on le choisit à la main.
+
 ## 2026-11-22 (nuit) · Pablo (avec Claude) · écran du responsable plus lisible
 
 **Décisions**

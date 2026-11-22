@@ -112,6 +112,9 @@
     lastSig = sig;
     const kept = {};
     KEEP.forEach(sel => app.querySelectorAll(sel).forEach((el, i) => { kept[sel + i] = [el.scrollTop, el.scrollLeft]; }));
+    // Éléments qui glissent d'une place à l'autre (bulle de la barre du bas)
+    const avant = {};
+    app.querySelectorAll('[data-glisse]').forEach(el => { avant[el.getAttribute('data-glisse')] = el.getBoundingClientRect(); });
     const act = document.activeElement;
     const focusId = act && app.contains(act) && act.id ? act.id : null;
     let s0 = null, s1 = null;
@@ -125,6 +128,13 @@
       el.scrollTop = k[0];
       el.scrollLeft = k[1];
     }));
+    const calme = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    app.querySelectorAll('[data-glisse]').forEach(el => {
+      const a = avant[el.getAttribute('data-glisse')];
+      if (!a || calme || typeof el.animate !== 'function') return;
+      const dx = a.left - el.getBoundingClientRect().left;
+      if (Math.abs(dx) > 1) el.animate([{ transform: 'translateX(' + dx + 'px)' }, { transform: 'none' }], { duration: 320, easing: 'cubic-bezier(.2, .8, .2, 1)' });
+    });
     if (focusId) {
       const f = document.getElementById(focusId);
       if (f) {

@@ -11,7 +11,7 @@ const tick = (ms) => new Promise(r => setTimeout(r, ms || 0));
 const PAGES = [
   { fichier: 'responsable.html', titre: 'Prototype responsable', bonjour: 'Responsable louange', initiale: 'H' },
   { fichier: 'coordinateur.html', titre: 'Prototype coordinateur', bonjour: 'Coordinateur louange · Saint-Maurice', initiale: 'T' },
-  { fichier: 'serviteur.html', titre: 'Prototype serviteur', bonjour: 'Serviteur · Louange', initiale: 'L' },
+  { fichier: 'serviteur.html', titre: 'Prototype serviteur', bonjour: 'Mes dimanches', initiale: 'L' },
 ];
 
 (async () => {
