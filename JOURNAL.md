@@ -2,6 +2,24 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-22 (nuit) · Pablo (avec Claude) · écran du responsable plus lisible
+
+**Décisions**
+- En-tête : KERYGMA centré ; la bulle H ouvre « Moi ». Barre du bas : Planning, Équipe, Actus, **À faire** (pastille rouge). Plus de « Bonjour … ».
+- Les validations (propositions de Thomas) passent dans « À faire ». Thomas y trouve aussi son compte rendu, les échanges, et les changements faits par Hélène. Lucas y trouve ses demandes.
+- Planning : une bulle par poste, [nom ou « Personne »] + [Tâche]. Option « Aucun » (personne à ce poste, compte comme rempli). Le responsable peut changer quelqu'un ; le coordinateur est prévenu. Vert + coche = confirmé.
+- Tâches : une par personne, texte libre, « Aucune tâche » par défaut, modifiable. Plus de tâches prédéfinies ni de résumé.
+- Calendrier : cases entières vertes / rouges, bouton réduire à gauche, mois centré, plus de « Date affichée ».
+- « Ce dimanche » pour le dimanche de la semaine, sinon « Dimanche 15 novembre ».
+- Message : les 3 débuts sont dans le champ (visibles tant qu'il est vide). Texte gris retiré.
+
+**Fait**
+- Tout ce qui précède, sur les 3 profils ; compte rendu : titre « Saint-Maurice » en grand ; flèche de retour ; effet au toucher ; barres de défilement masquées ; clavier iPhone (écran réduit à la partie visible).
+
+**À faire / à vérifier**
+- Tester sur iPhone : clavier ouvert dans « Tâche » et « Envoyer un message ».
+- À trancher : pour Hélène, une seule puce « Programme du culte » (la louange modifiable dedans) au lieu de deux.
+
 ## 2026-11-22 · Pablo (avec Claude) · débuts de message
 
 **Décision**

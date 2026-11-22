@@ -25,8 +25,9 @@ assert(checkTags(T.r.src).length === 0, 'balises : ' + checkTags(T.r.src).join('
 // 1. Thomas arrive directement sur Saint-Maurice, louange
 let x = T.v('arrivée Thomas');
 assert(!x.showLieux && x.showDetail, 'pas d’écran 3 lieux, directement le planning');
-assert(x.dTitre === 'Bonjour Thomas' && x.coordHeader && !x.aRetour, 'en-tête de Thomas, sans retour vers les 3 lieux');
-assert(/Louange · Saint-Maurice · dimanche 22 novembre/.test(x.dSous), 'sous-titre : ' + x.dSous);
+assert(!x.aDTitre && x.coordHeader && !x.aRetour, 'en-tête de Thomas : sa puce de rôle, pas de « Bonjour », pas de retour');
+assert(x.dSous === 'Ce dimanche · Louange · 10h30', 'sous-titre : ' + x.dSous);
+assert(x.nav.afaire.badge === '2' && x.nav.afaire.aBadge, 'pastille À faire : compte rendu à remplir et échange à valider');
 assert(x.protoLabel === 'Prototype coordinateur', 'étiquette en haut : ' + x.protoLabel);
 assert(/<title>Kerygma, prototype coordinateur<\/title>/.test(T.r.src), 'titre de la page');
 assert(x.initiale === 'T' && x.moiNom === 'Thomas' && !x.eqMins, 'identité Thomas');
@@ -56,7 +57,7 @@ assert(globalThis.__kerygmaPartage.invitations && Object.keys(globalThis.__keryg
 // 4. Équipe, Moi
 x.nav.equipe.pick(); x = T.v('équipe Thomas');
 assert(x.groupes.length === 1 && /^Saint-Maurice/.test(x.groupes[0].titre), 'Thomas ne voit que Saint-Maurice dans Équipe');
-x.nav.moi.pick(); x = T.v('moi Thomas');
+x.ouvrirMoi(); x = T.v('moi Thomas');
 assert(x.roles.length === 1 && /Coordinateur louange · Saint-Maurice/.test(x.roles[0].label), 'rôle de Thomas');
 x.nav.planning.pick(); x = T.v('retour planning');
 assert(x.showDetail && !x.showLieux, 'Planning ramène au planning de Saint-Maurice');
@@ -112,9 +113,11 @@ globalThis.__kerygmaPartage = undefined;
 const T3 = ouvrir(fichierCoord);
 let c = T3.v('Thomas, compte rendu');
 assert(c.aCRCarte && c.crCarteTag === 'Après le culte' && c.crCarteTitre === 'Compte rendu du dimanche 15 novembre' && c.crCarteBouton === 'Remplir le compte rendu', 'notification du compte rendu');
+c.nav.afaire.pick(); c = T3.v('À faire Thomas');
+assert(c.showAFaire && c.aCRCarte && !c.aFaireVide, 'la carte du compte rendu est dans « À faire »');
 c.ouvrirCR(); c = T3.v('formulaire');
-assert(c.showCR && !c.showDetail && c.crForm && !c.crLecture && c.crRetourLabel === 'Planning', 'formulaire du compte rendu');
-assert(/Louange · Saint-Maurice · dimanche 15 novembre · 10h30/.test(c.crSous), 'sous-titre : ' + c.crSous);
+assert(c.showCR && !c.showDetail && c.crForm && !c.crLecture && c.crRetourLabel === 'Retour à À faire', 'formulaire du compte rendu');
+assert(c.crTitre === 'Saint-Maurice' && c.crSous === 'Dimanche 15 novembre · Louange · 10h30', 'titre : ' + c.crTitre + ' / ' + c.crSous);
 assert(c.crPersonnes.map(p => p.nom).join() === 'Inès,Adrien,Chloé,Lucas,Camille,Bérénice', 'liste prévue : ' + c.crPersonnes.map(p => p.nom));
 assert(c.crPersonnes.every(p => p.present === 'true' && p.sous === p.postes) && c.crCompte === '6 présents sur 6 prévus', 'tout le monde coché au départ');
 assert(c.crPersonnes.every(p => p.msgAria === 'Écrire un message à ' + p.nom && !p.ouvert && !p.aEnvoye), 'bouton « Message » sur chaque personne');
@@ -145,24 +148,17 @@ assert(!c.crPersonnes.some(p => p.ouvert), 'annuler ferme le message');
 assert(globalThis.__kerygmaPartage.mercis.length === 1 && globalThis.__kerygmaPartage.mercis[0].noms.join() === 'Lucas' && globalThis.__kerygmaPartage.mercis[0].mode === 'prive', 'un seul message, à Lucas');
 // Très bon service : message à toute l'équipe, phrases toutes prêtes
 c.toggleTresBon(); c = T3.v('très bon service');
-assert(c.crTresBon && /toute l’équipe louange de Saint-Maurice/.test(c.crMerciNote) && c.crMsgT === 'Merci à toute l’équipe pour dimanche ! ', 'Très bon service : message à toute l’équipe, premier début proposé : ' + c.crMsgT);
-assert(!c.pretsOuvert && c.pretsFleche === '▾', 'liste des messages tout prêts fermée');
-c.togglePrets(); c = T3.v('liste ouverte');
-assert(c.pretsOuvert && c.prets.length === 3 && c.pretsFleche === '▴' && c.prets.map(p => p.texte).join(' | ') === 'Merci à toute l’équipe pour dimanche ! | Quel beau service dimanche ! | Bravo à chacun pour votre engagement !', 'trois débuts de message');
-c.saisirMsgT({ target: { value: 'Merci à toute l’équipe pour dimanche ! La louange a porté toute l’assemblée.' } });
-c = T3.v('suite écrite');
-c.togglePrets(); c = T3.v('liste rouverte');
-c.prets[1].pick(); c = T3.v('autre début');
-assert(c.crMsgT === 'Quel beau service dimanche ! La louange a porté toute l’assemblée.' && !c.pretsOuvert, 'le début change, la suite est gardée : ' + c.crMsgT);
-c.saisirMsgT({ target: { value: 'Ma propre phrase.' } });
-c = T3.v('texte libre');
-c.togglePrets(); c = T3.v('liste');
-c.prets[2].pick(); c = T3.v('début ajouté devant');
-assert(c.crMsgT === 'Bravo à chacun pour votre engagement ! Ma propre phrase.', 'le début se place devant un texte libre : ' + c.crMsgT);
+assert(c.crTresBon && /toute l’équipe louange de Saint-Maurice/.test(c.crMerciNote) && c.crMsgT === '' && c.pretsVisibles, 'Très bon service : champ vide, les débuts proposés dedans');
+assert(c.prets.length === 3 && c.prets.map(p => p.texte).join(' | ') === 'Merci à toute l’équipe pour dimanche ! | Quel beau service dimanche ! | Bravo à chacun pour votre engagement !', 'trois débuts de message');
+c.prets[1].pick(); c = T3.v('début choisi');
+assert(c.crMsgT === 'Quel beau service dimanche ! ' && !c.pretsVisibles, 'le début remplit le champ, les suggestions se cachent');
+c.saisirMsgT({ target: { value: '' } }); c = T3.v('champ vidé');
+assert(c.pretsVisibles, 'champ vidé : les débuts reviennent');
 c.saisirMsgT({ target: { value: 'Quel beau service dimanche ! Belle unité.' } });
 c = T3.v('message final');
 c.envoyerCR(); c = T3.v('envoyé');
-assert(c.showDetail && !c.showCR && /Compte rendu envoyé à Hélène/.test(c.toast) && /Merci envoyé à toute l’équipe/.test(c.toast), 'toast : ' + c.toast);
+assert(c.nav.afaire.badge === '1', 'compte rendu fait : il reste l’échange');
+assert(c.showAFaire && !c.showCR && /Compte rendu envoyé à Hélène/.test(c.toast) && /Merci envoyé à toute l’équipe/.test(c.toast), 'toast : ' + c.toast);
 assert(c.crCarteTag === 'Compte rendu envoyé' && /5 présents, 1 absent · merci envoyé/.test(c.crCarteTexte) && c.crCarteBouton === 'Revoir', 'carte : ' + c.crCarteTexte);
 const S9 = globalThis.__kerygmaPartage;
 assert(S9.comptesRendus['15/11|stm|louange'] && S9.comptesRendus['15/11|stm|louange'].absents.join() === 'Chloé', 'compte rendu partagé');
@@ -171,12 +167,12 @@ assert(S9.mercis[1].texte === 'Quel beau service dimanche ! Belle unité.', 't
 c.ouvrirCR(); c = T3.v('revoir');
 assert(c.crLecture && !c.crForm && c.crAbsentsTexte === 'Chloé' && c.crTextes.length === 2, 'Thomas relit son compte rendu');
 c.retourCR(); c = T3.v('retour');
-assert(c.showDetail, 'retour au planning');
+assert(c.showAFaire, 'retour à « À faire »');
 
 // 10. Hélène reçoit les comptes rendus
 const H3 = ouvrir(fichierHelene);
 let e = H3.v('Hélène comptes rendus');
-assert(e.aCRs && e.crListeTitre === 'Comptes rendus · dimanche 15 novembre', 'bloc comptes rendus');
+assert(e.aCRs && e.crListeTitre === 'Dimanche 15 novembre', 'bloc comptes rendus');
 assert(e.crListe.map(x => x.statut).join() === 'Reçu,Reçu,En attente', 'statuts : ' + e.crListe.map(x => x.statut));
 assert(e.crListe[0].detail === 'Thomas · 1 absent' && e.crListe[2].detail === 'En attente de Marco', 'détails : ' + e.crListe.map(x => x.detail).join(' | '));
 e.crListe[2].ouvrir(); e = H3.v('en attente');
@@ -185,7 +181,7 @@ assert(e.crPeutCommenter && e.crComTitre === 'Commentaire pour Marco' && e.msgPe
 e.retourCR(); e = H3.v('retour');
 e.crListe[0].ouvrir(); e = H3.v('ouvre Saint-Maurice');
 assert(!e.crEnAttente && e.crPeutCommenter, 'Hélène peut commenter un compte rendu reçu');
-assert(e.showCR && e.crLecture && e.crRetourLabel === 'Les 3 lieux' && /Rempli par Thomas/.test(e.crPar), 'Hélène lit le compte rendu de Thomas');
+assert(e.showCR && e.crLecture && e.crRetourLabel === 'Retour aux 3 lieux' && /Rempli par Thomas/.test(e.crPar), 'Hélène lit le compte rendu de Thomas');
 assert(e.crPresentsTexte === 'Inès, Adrien, Lucas, Camille, Bérénice' && e.crAbsentsTexte === 'Chloé', 'présents et absents');
 assert(e.crTextes.map(t => t.titre).join() === 'Ce qui s’est bien passé,Problèmes' && e.crAMerci && e.crMerciTexte === 'Très bon service : merci envoyé à toute l’équipe. Thomas a aussi écrit à Lucas.', 'commentaires et messages : ' + e.crMerciTexte);
 // Commentaire général pour Thomas
@@ -196,10 +192,11 @@ e = H3.v('commentaire saisi');
 e.envoyerCom(); e = H3.v('commentaire envoyé');
 assert(/Commentaire envoyé à Thomas/.test(e.toast) && e.crCom === '' && e.aCRComs && e.crComs[0].de === 'Toi (Hélène)', 'commentaire envoyé : ' + e.toast);
 // Message personnalisé à certaines personnes
-assert(e.msgModes[0].on && !e.msgChoix && e.crMsg === 'Merci à toute l’équipe pour dimanche ! ' && e.pretsH.length === 3, 'message à toute l’équipe par défaut, trois débuts');
-e.togglePretsH(); e = H3.v('débuts Hélène');
+assert(e.msgModes[0].on && !e.msgChoix && e.crMsg === '' && e.pretsHVisibles && e.pretsH.length === 3, 'message à toute l’équipe par défaut, champ vide avec trois débuts');
+e.envoyerMsg(); e = H3.v('message vide');
+assert(e.aErreurMsg && /choisis un début/.test(e.erreurMsg), 'message vide refusé : ' + e.erreurMsg);
 e.pretsH[1].pick(); e = H3.v('début Hélène');
-assert(e.crMsg === 'Quel beau service dimanche ! ' && !e.pretsHOuvert, 'Hélène choisit un début');
+assert(e.crMsg === 'Quel beau service dimanche ! ' && !e.pretsHVisibles && !e.aErreurMsg, 'Hélène choisit un début');
 e.msgModes[1].pick(); e = H3.v('certaines personnes');
 assert(e.msgChoix && e.msgPersonnes.map(p => p.label).join() === 'Inès,Adrien,Chloé,Lucas,Camille,Bérénice', 'destinataires possibles : toute la liste prévue');
 e.envoyerMsg(); e = H3.v('personne choisie ?');
@@ -213,21 +210,22 @@ e.envoyerMsg(); e = H3.v('message envoyé');
 assert(/Message envoyé à Chloé, Lucas|Message envoyé à Lucas, Chloé/.test(e.toast) || /Message envoyé à Chloé, Lucas/.test(e.toast) || /Message envoyé à .*Lucas/.test(e.toast), 'toast : ' + e.toast);
 const mH = globalThis.__kerygmaPartage.mercis.filter(m => m.de === 'Hélène');
 assert(mH.length === 1 && mH[0].mode === 'prive' && mH[0].noms.join() === 'Chloé,Lucas' && mH[0].texte === 'Merci à vous deux, très beau duo !', 'message enregistré : ' + JSON.stringify(mH[0]));
-assert(e.msgEnvoyes.length === 1 && /Envoyé à Chloé, Lucas/.test(e.msgEnvoyes[0].texte), 'Hélène voit ce qu’elle a envoyé');
+assert(e.msgEnvoyes.length === 1 && e.msgEnvoyes[0].qui === 'Envoyé à Chloé, Lucas :' && e.msgEnvoyes[0].texte === '« Merci à vous deux, très beau duo ! »' && e.crMsg === '', 'Hélène voit ce qu’elle a envoyé, sur deux lignes');
 e.msgModes[0].pick(); e = H3.v('équipe');
+e.pretsH[0].pick(); e = H3.v('début équipe');
 e.envoyerMsg(); e = H3.v('message équipe');
 assert(globalThis.__kerygmaPartage.mercis.filter(m => m.de === 'Hélène' && m.mode === 'equipe' && m.noms.length === 6).length === 1 && /toute l’équipe de Saint-Maurice/.test(e.toast), 'message à toute l’équipe');
 // Thomas voit le commentaire
 let c2 = T3.v('Thomas après commentaire');
 assert(c2.aCRComsCarte && /Hélène a commenté le service : « Belle préparation/.test(c2.crComsCarte), 'commentaire visible sur la carte de Thomas : ' + c2.crComsCarte);
-c2.ouvrirCR(); c2 = T3.v('Thomas relit');
+c2.nav.afaire.pick(); c2.ouvrirCR(); c2 = T3.v('Thomas relit');
 assert(c2.aCRComs && c2.crComs[0].de === 'Hélène, responsable louange' && !c2.crPeutCommenter, 'Thomas lit le commentaire, sans pouvoir écrire à sa place');
 c2.retourCR(); c2 = T3.v('retour Thomas');
 e.retourCR(); e = H3.v('retour 3 lieux');
 assert(e.showLieux, 'retour aux 3 lieux');
 e.crListe[1].ouvrir(); e = H3.v('Champigny');
 assert(e.crLecture && e.crTextes.length === 3 && e.crAbsentsTexte === 'Pierre' && /toute l’équipe/.test(e.crMerciTexte), 'compte rendu de Sylvie (exemple)');
-e.mins[1].pick(); e.retourCR(); e = H3.v('programme');
+e.mins[0].pick(); e.retourCR(); e = H3.v('programme');
 assert(!e.aCRs, 'comptes rendus louange masqués sur le programme du culte');
 
 // 11. Échanges entre serviteurs : Thomas valide
@@ -285,57 +283,74 @@ const tagsDe = n => ((g.candLibres.find(c => c.nom === n) || {}).tags || []).map
 assert(tagsDe('Bérénice').indexOf('Indisponible ce jour-là') >= 0, 'Bérénice : pas dispo dans sa grille');
 assert(tagsDe('Thaïs').indexOf('Si besoin seulement') >= 0, 'Thaïs : si besoin');
 
-// 13. Tâches : Thomas confie une tâche à quelqu'un du planning
+// 13. Tâches : Thomas confie une tâche à quelqu'un du planning (une par personne, modifiable)
 globalThis.__kerygmaPartage = undefined;
 const T5 = ouvrir(fichierCoord);
 let k = T5.v('Thomas tâches');
 k.dates[1].pick(); k = T5.v('29 nov');
 const gac = k.lignes.find(l => l.label === 'Guitare acoustique');
-assert(gac.aTache && gac.tacheTexte === 'Tâche : installer et brancher le matériel · à faire' && gac.tacheColor === '#4338CA', 'tâche de démonstration visible : ' + gac.tacheTexte);
-assert(k.aTachesCulte && k.tachesCulte.length === 1 && k.tachesCulte[0].etat === 'À faire' && /Lucas · guitare acoustique · demandé par Thomas/.test(k.tachesCulte[0].detail), 'liste des tâches du culte');
-assert(k.lignes.filter(l => l.peutTache).length === 5 && !k.lignes.find(l => l.label === 'Basse').peutTache, '« + Tâche » sur les postes remplis seulement');
+assert(gac.aTache && gac.tacheTexte === 'Tâche : installer et brancher le matériel' && gac.tacheColor === '#5B5F6B' && gac.etat === 'ok', 'tâche de démonstration, en petit et gris ; Lucas a confirmé : ' + gac.tacheTexte);
+assert(k.aTachesCulte === undefined && k.tachesCulte === undefined, 'plus de résumé des tâches du culte');
+assert(k.lignes.filter(l => l.peutTache).length === 5 && !k.lignes.find(l => l.label === 'Basse').peutTache && k.lignes.find(l => l.label === 'Basse').tacheOff === 'true', '« Tâche » grisé quand il n’y a personne');
 const dir = k.lignes.find(l => l.label === 'Direction');
-assert(dir.tacheAria === 'Ajouter une tâche à Olivier', 'libellé accessible : ' + dir.tacheAria);
+assert(dir.tacheAria === 'Donner une tâche à Olivier' && gac.tacheAria === 'Modifier la tâche de Lucas', 'libellés accessibles : ' + dir.tacheAria + ' / ' + gac.tacheAria);
 dir.ajouterTache(); k = T5.v('feuille tâche');
-assert(k.tacheOuverte && !k.sheetOuvert && k.tacheSous === 'Direction · Saint-Maurice · dim. 29 nov' && !k.tachePlusieurs, 'feuille « Ajouter une tâche »');
-assert(k.tacheTypes.length === 6 && k.tacheTypes[0].on && k.tacheTypes[5].label === 'Autre tâche' && !k.tacheAutre, 'tâches prédéfinies de la louange + Autre');
-assert(k.tacheMsg === 'Peux-tu t’occuper de ça dimanche ? Merci !' && k.tacheBouton === 'Envoyer la tâche à Olivier', 'message par défaut');
-k.tacheTypes[4].pick(); k = T5.v('nettoyer');
-assert(k.tacheTypes[4].on && !k.tacheTypes[0].on, 'tâche choisie');
-k.saisirTacheMsg({ target: { value: 'Avec Pierre, après la prière de fin.' } });
-k = T5.v('message');
-k.envoyerTache(); k = T5.v('tâche envoyée');
-assert(!k.tacheOuverte && /Tâche envoyée à Olivier : nettoyer la salle après le culte\./.test(k.toast), 'toast : ' + k.toast);
-const tS = globalThis.__kerygmaPartage.taches;
-assert(tS.length === 2 && tS[1].nom === 'Olivier' && tS[1].par === 'Thomas' && tS[1].message === 'Avec Pierre, après la prière de fin.' && tS[1].poste === 'direction' && !tS[1].fait, 'tâche enregistrée');
-assert(k.lignes.find(l => l.label === 'Direction').aTache && k.tachesCulte.length === 2, 'tâche visible sur la ligne et dans la liste');
-// Autre tâche, texte libre obligatoire
+assert(k.tacheOuverte && !k.sheetOuvert && k.tacheSous === 'Direction · Saint-Maurice · Dimanche 29 novembre' && k.tacheAucune === 'true' && k.tacheBouton === 'Enregistrer', 'feuille « Tâche » : ' + k.tacheSous);
+k.saisirTache({ target: { value: 'Nettoyer la salle après le culte, avec Pierre' } });
+k = T5.v('tâche écrite');
+k.enregistrerTache(); k = T5.v('tâche envoyée');
+assert(!k.tacheOuverte && k.toast === 'Tâche envoyée à Olivier.', 'toast : ' + k.toast);
+const tS = () => globalThis.__kerygmaPartage.taches;
+assert(tS().length === 2 && tS()[1].nom === 'Olivier' && tS()[1].par === 'Thomas' && tS()[1].titre === 'Nettoyer la salle après le culte, avec Pierre' && tS()[1].poste === 'direction' && !tS()[1].fait, 'tâche enregistrée');
+// Modifier la tâche de Lucas (déjà là) : pas de doublon, la case « faite » repart à zéro
+k.lignes.find(l => l.label === 'Guitare acoustique').ajouterTache(); k = T5.v('tâche Lucas');
+assert(k.tacheTexte === 'Installer et brancher le matériel' && k.tacheAucune === 'false', 'tâche existante dans la feuille');
+k.saisirTache({ target: { value: 'Installer le matériel à 8h45' } }); k.enregistrerTache(); k = T5.v('modifiée');
+assert(tS().filter(t => t.nom === 'Lucas').length === 1 && tS()[0].titre === 'Installer le matériel à 8h45' && tS()[0].message === '' && /modifiée/.test(k.toast), 'tâche de Lucas modifiée');
+// Aucune tâche : retire la tâche d'Olivier
+k.lignes.find(l => l.label === 'Direction').ajouterTache(); k = T5.v('Olivier');
+k.choisirAucuneTache(); k.enregistrerTache(); k = T5.v('Olivier sans tâche');
+assert(!k.lignes.find(l => l.label === 'Direction').aTache && tS().length === 1, 'Aucune tâche : retirée');
 k.lignes.find(l => l.label === 'Piano').ajouterTache(); k = T5.v('piano');
-k.tacheTypes[5].pick(); k = T5.v('autre');
-assert(k.tacheAutre && k.tacheTitre === '', 'champ libre');
-k.envoyerTache(); k = T5.v('autre vide');
-assert(k.aErreurTache && k.tacheOuverte, 'intitulé obligatoire');
-k.saisirTacheTitre({ target: { value: 'Accueillir le nouveau bassiste' } });
-k = T5.v('intitulé');
-k.envoyerTache(); k = T5.v('autre envoyée');
-assert(tS.length === 3 && tS[2].titre === 'Accueillir le nouveau bassiste' && tS[2].nom === 'Inès', 'tâche libre');
-// Poste tenu par deux personnes : choisir pour qui
-T5.r.c.setState({ tache: { date: '29/11', lieu: 'stm', poste: 'voix', noms: ['Pierre', 'Emma'] }, tacheNom: 'Pierre', tacheChoix: 0, tacheMsg: null, erreurTache: '' });
-k = T5.v('deux personnes');
-assert(k.tachePlusieurs && k.tacheNoms.length === 2 && k.tacheNoms[0].on, 'choix de la personne');
-k.tacheNoms[1].pick(); k = T5.v('Emma');
-assert(k.tacheBouton === 'Envoyer la tâche à Emma', 'bouton : ' + k.tacheBouton);
 k.fermerTache(); k = T5.v('fermée');
-assert(!k.tacheOuverte && tS.length === 3, 'fermer sans envoyer');
-// Hélène voit les tâches et peut en ajouter
+assert(!k.tacheOuverte && tS().length === 1, 'fermer sans enregistrer');
+// Hélène voit la tâche sur la ligne et peut en donner une
 const H5 = ouvrir(fichierHelene);
 let h5 = H5.v('Hélène tâches');
 h5.dates[1].pick(); h5 = H5.v('29');
 h5.cartes[0].ouvrir(); h5 = H5.v('stm 29');
-assert(h5.tachesCulte.length === 3, 'Hélène voit les tâches du culte');
-h5.lignes.find(l => l.label === 'Guitare acoustique').ajouterTache(); h5 = H5.v('Hélène feuille');
-h5.envoyerTache(); h5 = H5.v('Hélène envoie');
-assert(tS.length === 4 && tS[3].par === 'Hélène' && tS[3].nom === 'Lucas', 'tâche d’Hélène');
+assert(/installer le matériel à 8h45/.test(h5.lignes.find(l => l.label === 'Guitare acoustique').tacheTexte), 'Hélène voit la tâche');
+h5.lignes.find(l => l.label === 'Piano').ajouterTache(); h5 = H5.v('Hélène feuille');
+h5.saisirTache({ target: { value: 'Préparer les accords' } }); h5.enregistrerTache(); h5 = H5.v('Hélène envoie');
+assert(tS().length === 2 && tS()[1].par === 'Hélène' && tS()[1].nom === 'Inès', 'tâche d’Hélène');
+
+// 13 bis. Thomas change une personne ou met « Aucun » ; Hélène valide ; Thomas est prévenu des changements d'Hélène
+k.lignes.find(l => l.label === 'Direction').ouvrir(); k = T5.v('changer Olivier');
+assert(k.sheetOuvert && k.aOptionAucun && !k.aSheetNote, 'liste avec Aucun, sans petit message');
+k.candLibres.find(c => c.nom === 'Malik').choisir(); k = T5.v('Malik proposé');
+let dk = k.lignes.find(l => l.label === 'Direction');
+assert(dk.nom === 'Malik' && dk.etat === 'propose' && dk.sous === 'Proposé · en attente de validation par Hélène', 'remplacement proposé : ' + dk.nom);
+k.lignes.find(l => l.label === 'Basse').ouvrir(); k = T5.v('basse');
+k.choisirAucun(); k = T5.v('basse aucun');
+const bk = k.lignes.find(l => l.label === 'Basse');
+assert(bk.etat === 'aucun' && bk.nomTexte === 'Aucun' && bk.sous === 'Proposé · en attente de validation par Hélène' && /aucun/.test(k.toast), 'Aucun proposé');
+h5 = H5.v('Hélène voit');
+h5.nav.afaire.pick(); h5 = H5.v('Hélène À faire');
+const bloc = h5.aValider.find(v => /29 novembre/.test(v.titre));
+const its = bloc.items.map(i => i.poste + ':' + i.nom).join(' | ');
+assert(/Direction:Olivier → Malik/.test(its) && /Basse:Aucun/.test(its), 'Hélène voit le remplacement et Aucun : ' + its);
+bloc.valider(); h5 = H5.v('validé');
+h5.nav.planning.pick(); h5 = H5.v('planning');
+assert(h5.lignes.find(l => l.label === 'Direction').nom === 'Malik' && h5.lignes.find(l => l.label === 'Basse').etat === 'aucun', 'après validation : Malik à la direction, Aucun à la basse');
+assert(!h5.lignes.some(l => l.nom === 'Olivier'), 'Olivier n’est plus sur le planning');
+// Hélène change la batterie du 29 : Thomas est prévenu dans « À faire »
+h5.lignes.find(l => l.label === 'Batterie').ouvrir(); h5 = H5.v('batterie Hélène');
+h5.candLibres[0].choisir(); h5 = H5.v('batterie choisie');
+k = T5.v('Thomas après Hélène');
+assert(k.nav.afaire.aBadge && k.notifs.length === 1 && k.notifs[0].nouveau && /^Hélène a (choisi|remplacé)/.test(k.notifs[0].texte) && k.notifs[0].titre === 'Batterie · Dimanche 29 novembre · Saint-Maurice', 'Thomas prévenu : ' + (k.notifs[0] || {}).texte);
+const avantVu = k.nav.afaire.badge;
+k.notifs[0].vu(); k = T5.v('vu');
+assert(!k.notifs[0].nouveau && k.notifs[0].tag === 'Changement vu' && Number(k.nav.afaire.badge || 0) === Number(avantVu) - 1, 'Vu : la pastille baisse');
 
 // 14. Calendrier du mois (bouton « Mois »)
 k = T5.v('avant mois');
@@ -345,22 +360,23 @@ assert(k.moisOuvert && !k.moisFerme && k.moisTitre === 'Novembre 2026', 'mois du
 assert(k.moisEntetes.map(e => e.l).join('') === 'LMMJVSD' && k.moisCases.length === 36 && k.moisCases.slice(0, 6).every(c => c.inactif), 'grille : lundi en premier, 1er novembre un dimanche');
 const actifs = k.moisCases.filter(c => c.actif);
 assert(actifs.map(c => c.n).join() === '22,29' && actifs[1].on === 'true' && actifs[0].on === 'false', 'dimanches cliquables, 29 sélectionné');
-assert(actifs.every(c => c.dot === '#C2410C') && /postes à pourvoir/.test(actifs[1].aria), 'point orange : postes à pourvoir');
-assert(k.moisLegende.map(l => l.texte).join() === 'Je sers,Complet,Postes à pourvoir,Date affichée', 'légende');
+assert(actifs.every(c => c.bg === '#FBE2DA' && !c.aPoint) && /postes à pourvoir/.test(actifs[1].aria), 'cases entières rouge clair : postes à pourvoir');
+assert(k.moisLegende.map(l => l.texte).join() === 'Complet,Postes à pourvoir', 'légende sans « Date affichée »');
 assert(k.moisPrecOff === 'true' && k.moisSuivOff === 'false', 'flèches');
 k.moisPrec(); k = T5.v('pas avant novembre');
 assert(k.moisTitre === 'Novembre 2026', 'reste en novembre');
 k.moisSuiv(); k = T5.v('décembre');
 assert(k.moisTitre === 'Décembre 2026' && k.moisCases.filter(c => c.actif).map(c => c.n).join() === '6,13,20,27' && k.moisSuivOff === 'true', 'décembre');
 k.moisCases.find(c => c.n === '13' && c.actif).pick(); k = T5.v('13 déc');
-assert(/dimanche 13 décembre/.test(k.dSous) && k.moisOuvert && k.moisCases.find(c => c.n === '13' && c.actif).on === 'true', 'choisir un dimanche dans le mois');
+assert(/Dimanche 13 décembre/.test(k.dSous) && k.moisOuvert && k.moisCases.find(c => c.n === '13' && c.actif).on === 'true', 'choisir un dimanche dans le mois');
 k.toggleMois(); k = T5.v('réduit');
 assert(k.moisFerme && k.dates.find(d => d.on).label === '13 déc', 'retour à la bande, date gardée');
 // Jours où l'on sert : violet
 globalThis.__kerygmaPartage.invitations['dimanche|20/12|cha|louange|gac'] = { nom: 'Thomas', raison: '' };
 k.toggleMois(); k = T5.v('Thomas sert le 20');
 const c20 = k.moisCases.find(c => c.n === '20' && c.actif);
-assert(c20.bg === '#4338CA' && c20.fg === '#FFFFFF' && /tu sers/.test(c20.aria), 'jour où Thomas sert en violet');
+assert(c20.bg === '#4338CA' && c20.fg === '#FFFFFF' && c20.aPoint && /tu sers/.test(c20.aria), 'jour où Thomas sert en violet, avec un point');
+assert(k.moisLegende[0].texte === 'Je sers', 'légende « Je sers » quand on sert');
 
 console.log(steps + ' états vérifiés');
 process.exit(report('Coordinateur') ? 1 : 0);

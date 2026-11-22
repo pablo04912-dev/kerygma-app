@@ -25,6 +25,10 @@ assert(checkTags(L.r.src).length === 0, 'balises : ' + checkTags(L.r.src).join('
 let x = L.v('arrivée Lucas');
 assert(/data-prototype[^>]*>Prototype serviteur</.test(L.r.src) && /<title>Kerygma, prototype serviteur<\/title>/.test(L.r.src), 'étiquette Prototype serviteur en haut');
 assert(x.showAccueil && x.aRepondre && x.repondreTitre === 'À répondre (3)', 'trois demandes : ' + x.repondreTitre);
+assert(x.nav.afaire.badge === '4' && x.nav.afaire.aBadge, 'pastille À faire : 3 demandes + 1 demande d’échange : ' + x.nav.afaire.badge);
+x.nav.afaire.pick(); x = L.v('À faire Lucas');
+assert(x.showAFaire && !x.showAccueil && !x.aFaireVide && x.demandesEchange.length === 1, 'demandes et échange dans « À faire »');
+x.nav.planning.pick(); x = L.v('retour planning');
 assert(x.services.length === 5, '5 services : ' + x.services.length);
 assert(x.services.map(s => s.statut).join() === 'Confirmé,En attente,Confirmé,En attente,En attente', 'statuts : ' + x.services.map(s => s.statut));
 const d6 = x.demandes.find(d => d.titre === 'Dimanche 6 décembre');
@@ -106,8 +110,8 @@ assert(x.showAccueil && /Thomas voit tes dispos/.test(x.toast) && x.dispoBouton 
 // 8. Équipe, Moi
 x.nav.equipe.pick(); x = L.v('équipe');
 assert(x.showEquipe && x.equipes.length > 0 && x.equipes.every(e => !/Boulogne/.test(e.titre) || true), 'équipes de ses cultes');
-x.nav.moi.pick(); x = L.v('moi');
-assert(x.showMoi && /guitare acoustique/.test(x.moiPostes), 'postes de Lucas : ' + x.moiPostes);
+x.ouvrirMoi(); x = L.v('moi');
+assert(x.showMoi && x.profilCurrent === 'page' && /guitare acoustique/.test(x.moiPostes), 'la bulle L ouvre « Moi » : ' + x.moiPostes);
 assert(x.freqs.find(f => f.on).label === '2 fois par mois', 'fréquence par défaut');
 x.freqs.find(f => f.label === 'En pause').pick(); x = L.v('en pause');
 assert(x.freqs.find(f => f.on).label === 'En pause' && /Fréquence enregistrée/.test(x.toast), 'fréquence changée');
@@ -129,6 +133,10 @@ const avant = x.demandes.length;
 globalThis.__kerygmaPartage.invitations['dimanche|20/12|bou|louange|gac'] = { nom: 'Lucas', raison: '' };
 x = L.v('Lucas après invitation');
 assert(x.demandes.length === avant + 1 && x.demandes.some(d => d.cle === '20/12|bou|gac' && d.horaire === 'Présence 14h · fin vers 18h'), 'nouvelle demande reçue (Boulogne 20 déc)');
+// Hélène remplace Lucas (liste choisie par le responsable) : le service disparaît chez lui
+globalThis.__kerygmaPartage.affectations['dimanche|27/12|stm|louange|gac'] = { noms: ['Damien'], aucun: false };
+x = L.v('Lucas remplacé');
+assert(!x.demandes.some(d => d.cle === '27/12|stm|gac') && !x.services.some(sv => /27 déc · Saint-Maurice/.test(sv.titre)), 'Lucas n’est plus prévu le 27 à Saint-Maurice');
 
 // 10. Messages après le culte (merci de Thomas, message personnalisé d'Hélène)
 globalThis.__kerygmaPartage = undefined;

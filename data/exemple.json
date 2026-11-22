@@ -646,15 +646,6 @@
    "27/12": "pasdispo"
   }
  },
- "tachesTypes": {
-  "louange": [
-   "Installer et brancher le matériel",
-   "Faire la balance son",
-   "Préparer la liste des chants",
-   "Ranger le matériel après le culte",
-   "Nettoyer la salle après le culte"
-  ]
- },
  "taches": [
   {
    "id": "t1",
@@ -667,5 +658,31 @@
    "par": "Thomas",
    "fait": false
   }
- ]
+ ],
+ "confirmations": {
+  "22/11|stm|direction": [
+   "Inès"
+  ],
+  "22/11|stm|voix": [
+   "Adrien"
+  ],
+  "22/11|stm|gac": [
+   "Inès"
+  ],
+  "22/11|cha|direction": [
+   "Marco"
+  ],
+  "22/11|cha|batterie": [
+   "Thaïs"
+  ],
+  "22/11|bou|direction": [
+   "Kenza"
+  ],
+  "29/11|stm|direction": [
+   "Olivier"
+  ],
+  "29/11|stm|piano": [
+   "Inès"
+  ]
+ }
 }

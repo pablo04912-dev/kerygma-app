@@ -26,6 +26,11 @@ assert(x.cartes.every(k => k.edit), 'Hélène modifie les 3 lieux en louange');
 assert(x.dates[0].on && x.dates[0].label === '22 nov', 'date par défaut 22 nov');
 assert(/postes vides sur les 3 lieux/.test(x.aTraiter), 'résumé à traiter : ' + x.aTraiter);
 assert(x.nav.planning.current === 'page' && x.nav.equipe.current === 'false', 'nav planning active');
+assert(x.nav.afaire.aBadge && x.nav.afaire.badge === '1' && /1 chose à faire/.test(x.nav.afaire.aria), 'pastille À faire : 1 (la proposition de Thomas)');
+assert(/^Ce dimanche : 10 postes vides sur les 3 lieux$/.test(x.aTraiter), '« Ce dimanche » pour le dimanche de la semaine : ' + x.aTraiter);
+assert(x.crListeTitre === 'Dimanche 15 novembre', 'comptes rendus : juste la date : ' + x.crListeTitre);
+assert(x.mins.map(m => m.label).join() === 'Programme du culte,Louange' && x.mins[1].on, 'Programme du culte en premier, Louange choisi');
+assert(x.types[0].ligne === x.accent && x.types[1].ligne === 'transparent', 'onglets Culte / Prière soulignés');
 
 // 2. Changer de date sur l'accueil
 x.dates[1].pick(); x = check('date 29/11');
@@ -45,7 +50,7 @@ assert(voix.aSous && voix.sous === 'À valider : Thomas propose Pierre', 'propos
 
 // 4. Changer de date dans le détail : on reste dans Saint-Maurice
 x.dates[0].pick(); x = check('détail stm 22/11');
-assert(x.showDetail && x.dTitre === 'Saint-Maurice' && /22 novembre/.test(x.dSous), 'date changée dans le détail');
+assert(x.showDetail && x.dTitre === 'Saint-Maurice' && /^Ce dimanche · Louange/.test(x.dSous), 'date changée dans le détail : ' + x.dSous);
 const piano = x.lignes.find(l => l.label === 'Piano');
 assert(piano.vide && piano.peutChoisir, 'piano vide le 22/11');
 
@@ -106,7 +111,7 @@ assert(rubB && rubB.libre && /Saint-Maurice/.test(rubB.info), 'Noé vu comme aus
 x.fermer(); x.retour(); x = check('retour');
 
 // 9. Programme du culte
-x.mins[1].pick(); x = check('programme 29/11');
+x.mins[0].pick(); x = check('programme 29/11');
 assert(x.cartes[0].edit && x.cartes[1].lecture && x.cartes[2].lecture, 'programme : Saint-Maurice modifiable, autres en lecture');
 assert(x.cartes[0].compte === '5/5', 'programme stm 29/11 complet : ' + x.cartes[0].compte);
 assert(!x.cartes[1].aCompte && /pas encore rempli/.test(x.cartes[1].manque), 'Champigny sans programme');
@@ -123,11 +128,11 @@ assert(x.sheetOuvert && x.candidats.length > 3 && x.candidats.every(k => k.libre
 x.candidats[0].choisir(); x = check('prédication choisie');
 assert(x.lignes.find(l => l.label === 'Prédication').rempli, 'prédication remplie');
 let cene = x.lignes.find(l => l.label === 'Sainte Cène');
-assert(cene.aToggle && cene.nonOn && cene.videTexte === 'Pas ce dimanche' && !cene.peutChoisirSous, 'Sainte Cène : Non par défaut, bouton Oui/Non');
+assert(cene.aToggle && cene.nonOn && cene.nomTexte === 'Pas ce dimanche' && cene.nomFixe && !cene.peutChoisir, 'Sainte Cène : Non par défaut, bouton Oui/Non');
 const avant = x.dCompte;
 cene.pickOui(); x = check('cène oui');
 cene = x.lignes.find(l => l.label === 'Sainte Cène');
-assert(cene.ouiOn && cene.vide && cene.videTexte === 'À pourvoir' && cene.peutChoisirSous, 'Oui : à pourvoir + Choisir un nom');
+assert(cene.ouiOn && cene.vide && cene.nomTexte === 'Personne' && cene.peutChoisir, 'Oui : « Personne », bouton pour choisir');
 assert(/sur 6/.test(x.dCompte), 'avec Sainte Cène le compte passe sur 6 : ' + avant + ' -> ' + x.dCompte);
 cene.ouvrir(); x = check('feuille cène');
 assert(x.sheetOuvert && x.sheetSaisie && x.sheetTitre === 'Sainte Cène', 'feuille cène avec saisie libre');
@@ -143,7 +148,7 @@ cene = x.lignes.find(l => l.label === 'Sainte Cène');
 assert(!x.sheetOuvert && cene.rempli && cene.nom === 'Samir Girard' && cene.aSous, 'nom libre enregistré');
 cene.pickNon(); x = check('cène non');
 cene = x.lignes.find(l => l.label === 'Sainte Cène');
-assert(cene.nonOn && !cene.rempli && cene.videTexte === 'Pas ce dimanche' && !/sur 6/.test(x.dCompte), 'Non : retirée du compte');
+assert(cene.nonOn && !cene.rempli && cene.nomTexte === 'Pas ce dimanche' && !/sur 6/.test(x.dCompte), 'Non : retirée du compte');
 cene.pickOui(); x = check('cène oui à nouveau');
 assert(x.lignes.find(l => l.label === 'Sainte Cène').nom === 'Samir Girard', 'le nom revient si on remet Oui');
 x.lignes.find(l => l.label === 'Sainte Cène').pickNon(); x = check('cène non 2');
@@ -196,14 +201,14 @@ assert(x.dates[2].on && x.dates[2].label === '6 déc', 'date du dimanche conserv
 x.nav.equipe.pick(); x = check('équipe');
 assert(x.showEquipe && x.nav.equipe.current === 'page', 'onglet équipe');
 assert(x.groupes.length === 3, 'équipe : 3 lieux');
-x.mins[0].pick(); x = check('équipe louange');
+x.mins[1].pick(); x = check('équipe louange');
 assert(x.groupes[0].items.length > 0, 'équipe louange du dimanche');
 x.vues[1].pick(); x = check('toute l’équipe');
 assert(x.eqTous && x.personnes.length > 20, 'toute l’équipe louange : ' + x.personnes.length);
 x.nav.actus.pick(); x = check('actus');
 assert(x.showActus && x.actus.length === 5, 'actus');
-x.nav.moi.pick(); x = check('moi');
-assert(x.showMoi && x.roles.length === 2, 'moi');
+x.ouvrirMoi(); x = check('moi');
+assert(x.showMoi && x.roles.length === 2 && x.profilCurrent === 'page', 'la bulle H ouvre « Moi »');
 x.nav.planning.pick(); x = check('retour planning');
 assert(x.showLieux, 'retour au planning sur l’écran 3 lieux');
 
@@ -235,7 +240,64 @@ if (vide) { vide.ouvrir(); x = check('feuille'); assert(x.sheetOuvert, 'feuille 
 
 // 13. Couleur principale (tweak)
 const alt = load(file, { accent: '#0F766E' }).c.renderVals();
-assert(alt.accent === '#0F766E' && alt.mins[0].bg === '#0F766E', 'tweak couleur');
+assert(alt.accent === '#0F766E' && alt.mins[1].bg === '#0F766E', 'tweak couleur');
+
+// 14. Lignes du planning : nom ou « Personne », « Aucun », remplacement, tâche unique
+{
+  globalThis.__kerygmaPartage = undefined;
+  const r = load(file, {});
+  const V = l => { const y = r.c.renderVals(); const e = checkHoles(tpl, y); assert(e.length === 0, l + ' : ' + e.join(' | ')); steps++; return y; };
+  let y = V('départ 14');
+  y.cartes[0].ouvrir(); y = V('Saint-Maurice 22/11');
+  const dir = y.lignes.find(l => l.label === 'Direction');
+  assert(dir.etat === 'ok' && dir.iconeOk && dir.nomTexte === 'Inès' && dir.nomFond === '#E7F5EC', 'Inès a confirmé : bulle verte avec coche');
+  const bat = y.lignes.find(l => l.label === 'Batterie');
+  assert(bat.etat === 'normal' && !bat.iconeOk && bat.peutTache && bat.tacheOff === 'false', 'Bérénice pas encore confirmée : neutre, tâche possible');
+  let bas = y.lignes.find(l => l.label === 'Basse');
+  assert(bas.vide && bas.nomTexte === 'Personne' && bas.peutChoisir && !bas.peutTache && bas.tacheOff === 'true', 'basse : « Personne », tâche grisée');
+  // « Aucun » : personne à la basse ce dimanche, le poste compte comme rempli
+  bas.ouvrir(); y = V('feuille basse');
+  assert(y.aOptionAucun && !y.aSheetNote && y.aucunTexte === 'Personne à ce poste ce dimanche', 'option Aucun, sans petit message');
+  y.choisirAucun(); y = V('aucun basse');
+  bas = y.lignes.find(l => l.label === 'Basse');
+  assert(!bas.vide && bas.etat === 'aucun' && bas.nomTexte === 'Aucun' && !bas.peutTache, 'basse : Aucun');
+  assert(/5 sur 7/.test(y.dCompte) && /Thomas est prévenu/.test(y.toast), 'Aucun compte comme rempli : ' + y.dCompte + ' / ' + y.toast);
+  // Changer une personne : Hélène remplace Bérénice, Thomas est prévenu
+  y.lignes.find(l => l.label === 'Batterie').ouvrir(); y = V('feuille batterie');
+  y.candLibres.find(k => k.nom === 'Thaïs' || k.nom === 'Lucas').choisir(); y = V('batterie changée');
+  const nb = y.lignes.find(l => l.label === 'Batterie');
+  assert(nb.nom !== 'Bérénice' && nb.rempli && nb.sous === 'Invitation envoyée', 'Bérénice remplacée : ' + nb.nom);
+  const S = globalThis.__kerygmaPartage;
+  assert(S.notifs.length === 2 && S.notifs.every(n => n.pour === 'Thomas' && n.par === 'Hélène') && S.notifs[1].avant === 'Bérénice', 'Thomas prévenu des 2 changements');
+  // Tâche : une seule par personne, « Aucune tâche » par défaut, modifiable
+  y.lignes.find(l => l.label === 'Voix').ajouterTache(); y = V('feuille tâche');
+  assert(y.tacheOuverte && y.tacheTitreFeuille === 'Tâche pour Adrien' && y.tacheAucune === 'true' && y.tacheTexte === '', 'feuille tâche : Aucune tâche par défaut');
+  y.saisirTache({ target: { value: 'Préparer la liste des chants' } }); y = V('tâche écrite');
+  assert(y.tacheAucune === 'false', 'texte écrit : « Aucune tâche » n’est plus choisi');
+  y.enregistrerTache(); y = V('tâche enregistrée');
+  let vx = y.lignes.find(l => l.label === 'Voix');
+  assert(!y.tacheOuverte && vx.aTache && vx.tacheTexte === 'Tâche : préparer la liste des chants' && vx.tacheColor === '#5B5F6B' && vx.tacheFond === '#EEF0FF', 'tâche en petit et gris sous la ligne');
+  assert(/Tâche envoyée à Adrien/.test(y.toast) && y.aTachesCulte === undefined, 'plus de résumé des tâches');
+  vx.ajouterTache(); y = V('rouvrir tâche');
+  assert(y.tacheTexte === 'Préparer la liste des chants', 'la tâche se retrouve dans la feuille');
+  y.saisirTache({ target: { value: 'Préparer la liste des chants et les envoyer samedi' } }); y.enregistrerTache(); y = V('tâche modifiée');
+  assert(S.taches.filter(t => t.nom === 'Adrien').length === 1 && /samedi/.test(y.lignes.find(l => l.label === 'Voix').tacheTexte) && /modifiée/.test(y.toast), 'modifiée, pas de doublon');
+  y.lignes.find(l => l.label === 'Voix').ajouterTache(); y = V('rouvrir');
+  y.choisirAucuneTache(); y = V('aucune tâche');
+  assert(y.tacheAucune === 'true' && y.tacheTexte === '', 'Aucune tâche choisie');
+  y.enregistrerTache(); y = V('tâche retirée');
+  assert(!y.lignes.find(l => l.label === 'Voix').aTache && /retirée/.test(y.toast), 'tâche retirée');
+  // Calendrier : cases entières colorées, plus de « Date affichée »
+  y.toggleMois(); y = V('mois');
+  const c22 = y.moisCases.find(k => k.actif && k.n === '22');
+  assert(c22.bg === '#FBE2DA' && !c22.aPoint && c22.border === '#16181D', 'case du 22 : rouge clair (postes à pourvoir), bord noir car affichée');
+  assert(y.moisLegende.map(l => l.texte).join() === 'Complet,Postes à pourvoir' && y.aLegende, 'légende : ' + y.moisLegende.map(l => l.texte).join());
+  // « À faire » : la proposition de Thomas
+  y.nav.afaire.pick(); y = V('à faire');
+  assert(y.showAFaire && !y.aFaireVide && y.aValider.length === 1, 'onglet À faire avec la proposition');
+  y.aValider[0].valider(); y = V('validée');
+  assert(!y.nav.afaire.aBadge && y.aFaireVide, 'plus rien à faire, pastille retirée');
+}
 
 console.log(steps + ' états vérifiés');
 process.exit(report('Planning') ? 1 : 0);
