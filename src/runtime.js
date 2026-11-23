@@ -166,9 +166,10 @@
       if (!pr.width) return;
       const nouvelle = p.hasAttribute('data-fenetre') && fenetresAvant.indexOf(p.getAttribute('data-fenetre')) < 0;
       if (nouvelle) {
+        // la date d'avant reste visible en entier (par exemple 15 nov avant ce dimanche 22 nov)
         const dates = Array.from(p.querySelectorAll('[data-visible]'));
-        const debut = er.left - pr.left + p.scrollLeft;
-        p.scrollLeft = dates[0] === el ? 0 : Math.max(0, debut - 36);
+        const i = dates.indexOf(el);
+        p.scrollLeft = i <= 0 ? 0 : dates[i - 1].getBoundingClientRect().left - pr.left + p.scrollLeft;
       } else if (er.left < pr.left) p.scrollLeft -= (pr.left - er.left) + 24;
       else if (er.right > pr.right) p.scrollLeft += (er.right - pr.right) + 24;
     });

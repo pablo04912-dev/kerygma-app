@@ -728,9 +728,11 @@ class Component extends DCLogic {
       };
     });
 
+    // Qui sert avec moi : louange et projection de ce culte (le programme reste dans le détail du service)
     var equipes = tous.filter(actif).map(function (sv) {
-      var eq = equipeCulteDe(sv)[0];
-      return { titre: 'Dim. ' + court(sv.date) + ' · ' + sv.lieu.nom, items: eq.items };
+      var items = [];
+      equipeCulteDe(sv).forEach(function (g) { if (g.titre !== 'Programme du culte') items = items.concat(g.items); });
+      return { titre: 'Dim. ' + court(sv.date) + ' · ' + sv.lieu.nom, items: items };
     });
 
     var postesDe = Object.keys(DATA.pool).filter(function (k) { return DATA.pool[k].indexOf(NOM) >= 0 && PL.some(function (p) { return p.id === k; }); }).map(function (k) { return poste(k).label.toLowerCase(); });

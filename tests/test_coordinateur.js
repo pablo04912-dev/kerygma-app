@@ -194,6 +194,7 @@ assert(e.showCR && e.crLecture && e.crRetourLabel === 'Retour aux 3 lieux' && e.
 assert(e.crPresentsTexte === 'Inès, Adrien, Camille, Bérénice, Lucas' && e.crAbsentsTexte === 'Chloé', 'présents et absents');
 assert(e.crTextes.map(t => t.titre + (t.vide ? ' : Aucun' : '')).join() === 'Ce qui s’est bien passé,Problèmes,À améliorer : Aucun', 'les 3 rubriques, « Aucun » quand c’est vide : ' + e.crTextes.map(t => t.titre + (t.vide ? ' : Aucun' : '')).join());
 assert(!e.crAMerci, 'les messages de Thomas à l’équipe ou à Lucas restent entre eux : Hélène ne les voit pas');
+assert(e.crComNote === 'Un avis général sur le service. Thomas, qui coordonne Saint-Maurice, le verra.', 'note neutre (pas de « coordinateur de ») : ' + e.crComNote);
 // Commentaire général pour Thomas
 e.envoyerCom(); e = H3.v('commentaire vide');
 assert(e.aErreurCom, 'commentaire vide refusé');

@@ -121,7 +121,9 @@ assert(x.showAccueil && /Thomas voit tes dispos/.test(x.toast) && x.dispoBouton 
 
 // 8. Équipe, Moi
 x.nav.equipe.pick(); x = L.v('équipe');
-assert(x.showEquipe && x.equipes.length > 0 && x.equipes.every(e => !/Boulogne/.test(e.titre) || true), 'équipes de ses cultes');
+assert(x.showEquipe && x.equipes.length > 0, 'équipes de ses cultes');
+{ const b22 = x.equipes.find(e => e.titre === 'Dim. 22 nov · Boulogne');
+  assert(b22 && b22.items.some(i => i.label === 'Projection' && i.nom === 'Lucas' && i.color === '#4338CA'), 'Boulogne 22 nov : Lucas apparaît à la projection, à côté de l’équipe louange'); }
 x.ouvrirMoi(); x = L.v('moi');
 assert(x.showMoi && x.profilCurrent === 'page' && /guitare acoustique/.test(x.moiPostes), 'la bulle L ouvre « Moi » : ' + x.moiPostes);
 assert(x.freqs.find(f => f.on).label === '2 fois par mois', 'fréquence par défaut');

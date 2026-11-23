@@ -435,5 +435,10 @@ assert(alt.accent === '#0F766E' && alt.mins[1].bg === '#0F766E', 'tweak couleur'
   assert(!y.aFenPrec && !y.aFenSuiv && !y.bande.some(b => b.marqueur) && y.dates[0].label === '26 nov', 'prière : les jeudis, sans flèches');
 }
 
+{
+  globalThis.__kerygmaPartage = undefined;
+  const r = load(file, {}); let y = r.c.renderVals(); y.ouvrirMoi(); y = r.c.renderVals();
+  assert(y.roles.some(ro => /valide le planning de chaque mois/.test(ro.detail)) && !y.roles.some(ro => /propositions/.test(ro.detail)), 'Moi : plus de « propositions » dans le rôle d’Hélène');
+}
 console.log(steps + ' états vérifiés');
 process.exit(report('Planning') ? 1 : 0);

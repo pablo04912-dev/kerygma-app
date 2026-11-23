@@ -976,11 +976,6 @@ class Component extends DCLogic {
       return out;
     }
     // Ce que les volontaires ont reçu pour un culte (sans brouillon)
-    function equipeEnvoyee(d, l) {
-      var out = [];
-      postesDe(d, l).forEach(function (p) { listeEnvoyee(d, l, p.id).forEach(function (n) { if (out.indexOf(n) < 0) out.push(n); }); });
-      return out;
-    }
     // Brouillons de l'auteur pour un lieu (tous les dimanches)
     function brouillonsLieu(l) {
       return Object.keys(S.brouillons).filter(function (k) { var b = S.brouillons[k]; return b.par === MOI && b.lieu === l; }).map(function (k) {
@@ -1748,7 +1743,7 @@ class Component extends DCLogic {
       { label: 'Coordinateur louange · Saint-Maurice', detail: 'Remplit le planning louange de Saint-Maurice. Hélène, responsable louange, valide avant l’envoi aux serviteurs.' }
     ] : [
       { label: 'Ancienne · Saint-Maurice', detail: 'Tient le programme du culte de Saint-Maurice, voit Champigny et Boulogne.' },
-      { label: 'Responsable louange', detail: 'Modifie les plannings louange des 3 lieux et valide les propositions des coordinateurs.' }
+      { label: 'Responsable louange', detail: 'Modifie les plannings louange des 3 lieux et valide le planning de chaque mois.' }
     ]).map(function (r, i, a) { return Object.assign({}, r, { sep: i === a.length - 1 ? 'transparent' : '#EFEBE3' }); });
 
     // Bouton Auto : propose des noms pour les postes affichés sans personne
@@ -1975,7 +1970,7 @@ class Component extends DCLogic {
       crComs: crComs,
       crPeutCommenter: !coord,
       crComTitre: 'Commentaire pour ' + LC.coord,
-      crComNote: 'Un avis général sur le service. ' + LC.coord + ', coordinateur de ' + LC.nom + ', le verra.',
+      crComNote: 'Un avis général sur le service. ' + LC.coord + ', qui coordonne ' + LC.nom + ', le verra.',
       crCom: s.crCom || '',
       crFocusAttr: s.crFocus ? 'true' : 'false',
       saisirCom: function (e) { self.setState({ crCom: e && e.target ? e.target.value : '', erreurCom: '' }); },
