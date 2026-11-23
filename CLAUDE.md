@@ -1,122 +1,71 @@
 # KERYGMA App : règles pour Claude
 
-Tu travailles sur le prototype de l'appli KERYGMA (plannings des ministères de l'église Kerygma, Paris). Deux personnes travaillent sur ce dépôt, chacune avec son propre Claude : **Pablo** et **Manuel**. Ce fichier est votre mémoire commune : lis-le en entier à chaque séance.
+Prototype de l'appli KERYGMA (plannings des ministères de l'église Kerygma, Paris). Deux personnes y travaillent, chacune avec son Claude : **Pablo** et **Manuel**. Ce fichier est votre mémoire commune : lis-le en entier à chaque séance. Les décisions détaillées sont dans `docs/decisions.md` (section 6).
 
 ## 1. Début de séance (obligatoire, avant toute autre chose)
 
-1. `git pull` pour récupérer le travail de l'autre.
-2. Lis `MESSAGES.md` : montre d'abord les messages adressés à ton interlocuteur, puis déplace-les dans "Déjà lus" (envoyé avec le commit de fin de séance).
-3. Lis les dernières entrées de `JOURNAL.md` et `git log --since="<date de la dernière entrée de la personne avec qui tu parles>" --stat`.
-4. Fais un **résumé court de ce que l'autre a fait sur l'appli** depuis la dernière séance de ton interlocuteur : écrans touchés, décisions, événements techniques, ce qui reste à faire. Pas de jargon.
-5. `npm install` (si besoin), `npm run build`, `npm test` : signale tout de suite si quelque chose est cassé.
-6. Montre l'aperçu (voir section 4) : la page complète « Kerygma prototype », plus 3 onglets, un par niveau (« Prototype responsable », « Prototype coordinateur », « Prototype serviteur »). Si ces onglets n'existent pas encore dans ton compte, crée-les ; sinon, republie-les. Puis demande sur quoi on travaille.
+1. `git pull`.
+2. `MESSAGES.md` : montre les messages adressés à ton interlocuteur, puis déplace-les dans "Déjà lus" (envoyé avec le commit de fin de séance).
+3. Lis les dernières entrées de `JOURNAL.md` et `git log --since="<date de la dernière entrée de ton interlocuteur>" --stat`.
+4. Résumé court, sans jargon, de ce que l'autre a fait sur l'appli depuis : écrans touchés, décisions, événements techniques, ce qui reste à faire.
+5. `npm install` (si besoin), `npm run build`, `npm test` : signale tout de suite ce qui est cassé.
+6. Montre l'aperçu (section 4), puis demande sur quoi on travaille.
 
-## 1 bis. Pendant la séance : rester à jour et envoyer au fil de l'eau
+## 1 bis. Pendant la séance
 
-- Avant chaque réponse qui touche au projet, fais `git pull`. Si l'autre a envoyé quelque chose entre-temps, dis-le en une phrase.
-- Si un écran a changé, `npm run build` puis republie l'aperçu (section 4).
-- **Envoie au fil de l'eau** : dès qu'une modification est terminée et que `npm run build` et `npm test` sont verts, fais tout de suite un commit et un envoi (`git pull --rebase` puis `git push`). N'attends pas la fin de séance : l'autre doit voir ton travail dans les minutes qui suivent. Ne laisse jamais de travail fini non envoyé.
-- Un travail pas fini ou des tests rouges ne s'envoient pas : termine ou annule d'abord.
-
-## 1 ter. Ce qu'on partage, boîte à messages et suivi automatique
-
-- **On ne partage que ce qui concerne l'appli** : changements d'écrans, de données ou de règles, décisions communes, événements techniques (base de données branchée, mise en ligne, compte créé, etc.). C'est ça qui va dans le dépôt, le journal, les messages et les notifications.
-- **Les recherches, explorations et idées de chacun restent privées**, dans son propre projet Claude, pas dans le dépôt. Elles n'y entrent que si ton interlocuteur le demande, ou quand une idée devient une décision ou un changement de l'appli.
-
-- `MESSAGES.md` est le chat différé entre Pablo et Manuel. Si ton interlocuteur dit "dis à Manu…" ou "dis à Pablo…", écris le message en haut de la partie de l'autre (date + prénom), puis fais tout de suite un commit et un `git push`.
-- Chacun peut avoir un **suivi automatique** : une tâche programmée dans son propre Claude, toutes les heures de 9h à 23h, qui ne prévient que si l'autre a changé quelque chose. Le texte à donner à son Claude est dans `docs/suivi-automatique.md`.
+- Avant chaque réponse qui touche au projet : `git pull`. Si l'autre a envoyé quelque chose, dis-le en une phrase.
+- Écran changé : `npm run build`, puis republie l'aperçu.
+- **Envoie au fil de l'eau** : dès qu'une modification est finie et que `npm run build` et `npm test` sont verts, commit puis `git pull --rebase` et `git push`. Un travail pas fini ou des tests rouges ne s'envoient pas.
+- **On ne partage que ce qui concerne l'appli** (écrans, données, règles, décisions communes, événements techniques). Les recherches et idées de chacun restent privées, dans son propre projet Claude, jusqu'à ce qu'elles deviennent une décision ou que l'interlocuteur demande de les partager.
+- `MESSAGES.md` est le chat différé : "dis à Manu…" ou "dis à Pablo…" → message en haut de la partie de l'autre (date + prénom), commit et `git push` tout de suite.
+- Suivi automatique (tâche programmée qui prévient quand l'autre a changé quelque chose) : texte dans `docs/suivi-automatique.md`.
 
 ## 2. Fin de séance (obligatoire)
 
-1. `npm run build` puis `npm test` : tout doit être vert. Sinon, corrige ou annule avant d'envoyer.
-2. Ajoute une entrée **en haut** de `JOURNAL.md` : date, qui, ce qui a été fait, décisions, ce qui reste à faire.
-3. Un commit clair en français, puis `git push` sur `main` (le gros du travail est déjà envoyé au fil de l'eau). Pas de validation croisée : chacun envoie directement.
-4. Si `git push` est refusé parce que l'autre a envoyé entre-temps : `git pull --rebase`, relance les tests, puis renvoie.
+1. `npm run build` puis `npm test` : tout vert, sinon corrige ou annule.
+2. Entrée **en haut** de `JOURNAL.md` : date, qui, ce qui a été fait, décisions, ce qui reste à faire. Une décision nouvelle ou changée va aussi dans `docs/decisions.md`, à sa place.
+3. Commit clair en français, `git push` sur `main`. Si refusé : `git pull --rebase`, tests, renvoi.
 
 ## 3. Règles sur les données (non négociables)
 
-- **Ce dépôt est public.** Aucune vraie donnée de l'église ici : pas de vrais noms ni prénoms, pas d'e-mails, pas de plannings réels. Seulement les données inventées de `data/exemple.json`.
+- **Ce dépôt est public.** Aucune vraie donnée de l'église : pas de vrais noms ni prénoms, pas d'e-mails, pas de plannings réels. Seulement les données inventées de `data/exemple.json`.
 - Les vraies données (plannings, comptes) restent dans le **Drive partagé "Kerygma App"** (privé), jamais dans GitHub.
 - L'appli ne doit **jamais** demander ni enregistrer : adresse, numéro de téléphone, date de naissance, lieu de naissance, âge. Seulement prénom, nom, e-mail.
 - Mots de passe : jamais en clair ; seulement une empreinte (dans la vraie appli).
 
 ## 4. Aperçu
 
-- Après chaque modification : `npm run build`, puis publie `site/index.html` comme page dans la conversation (aperçu à droite), si ton outil le permet. Les pages `site/responsable.html`, `site/coordinateur.html` et `site/serviteur.html` s'ouvrent directement sur un profil test : chacun peut les publier en plus, en onglets nommés « Prototype responsable », « Prototype coordinateur », « Prototype serviteur ».
-- Le lien public se met à jour tout seul quelques minutes après chaque `git push` : voir le README.
-- L'aperçu à droite est une copie publiée depuis le compte de chacun : il ne change que quand ton Claude le republie (il ne peut pas suivre le lien public tout seul). Pour voir tout de suite le travail de l'autre, utilise le lien public.
+- Après chaque modification : `npm run build`, puis publie `site/index.html` (page « Kerygma prototype ») et, en onglets, `site/responsable.html`, `site/coordinateur.html`, `site/serviteur.html` (« Prototype responsable », « Prototype coordinateur », « Prototype serviteur »). Crée-les s'ils n'existent pas dans ton compte, sinon republie-les.
+- Le lien public (README) se met à jour quelques minutes après chaque `git push`. L'aperçu publié ne change que quand ton Claude le republie : pour voir le travail de l'autre tout de suite, utilise le lien public.
 
 ## 5. Comment le projet est construit
 
-- `src/accueil.dc.html` : écran d'accueil public et connexion.
-- `src/planning.template.html` : espace connecté des responsables et coordinateurs. Profil test "Hélène" (responsable louange) et, avec `profil: 'coordinateur'`, "Thomas" (coordinateur louange à Saint-Maurice). `__DATA__` est remplacé par `data/exemple.json` et `__PROFIL__` par le profil au build.
-- `src/serviteur.template.html` : espace d'un serviteur (profil test "Lucas").
-- Les 3 profils partagent pendant la visite un même état (`partage()` : invitations, `brouillons` (choix pas encore envoyés, par auteur), `validations` (mois validés par le responsable, clé `lieu|2026-11`), réponses, comptes rendus, commentaires, messages (`mercis`), échanges, dispos, collecte, tâches, `affectations` (liste d'un poste choisie par le responsable, avec « Aucun »), `notifs` (envois et validations, montrés à l'autre dans « À faire »), `ajouts` (postes ajoutés avec « + » pour un culte), `prefs` (fréquence et « servir ensemble » choisies par le serviteur, utilisées par Auto)), pour montrer la chaîne coordinateur → responsable → serviteur. Rien n'est enregistré. La fonction `partage()` doit rester identique dans les deux fichiers (le build le vérifie).
-- `data/exemple.json` : plannings louange et programme (22/11 au 27/12), `historique` (4 dimanches passés, pour "X dimanches de suite" et "X semaines sans service"), `indispos` et `freqMax` (exemples pour les étiquettes de la liste "Choisir"), `comptesRendus` (celui de Champigny du 15/11), `echanges` (un à valider par Thomas, une demande reçue par Lucas), `dispos` (grilles de décembre déjà remplies à l'avance), `taches` (une tâche de Thomas pour Lucas le 29/11) `confirmations` (qui a déjà dit « dispo », pour la coche verte) et `projection` (services de projection de Lucas, pour ses onglets de services). Tout est inventé.
-- `src/runtime.js` + `src/page.html` : moteur qui fait tourner ces écrans dans la page téléphone.
-- `outils/build.py` : produit `build/*.dc.html` (Accueil, Planning pour Hélène, Coordinateur pour Thomas, Serviteur pour Lucas ; format du canevas Claude Design) et `site/index.html` (page téléphone).
-- `tests/` : tests de la logique (`test_accueil.js`, `test_planning.js`, `test_coordinateur.js`, `test_serviteur.js`), des pages par profil (`test_pages_profils.js`), des tailles (`test_tailles.js`) et test de bout en bout de la page téléphone (`test_phone.js`, avec la chaîne Thomas → Hélène → Lucas). Ajoute un test pour chaque nouveau comportement.
-- Taille du texte : dans la page téléphone, les tailles sont converties en rem au build (1rem = 17 px), pour suivre la taille de texte réglée dans le téléphone (sur iPhone : `-apple-system-body`). L'en-tête et la barre du bas gardent leurs pixels (`data-taille-fixe`). `tests/test_tailles.js` le vérifie, avec les boutons de 44 px.
-- `outils/controle_qualite.py` : contrôle visuel à lancer à la main après un gros changement d'écran (320 px, 390 px, ordinateur ; texte normal, x1,5, x2) ; il signale débordements, petits boutons et textes coupés.
-- `.github/workflows/ci.yml` : à chaque envoi, build + tests + mise en ligne sur GitHub Pages.
+- `src/accueil.dc.html` : accueil public et connexion.
+- `src/planning.template.html` : espace des responsables et coordinateurs (profil test Hélène, responsable louange ; avec `profil: 'coordinateur'`, Thomas, coordinateur louange à Saint-Maurice).
+- `src/serviteur.template.html` : espace d'un serviteur (profil test Lucas).
+- `src/commun.js` : code commun aux deux écrans connectés (dates, bande des 2 mois, calendrier du mois, état partagé `partage()`). Le build le colle à la place de `/*__COMMUN__*/`. On ne le modifie qu'ici.
+- `src/morceaux/*.html` : morceaux de gabarit communs (barre du bas, bande des dates), collés au build à la place de `<!--@nom-->`.
+- État partagé pendant la visite (`partage()`, rien n'est enregistré) : invitations, brouillons (par auteur), validations (mois validés, clé `lieu|2026-11`), réponses, comptes rendus, commentaires, mercis, échanges, dispos, collecte, tâches, affectations, notifs, ajouts (postes « + »), prefs (fréquence, servir ensemble). C'est lui qui montre la chaîne Thomas → Hélène → Lucas.
+- `data/exemple.json` : tout est inventé. Plannings louange et programme (22/11 au 27/12), historique (4 dimanches passés), indispos, freqMax, comptesRendus, echanges, dispos, taches, confirmations, projection.
+- `src/runtime.js` + `src/page.html` : moteur de la page téléphone. `outils/build.py` produit `build/*.dc.html` (format du canevas Claude Design) et `site/*.html`.
 - Format des écrans : HTML avec `{{trous}}`, `<sc-if>`, `<sc-for>`, `onClick="{{fonction}}"`, et une classe `Component extends DCLogic` avec `renderVals()`. Pas de logique dans les trous : calcule dans `renderVals()`.
+- Tailles du texte en rem au build (1rem = 17 px) pour suivre le réglage du téléphone ; l'en-tête et la barre du bas gardent leurs pixels (`data-taille-fixe`).
+- `tests/` : un test par nouveau comportement. Logique : `test_accueil.js`, `test_planning.js`, `test_coordinateur.js`, `test_serviteur.js` ; pages par profil, tailles (boutons de 44 px), bout en bout (`test_phone.js`, chaîne Thomas → Hélène → Lucas).
+- `outils/controle_qualite.py` : contrôle visuel, à lancer à la main après un gros changement d'écran (320 px, 390 px, ordinateur ; texte normal, x1,5, x2).
+- `.github/workflows/ci.yml` : à chaque envoi, build + tests + mise en ligne sur GitHub Pages.
+- **Économiser les tokens** : les gabarits sont longs ; cherche (`grep -n`) avant de lire, lis seulement les lignes utiles, et ne relis pas un fichier entier pour une petite modification.
 
-## 6. Décisions déjà prises (résumé)
+## 6. Décisions
 
-- Nom : **KERYGMA**. 100 % français pour l'instant. Gratuit.
-- 3 lieux : Saint-Maurice (dim. 10h30), Champigny (dim. 10h30), Boulogne (dim. 15h30). Réunion de prière : jeudi 20h Saint-Maurice, mercredi 20h Champigny et Boulogne.
-- On commence par la **louange** (testée sur les 3 lieux) et par l'espace des **responsables** ; les membres ensuite.
-- Rôles : pasteurs principaux (tout), pasteurs de lieu (leur lieu, voient les autres), responsable de commission (sa commission, 3 lieux), coordinateur de lieu (sa commission, son lieu), serviteur (ses dispos).
-- Une personne peut servir dans plusieurs lieux : conflit seulement si deux réunions se chevauchent.
-- Sainte Cène une fois sur deux : bouton Oui/Non. Le rôle "Louange" du programme est repris de la direction du planning louange.
-- En-tête : KERYGMA au centre, en grand ; la bulle avec l'initiale (en haut à droite) ouvre « Moi » (profil). Pas de « Bonjour … » : on garde les puces de rôle (« Ancienne · Saint-Maurice », « Responsable louange »).
-- Barre du bas, dans cet ordre : Planning, **À faire**, Actus, Équipe, sur tous les écrans connectés ; barre flottante façon Instagram (capsule blanche translucide, fond flouté visible derrière, bulle grise qui glisse sous l'onglet touché ; on garde les noms sous les icônes et le violet), avec une pastille rouge qui compte ce qu'il reste à faire. À faire : responsable = propositions à valider ; coordinateur = compte rendu à remplir, échanges à valider, changements faits par le responsable (bouton « Vu ») ; serviteur = demandes de service et d'échange. Boutons d'au moins 44 px, lisibles par tous les âges.
-- Dates : « Ce dimanche 22 novembre » pour le dimanche de la semaine en cours, sinon « Dimanche 29 novembre » (D majuscule).
-- Accueil du responsable : onglets soulignés « Culte du dimanche / Réunion de prière », puces « Programme culte » (en premier) et « Louange », bande des dates ; puis **le dimanche choisi** dans la bande (« Ce dimanche 22 novembre » par défaut ; les 3 cultes : qui sert, tâches, choix pas encore envoyés), puis, quel que soit le dimanche choisi, **Compte rendu de dimanche dernier** (les 3 cultes, avec tout à droite une bulle « Ajouter un commentaire » qui ouvre le compte rendu, curseur dans le commentaire ; « Commenté ✓ » une fois fait). Plus de « Dimanches suivants » (décision du 22/11).
-- Effet au toucher : tout bouton se grise légèrement quand on appuie. Retour = une flèche seule. Pas de barres de défilement visibles.
-- **Lignes du planning louange** : deux parties, **VOIX** (de base : Direction, Voix) et **INSTRUMENTS** (de base : Piano, Batterie, Guitare acoustique), chacune avec un bouton « + » pour ajouter une voix (une voix en plus, ou une voix personnalisée) ou un instrument (basse, guitare électrique, ou instrument personnalisé) ; un poste ajouté peut être retiré (« Retirer ce poste »). Une bulle par poste (une par personne) : rôle à gauche, puis [nom ou « Aucun »] et [Tâche]. Par défaut « Aucun » : personne à ce poste, ce n'est **pas** « à pourvoir » (décision du 22/11) ; donc plus de « Manque », de compteur « X sur 7 », de vert/rouge dans le calendrier louange, ni de bouton « Modifiable ». Toucher le nom ouvre la liste pour choisir ou changer ; « Aucun » en haut de la liste retire la personne. Vert avec une coche = la personne a confirmé ; rouge = pas dispo. En-tête de chaque partie : titre en grand (VOIX, INSTRUMENTS), Auto sur la même ligne à droite de VOIX ; mêmes espacements pour les deux parties.
-- **Bouton Auto** (responsable et coordinateur, sur le planning d'un culte) : propose des noms pour les postes affichés sans personne, d'après qui a le moins servi, les indispos, les dispos du mois (« si besoin » en dernier), la fréquence max et « servir ensemble » choisis par chaque serviteur, les conflits avec les autres lieux ; jamais quelqu'un qui sert déjà ce culte. Les noms proposés vont dans le brouillon (violet pointillé, « Pas encore envoyé ») ; on peut en changer, puis on envoie le planning. Il ne remplit que les postes affichés : la basse, par exemple, seulement si on l'a ajoutée avec « + ».
-- **Serviteur avec plusieurs services** (exemple : Lucas, louange et projection) : en haut de son planning, des onglets « Tout », « Projection », « Louange » ; « Mes dimanches » et « Mes prochains services » suivent l'onglet choisi ; « À faire » garde toutes les demandes.
-- **Création de compte** (vraie appli, pour tous les rôles) : quelques questions au début : fréquence souhaitée (1, 2, 3 fois par mois…), services dont on fait partie, rôle dans chaque service (par exemple louange : voix, guitare… plusieurs choix possibles), famille et servir ensemble ou non. Les rôles déclarés sont confirmés au-dessus : serviteurs par leur coordinateur ou responsable, coordinateurs par les responsables. Limite de fréquence (par exemple 3 fois par mois au plus) à voir avec les pasteurs.
-- **Prototype** : "Se connecter" ouvre directement le profil de Hélène ; la fenêtre de connexion propose aussi les 3 profils test (Hélène responsable, Thomas coordinateur, Lucas serviteur). À retirer avant la vraie appli.
-- Contrôle des conflits entre lieux, règles validées : rouge = déjà ailleurs à la même heure (ou prière le même soir ailleurs) ; orange = même jour à un horaire compatible, ou fréquence max atteinte ; rouge clair = indispo déclarée ; gris = déjà sur un autre poste du même culte.
-- Liste "Choisir" (quand on remplit un poste) : ceux qui ont **le moins servi en premier**. En petit : "2 dimanches de suite", "3 dimanches de suite"… pour ceux qui enchaînent ; "2 semaines sans service"… pour les autres (compté en semaines, pas en jours).
-- Personnes déjà ailleurs à la même heure : grisées en bas **avec la raison** ("Sert à Champigny à 10h30"), mais on peut quand même les inviter ("Inviter quand même", utile en cas d'erreur de planning). Le serviteur choisit alors : se faire remplacer sur l'un des deux, ou garder les deux exceptionnellement en justifiant au responsable.
-- Collecte des dispos du mois : grille façon Doodle, chaque toucher change l'état de la date : **dispo** (vert), **si besoin** (orange), **pas dispo** (rouge) ; bouton "Je n'ai pas d'indispo".
-- Périmètre de chaque responsable ou coordinateur : une liste de couples (ministère, lieu), par exemple sono à Champigny et à Boulogne, mais pas à Saint-Maurice. Il voit et gère exactement ce périmètre. Une personne peut coordonner plusieurs ministères.
-- Vocabulaire : le **coordinateur** remplit le planning (d'un lieu) ; le **responsable du ministère** le valide.
-- **Brouillon puis envoi** (décision du 22/11) : choisir quelqu'un (ou « Aucun », ou Auto) ne prévient personne ; le nom est en brouillon (« Pas encore envoyé »). Un bouton « Envoyer le planning aux volontaires », collé au-dessus de la barre du bas, envoie tous les changements du lieu : demandes aux volontaires (« Demande envoyée »), et l'autre (responsable ou coordinateur) est prévenu dans « À faire ». Si on quitte la page avec un brouillon : « Envoyer les invitations ? » Oui, envoyer / Non, plus tard (le brouillon reste). Le coordinateur envoie lui-même, sans validation poste par poste.
-- **Validation du mois dans l'appli** : le responsable valide le planning d'un mois et d'un lieu (bouton « Valider le planning de novembre » sous les postes), à tout moment, même si tout n'est pas rempli ; quand chaque volontaire du mois a répondu dispo, il reçoit dans « À faire » la carte « Tout est rempli … Tu peux valider si c'est bon pour toi ». Le coordinateur est prévenu (« Planning validé »). Après validation, responsable et coordinateur peuvent toujours modifier ; chaque changement est envoyé aux volontaires concernés. Hypothèse en attente de confirmation : c'est la validation du mois qui ajoute les services confirmés aux agendas. Pas d'e-mail de validation.
-- **Feuilles du bas** : pas de bouton « Fermer » ; toucher la zone grise (ou la poignée en haut) fait descendre la feuille.
-- **Bande des dates** (décision du 22/11) : le bouton « Mois » reste fixe à gauche ; la bande montre **2 mois à la fois** (janvier-février, mars-avril, …, novembre-décembre), avec une pastille au début de chaque mois (« Novembre », « Décembre » ; « janvier 2027 » avec l'année quand ce n'est pas 2026). Flèche « › » à la fin : les 2 mois suivants (la bande revient au début) ; flèche « ‹ » au début : les 2 mois d'avant. En changeant de 2 mois, on tombe sur le dimanche le plus proche d'aujourd'hui (ce dimanche, sinon le premier à venir ou le dernier passé). Dimanches de janvier 2026 à décembre 2027. Les **dimanches passés** se consultent (qui a servi) mais ne se modifient plus (« Dimanche passé »). « Mes dimanches » du serviteur : mêmes 2 mois et flèches, à partir d'aujourd'hui (la pastille ouvre le calendrier du mois).
-- **Agendas** : chacun connecte son agenda une seule fois, dans l'appli, à la création du compte. Ensuite, à chaque validation, ses services (serviteurs, coordinateurs, responsables : tout ce qui le concerne) s'ajoutent tout seuls dans son agenda, sans invitation à accepter, et se mettent à jour à chaque changement (échange, remplacement, nouvelle heure). Pistes techniques :
-  - Google Agenda : connexion Google dans l'appli, l'appli écrit directement dans l'agenda (mise à jour immédiate). L'accès à l'agenda est une autorisation "sensible" chez Google : vérification de l'appli à prévoir avant le lancement (page de confidentialité, jusqu'à 10 jours) ; sans vérification, écran d'avertissement et 100 utilisateurs maximum (suffisant pour les tests).
-  - Agenda de l'iPhone : bouton "Ajouter à l'agenda de l'iPhone" (abonnement), l'iPhone se met à jour tout seul (toutes les 15 min par défaut).
-  - Outlook et autres : abonnement aussi (mise à jour plus lente), connexion directe plus tard si besoin.
-- **Heure de présence** : fixée par le responsable de chaque ministère, par lieu (exemple : louange à Saint-Maurice à 9h), modifiable pour une date. L'événement d'agenda va de l'heure de présence à la fin du culte, comptée **2h30 après le début** (un culte dure au moins 2h) : Saint-Maurice et Champigny 10h30 → 13h, Boulogne 15h30 → 18h. Réunions de prière : durée à préciser.
-- Un serviteur, dans le culte où il sert, voit la liste de **tous ceux qui servent ce culte-là** (tous ministères) ; il ne voit pas les autres lieux.
-- **Compte rendu de service** : après le culte, le **coordinateur du lieu** reçoit une notification et remplit le compte rendu : présents / absents (cases à cocher sur la liste prévue), commentaire (ce qui s'est bien passé, problèmes, à améliorer), bouton "Message" sur chaque personne de la liste pour lui écrire seule, et option "Très bon service" qui envoie un merci à toute l'équipe présente : un seul champ de message, avec les 3 débuts proposés dedans tant qu'il est vide ; on en touche un (ou on écrit directement), puis on écrit la suite. Même chose pour le message des responsables. Après l'envoi, la confirmation verte rappelle à qui, puis le message à la ligne. Le compte rendu remonte aux responsables au-dessus. Les serviteurs ne voient que les messages, jamais les commentaires. Lecture par le responsable : en haut « Compte rendu · Sylvie », le lieu en grand, puis présents et absents ; les 3 rubriques (Ce qui s'est bien passé, Problèmes, À améliorer) sont toujours là, avec « Aucun » à droite quand c'est vide.
-- **Messages privés** (règle pour tous) : un message envoyé en direct (à une personne, à quelques-unes ou à l'équipe) n'est vu que par celui qui l'envoie et ceux qui le reçoivent. Le responsable ne voit donc pas les mercis ni les messages du coordinateur à son équipe ; chacun ne voit que ses propres commentaires ou ceux qui lui sont adressés.
-- **Au-dessus du coordinateur** (responsables, parfois eux-mêmes pasteurs, et pasteurs principaux) : chacun peut laisser un **commentaire général** sur le service, que le coordinateur voit, et **envoyer un message personnalisé** (par exemple "très bon service") à n'importe quel serviteur : une ou plusieurs personnes, ou toute l'équipe. Possible même avant que le coordinateur ait rempli son compte rendu.
-- **Tâches** : le coordinateur et les responsables confient une tâche à une personne du planning (bouton "Tâche" sur sa ligne, grisé tant qu'il n'y a personne) : une tâche par personne et par culte, écrite librement ; « Aucune tâche » par défaut ; toujours modifiable (on rouvre « Tâche », on change le texte ou on remet « Aucune tâche »). Pas de liste prédéfinie, pas de résumé des tâches : la tâche s'écrit en petit et en gris sous la ligne. Pas de validation par le responsable. Sur téléphone, les feuilles et champs de message restent au-dessus du clavier. Le serviteur la voit sur son planning (point sur le dimanche, "1 tâche à faire") et dans le détail du service, et la coche quand c'est fait ; le planning affiche alors "faite".
-- **Calendrier du mois** : la bande des dates a un bouton "Mois" qui ouvre le calendrier du mois ; un bouton flèche à gauche le réduit, le mois est centré. Les jours où je sers sont en violet (violet clair si pas encore confirmé), avec un point s'il y a une tâche à faire. Pour la louange, plus de vert ni de rouge (« Aucun » n'est pas « à pourvoir »). Pas de « Date affichée » dans la légende. Le serviteur a la même bande, "Mes dimanches", en haut de son planning.
-- "À traiter" (postes vides, absences, conflits) : visible par le coordinateur du ministère concerné et par les responsables au-dessus de lui.
-- Servir ensemble ou séparément : réglage pour couples, familles, frères et sœurs qui vivent ensemble (même culte ou même jour, ou au contraire jamais le même jour).
-- Tout doit pouvoir se faire sur téléphone **et** sur ordinateur, y compris remplir un planning.
-- L'appli respecte la taille de texte réglée dans le téléphone sans casser l'affichage.
-- Notifications sur iPhone : priorité (il faut ajouter l'appli à l'écran d'accueil ; prévoir un pas-à-pas).
-- Bilan de l'année pour chaque serviteur. Pas de classements, de points ni de séries. (La jauge de remplissage du planning louange a été retirée le 22/11.)
-- WhatsApp (envoyer depuis l'appli vers une communauté KERYGMA et ses groupes) : en suspens, question posée à Manuel.
-- Boutons ergonomiques : 44 px minimum, sans les surdimensionner.
-- Réponse à une demande de service : 3 états, **en attente**, **dispo**, **pas dispo**.
-- Indispos saisies à l'avance par chaque serviteur ; le coordinateur peut lancer une collecte des indispos pour un mois. S'il place quand même quelqu'un d'indisponible, la demande le signale au serviteur.
-- Échange : le serviteur demande à un autre de le remplacer ; si l'autre accepte, le coordinateur valide (Oui/Non) ; le planning change et le coordinateur voit "X remplacé par Y (X pas dispo)".
-- Fréquence maximale par serviteur (par mois, par trimestre, en pause), avec avertissement si elle est dépassée.
-- Planning proposé automatiquement : c'est le bouton Auto (voir plus haut) ; le coordinateur ou le responsable le modifie s'il veut, puis l'envoie.
-- Espace louange (plus tard) : bibliothèque de chants avec tonalités et liens audio pour répéter.
-- Les discussions restent sur WhatsApp ; l'appli gère plannings et annonces.
-- Le document de cadrage complet (avec les vrais noms) est dans le Drive "Kerygma App", dossier "01 Cadrage".
+Le détail est dans **`docs/decisions.md`**, rangé par écran : avant de toucher un écran, lis la partie qui le concerne. L'essentiel :
+
+- KERYGMA, 100 % français, gratuit. 3 lieux : Saint-Maurice et Champigny (dim. 10h30), Boulogne (dim. 15h30). On commence par la louange et l'espace des responsables.
+- Rôles : pasteurs principaux, pasteurs de lieu, responsable de ministère (3 lieux, valide), coordinateur de lieu (remplit le planning de son lieu), serviteur. Chacun voit exactement son périmètre (couples ministère, lieu).
+- Barre du bas : Planning, À faire, Actus, Équipe ; « Moi » dans la bulle en haut à droite.
+- Planning louange : « Aucun » n'est pas « à pourvoir ». Choisir met en brouillon ; « Envoyer le planning aux volontaires » envoie ; le responsable valide le mois quand il veut.
+- Tout doit marcher sur téléphone et sur ordinateur, avec des boutons de 44 px et la taille de texte du téléphone.
+- Messages privés : vus seulement par l'expéditeur et les destinataires. Pas de classements, de points ni de séries.
 
 ## 7. Style d'écriture
 
-- Français, direct, sans remplissage. Jamais de tiret cadratin : utilise virgules, parenthèses ou point-virgule.
+- Français, direct, sans remplissage. Jamais de tiret cadratin : virgules, parenthèses ou point-virgule.
