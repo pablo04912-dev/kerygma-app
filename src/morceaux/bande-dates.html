@@ -1,0 +1,31 @@
+<!-- Bande des dates du planning : « Mois » fixe, flèches, 2 mois à la fois (voir renderVals : bande, aFenPrec, aFenSuiv) -->
+<div data-bande style="display: flex; flex-shrink: 0; align-items: flex-start; gap: 8px; margin-right: -20px">
+<button type="button" aria-expanded="false" aria-label="Voir le mois" onClick="{{toggleMois}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 10px; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+<span style="font-size: 12px; font-weight: 600">Mois</span>
+</button>
+<nav aria-label="Dates" data-fenetre="{{fenetreCle}}" style="flex: 1 1 auto; min-width: 0; display: flex; gap: 8px; overflow-x: auto; padding: 0 20px 2px 0">
+<sc-if value="{{aFenPrec}}" hint-placeholder-val="{{false}}">
+<button type="button" data-fleche aria-label="{{fenPrecAria}}" onClick="{{fenPrec}}" style="flex: 0 0 auto; width: 52px; min-height: 56px; padding: 0; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+</sc-if>
+<sc-for list="{{bande}}" as="d" hint-placeholder-count="5">
+<sc-if value="{{d.marqueur}}" hint-placeholder-val="{{false}}">
+<button type="button" data-marqueur aria-label="{{d.aria}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 56px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 0; background: #EEF0FF; color: {{accent}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; cursor: pointer">
+<sc-if value="{{d.haut}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 12px; font-weight: 600">{{d.haut}}</span>
+</sc-if>
+<span style="font-size: 15px; font-weight: 800">{{d.bas}}</span>
+</button>
+</sc-if>
+<sc-if value="{{d.date}}" hint-placeholder-val="{{true}}">
+<button type="button" data-visible="{{d.visible}}" aria-pressed="{{d.on}}" onClick="{{d.pick}}" style="flex: 0 0 auto; min-width: 64px; min-height: 56px; padding: 8px 12px; border-radius: 14px; border: 1px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-family: inherit; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer">
+<span style="font-size: 12px; font-weight: 500">{{d.jour}}</span>
+<span style="font-size: 15px; font-weight: 700">{{d.label}}</span>
+</button>
+</sc-if>
+</sc-for>
+<sc-if value="{{aFenSuiv}}" hint-placeholder-val="{{false}}">
+<button type="button" data-fleche aria-label="{{fenSuivAria}}" onClick="{{fenSuiv}}" style="flex: 0 0 auto; width: 52px; min-height: 56px; padding: 0; border-radius: 14px; border: 1px solid #E7E3DA; background: #FFFFFF; color: {{accent}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+</sc-if>
+</nav>
+</div>

@@ -40,6 +40,13 @@ def ecran_dc(source):
     return gabarit, script
 
 
+def morceaux(texte):
+    """Remplace chaque <!--@nom--> par src/morceaux/nom.html (sans sa première ligne de commentaire)."""
+    def un(m):
+        return lire("src/morceaux/" + m.group(1) + ".html").split("\n", 1)[1].rstrip("\n")
+    return re.sub(r"<!--@([a-z-]+)-->", un, texte)
+
+
 def tailles_relatives(gabarit):
     """Page téléphone : tailles de texte en rem (1rem = 17px au réglage normal), pour suivre
     la taille de texte réglée dans le téléphone. Les éléments marqués data-taille-fixe gardent
@@ -60,15 +67,13 @@ def main():
     planning = lire("src/planning.template.html")
     serviteur = lire("src/serviteur.template.html")
 
-    # L'état partagé entre les 3 profils doit être le même dans les deux écrans
-    def fonction_partage(texte):
-        debut = texte.index("function partage(DATA) {")
-        return texte[debut:texte.index("</script>", debut)].strip()
-    if fonction_partage(planning) != fonction_partage(serviteur):
-        raise SystemExit("function partage() doit être identique dans planning.template.html et serviteur.template.html")
+    # Code commun aux deux écrans connectés (dates, calendrier, état partagé) : un seul fichier, src/commun.js
+    commun = lire("src/commun.js")
     for nom, texte in (("planning", planning), ("serviteur", serviteur)):
-        if texte.count("__DATA__") != 1:
-            raise SystemExit("__DATA__ doit apparaître une fois dans src/" + nom + ".template.html")
+        if texte.count("__DATA__") != 1 or texte.count("/*__COMMUN__*/") != 1:
+            raise SystemExit("__DATA__ et /*__COMMUN__*/ doivent apparaître une fois dans src/" + nom + ".template.html")
+    planning = morceaux(planning.replace("/*__COMMUN__*/", commun))
+    serviteur = morceaux(serviteur.replace("/*__COMMUN__*/", commun))
     if planning.count("__PROFIL__") != 1:
         raise SystemExit("__PROFIL__ doit apparaître une fois dans src/planning.template.html")
     planning = planning.replace("__DATA__", json_donnees)
