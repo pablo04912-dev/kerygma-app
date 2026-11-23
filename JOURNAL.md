@@ -7,6 +7,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 **Fait**
 - Relecture de tous les écrans des 3 profils (téléphone et ordinateur). Corrigé : bout de pastille coupé dans la bande des dates (la date d'avant reste visible en entier) ; rôle d'Hélène dans Moi (« valide le planning de chaque mois ») ; « Thomas, qui coordonne Saint-Maurice » (plus d'accord de genre faux) ; la projection de Lucas apparaît dans Équipe.
 - Code allégé, sans changement visible (30 écrans comparés au pixel près) : `src/commun.js` (dates, bande des 2 mois, calendrier du mois, état partagé) et `src/morceaux/` (barre du bas, bande des dates), collés au build. Un bug latent du calendrier de Lucas corrigé au passage.
+- Comptes rendus : avec un gros texte ou un petit écran, la bulle « Ajouter un commentaire » passe sous le lieu au lieu de déborder.
 - `CLAUDE.md` raccourci (24 Ko → 7 Ko) pour coûter moins cher à chaque séance ; les décisions détaillées sont dans `docs/decisions.md`, rangées par écran.
 
 **À faire**
