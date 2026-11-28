@@ -61,7 +61,7 @@ Le détail est dans **`docs/decisions.md`**, rangé par écran : avant de touche
 
 - KERYGMA, 100 % français, gratuit. 3 lieux : Saint-Maurice et Champigny (dim. 10h30), Boulogne (dim. 15h30). On commence par la louange et l'espace des responsables.
 - Rôles : pasteurs principaux, pasteurs de lieu, responsable de ministère (3 lieux, valide), coordinateur de lieu (remplit le planning de son lieu), serviteur. Chacun voit exactement son périmètre (couples ministère, lieu).
-- Barre du bas : Planning, À faire, Actus, Équipe ; « Moi » dans la bulle en haut à droite.
+- Barre du bas : Accueil, Planning, Équipe (À faire et annonces sur l'Accueil) ; « Moi » dans la bulle en haut à droite.
 - Planning louange : « Aucun » n'est pas « à pourvoir ». Choisir met en brouillon ; « Envoyer le planning aux volontaires » envoie ; le responsable valide le mois quand il veut.
 - Tout doit marcher sur téléphone et sur ordinateur, avec des boutons de 44 px et la taille de texte du téléphone.
 - Messages privés : vus seulement par l'expéditeur et les destinataires. Pas de classements, de points ni de séries.

@@ -5,8 +5,12 @@ const jour = (v, l) => v.dates.find(d => d.label === l); // un dimanche de la ba
 const fichierCoord = process.argv[2];
 const fichierHelene = process.argv[3];
 let steps = 0;
-function ouvrir(file) {
+// Changements enregistrés dans l'état partagé (la vraie appli enverra une notification)
+const N = nom => globalThis.__kerygmaPartage.notifs.filter(n => n.pour === nom);
+// On arrive sur l'Accueil ; sauf demande contraire, on passe tout de suite au Planning
+function ouvrir(file, resterAccueil) {
   const r = load(file, {});
+  if (!resterAccueil) r.c.renderVals().nav.planning.pick();
   return {
     r,
     v(label) {
@@ -20,11 +24,13 @@ function ouvrir(file) {
 }
 
 globalThis.__kerygmaPartage = undefined;
-const T = ouvrir(fichierCoord);
+const T = ouvrir(fichierCoord, true);
 assert(checkTags(T.r.src).length === 0, 'balises : ' + checkTags(T.r.src).join(' | '));
 
 // 1. Thomas arrive directement sur Saint-Maurice, louange
-let x = T.v('arrivée Thomas');
+let x = T.v('arrivée Thomas sur l’Accueil');
+assert(x.nav.afaire.current === 'page', 'Thomas arrive sur l’Accueil');
+x.nav.planning.pick(); x = T.v('planning Thomas');
 assert(!x.showLieux && x.showDetail, 'pas d’écran 3 lieux, directement le planning');
 assert(!x.aDTitre && x.coordHeader && !x.aRetour, 'en-tête de Thomas : sa puce de rôle, pas de « Bonjour », pas de retour');
 assert(x.dSous === 'Ce dimanche 22 novembre · Louange · 10h30', 'sous-titre : ' + x.dSous);
@@ -77,7 +83,8 @@ assert(x.showDetail && !x.showLieux, 'Planning ramène au planning de Saint-Maur
 // 5. Hélène est prévenue dans « À faire », voit le planning et valide le mois quand elle veut
 const H = ouvrir(fichierHelene);
 let h = H.v('Hélène');
-assert(h.notifs.length === 1 && h.notifs[0].titre === 'Planning · Dimanche 29 novembre · Saint-Maurice' && h.notifs[0].texte === 'Thomas a envoyé le planning aux volontaires. Basse : ' + nomBasse + '.' && h.nav.afaire.badge === '2', 'Hélène prévenue : ' + (h.notifs[0] || {}).texte);
+assert(N('Hélène').length === 1 && N('Hélène')[0].date === '29/11' && N('Hélène')[0].lieu === 'stm' && N('Hélène')[0].resume === 'Thomas a envoyé le planning aux volontaires. Basse : ' + nomBasse + '.' && h.nav.afaire.badge === '2', 'Hélène prévenue : ' + (N('Hélène')[0] || {}).resume);
+assert(h.notifs.length === 0, 'plus de liste de changements avec « Vu »');
 h.cartes[0].ouvrir(); h = H.v('Hélène détail');
 jour(h, '29 nov').pick(); h = H.v('Hélène 29/11');
 assert(h.lignes.find(l => l.label === 'Basse').nom === nomBasse && h.lignes.find(l => l.label === 'Basse').sous === 'Demande envoyée', 'la basse chez Hélène');
@@ -90,8 +97,8 @@ assert(!h.aToast, 'toast effacé');
 // 6. Thomas voit la validation, et peut toujours modifier
 x = T.v('Thomas après validation');
 assert(/^Validé par Hélène\. Il reste modifiable/.test(x.moisEtat), 'Thomas voit « Validé par Hélène » : ' + x.moisEtat);
-const nv = x.notifs.find(n => /Planning de novembre/.test(n.titre));
-assert(nv && nv.tag === 'Planning validé' && /a validé le planning de novembre/.test(nv.texte), 'notification de validation : ' + (nv && nv.tag));
+const nv = N('Thomas').find(n => n.mois === '2026-11');
+assert(nv && /a validé le planning de novembre/.test(nv.resume), 'notification de validation : ' + (nv && nv.resume));
 
 // 7. Après validation, Thomas change encore : Hélène est prévenue
 x.groupesPostes[1].ajouter(); x = T.v('ajouter gel');
@@ -101,7 +108,7 @@ const nomGel = x.candLibres[0].nom;
 x.candLibres[0].choisir(); x = T.v('gel choisie');
 x.envoyerPlanning(); x = T.v('gel envoyée');
 h = H.v('Hélène, nouveau changement');
-assert(h.notifs.filter(n => n.nouveau).length === 2 && h.notifs.some(n => /Guitare électrique : / .test(n.texte) && n.texte.indexOf(nomGel) >= 0), 'Hélène prévenue du changement après validation');
+assert(N('Hélène').length === 2 && N('Hélène').some(n => n.resume.indexOf('Guitare électrique : ' + nomGel) >= 0), 'Hélène prévenue du changement après validation');
 assert(globalThis.__kerygmaPartage.validations['stm|2026-11'], 'le mois reste validé');
 
 // 8. Si Hélène modifie à son tour, c'est son propre brouillon, puis Thomas est prévenu à l'envoi
@@ -112,7 +119,7 @@ assert(x.lignes.find(l => l.label === 'Batterie').nom === 'Bérénice' && !x.aEn
 h.envoyerPlanning(); h = H.v('Hélène envoie');
 assert(/Thomas est prévenu/.test(h.toast), 'toast : ' + h.toast);
 x = T.v('Thomas après envoi d’Hélène');
-assert(x.lignes.find(l => l.label === 'Batterie').nom !== 'Bérénice' && x.notifs.some(n => n.nouveau && /^Hélène a envoyé le planning aux volontaires\. Batterie : /.test(n.texte)), 'Thomas prévenu du changement d’Hélène');
+assert(x.lignes.find(l => l.label === 'Batterie').nom !== 'Bérénice' && N('Thomas').some(n => /^Hélène a envoyé le planning aux volontaires\. Batterie : /.test(n.resume)), 'Thomas prévenu du changement d’Hélène');
 
 // 9. Compte rendu de service du dernier dimanche (15 nov)
 globalThis.__kerygmaPartage = undefined;
@@ -122,7 +129,7 @@ assert(c.aCRCarte && c.crCarteTag === 'Après le culte' && c.crCarteTitre === 'C
 c.nav.afaire.pick(); c = T3.v('À faire Thomas');
 assert(c.showAFaire && c.aCRCarte && !c.aFaireVide, 'la carte du compte rendu est dans « À faire »');
 c.ouvrirCR(); c = T3.v('formulaire');
-assert(c.showCR && !c.showDetail && c.crForm && !c.crLecture && c.crRetourLabel === 'Retour à À faire', 'formulaire du compte rendu');
+assert(c.showCR && !c.showDetail && c.crForm && !c.crLecture && c.crRetourLabel === 'Retour à l’accueil', 'formulaire du compte rendu');
 assert(c.crTitre === 'Saint-Maurice' && c.crSous === 'Dimanche 15 novembre · Louange · 10h30', 'titre : ' + c.crTitre + ' / ' + c.crSous);
 assert(c.crPersonnes.map(p => p.nom).join() === 'Inès,Adrien,Chloé,Camille,Bérénice,Lucas', 'liste prévue : ' + c.crPersonnes.map(p => p.nom));
 assert(c.crPersonnes.every(p => p.present === 'true' && p.sous === p.postes) && c.crCompte === '6 présents sur 6 prévus', 'tout le monde coché au départ');
@@ -190,7 +197,7 @@ e.retourCR(); e = H3.v('retour');
 e.crListe[0].ouvrir(); e = H3.v('ouvre Saint-Maurice');
 assert(e.crFocusAttr === 'false', 'toucher le lieu ouvre le compte rendu sans le clavier');
 assert(!e.crEnAttente && e.crPeutCommenter, 'Hélène peut commenter un compte rendu reçu');
-assert(e.showCR && e.crLecture && e.crRetourLabel === 'Retour aux 3 lieux' && e.crHaut === 'Compte rendu · Thomas' && e.crPar === undefined, 'Hélène lit le compte rendu de Thomas : ' + e.crHaut);
+assert(e.showCR && e.crLecture && e.crRetourLabel === 'Retour à l’accueil' && e.crHaut === 'Compte rendu · Thomas' && e.crPar === undefined, 'Hélène lit le compte rendu de Thomas : ' + e.crHaut);
 assert(e.crPresentsTexte === 'Inès, Adrien, Camille, Bérénice, Lucas' && e.crAbsentsTexte === 'Chloé', 'présents et absents');
 assert(e.crTextes.map(t => t.titre + (t.vide ? ' : Aucun' : '')).join() === 'Ce qui s’est bien passé,Problèmes,À améliorer : Aucun', 'les 3 rubriques, « Aucun » quand c’est vide : ' + e.crTextes.map(t => t.titre + (t.vide ? ' : Aucun' : '')).join());
 assert(!e.crAMerci, 'les messages de Thomas à l’équipe ou à Lucas restent entre eux : Hélène ne les voit pas');
@@ -235,12 +242,12 @@ assert(c2.aCRComsCarte && /Hélène a commenté le service : « Belle préparati
 c2.nav.afaire.pick(); c2.ouvrirCR(); c2 = T3.v('Thomas relit');
 assert(c2.aCRComs && c2.crComs[0].de === 'Hélène, responsable louange' && !c2.crPeutCommenter, 'Thomas lit le commentaire, sans pouvoir écrire à sa place');
 c2.retourCR(); c2 = T3.v('retour Thomas');
-e.retourCR(); e = H3.v('retour 3 lieux');
-assert(e.showLieux, 'retour aux 3 lieux');
+e.retourCR(); e = H3.v('retour accueil');
+assert(e.showAFaire && e.nav.afaire.current === 'page' && e.aCRs, 'retour à l’Accueil, où sont les comptes rendus');
 e.crListe[1].ouvrir(); e = H3.v('Champigny');
 assert(e.crLecture && e.crTextes.length === 3 && e.crAbsentsTexte === 'Pierre' && !e.crAMerci && e.crHaut === 'Compte rendu · Sylvie', 'compte rendu de Sylvie (exemple)');
 e.mins[0].pick(); e.retourCR(); e = H3.v('programme');
-assert(!e.aCRs, 'comptes rendus louange masqués sur le programme du culte');
+assert(e.aCRs, 'le compte rendu de dimanche dernier est sur l’Accueil, quel que soit le planning choisi');
 
 // 11. Échanges entre serviteurs : Thomas valide
 globalThis.__kerygmaPartage = undefined;
@@ -352,9 +359,8 @@ assert(bk.etat === 'aucun' && bk.nomTexte === 'Aucun' && bk.sous === 'Pas encore
 k.envoyerPlanning(); k = T5.v('envoyé');
 h5 = H5.v('Hélène voit');
 h5.nav.afaire.pick(); h5 = H5.v('Hélène À faire');
-const n29 = h5.notifs.find(n => /29 novembre/.test(n.titre));
-assert(n29 && /Direction : Malik ; retrait de Olivier/.test(n29.texte) && /Piano : retrait de Inès/.test(n29.texte), 'Hélène voit le remplacement et Aucun : ' + (n29 && n29.texte));
-n29.vu(); h5 = H5.v('vu');
+const n29 = N('Hélène').find(n => n.date === '29/11');
+assert(n29 && /Direction : Malik ; retrait de Olivier/.test(n29.resume) && /Piano : retrait de Inès/.test(n29.resume), 'Hélène prévenue du remplacement et de Aucun : ' + (n29 && n29.resume));
 h5.nav.planning.pick(); h5 = H5.v('planning');
 assert(h5.lignes.find(l => l.label === 'Direction').nom === 'Malik' && h5.lignes.find(l => l.label === 'Piano').etat === 'aucun', 'Malik à la direction, Aucun au piano');
 assert(!h5.lignes.some(l => l.nom === 'Olivier'), 'Olivier n’est plus sur le planning');
@@ -363,10 +369,9 @@ h5.lignes.find(l => l.label === 'Batterie').ouvrir(); h5 = H5.v('batterie Hélè
 h5.candLibres[0].choisir(); h5 = H5.v('batterie choisie');
 h5.envoyerPlanning(); h5 = H5.v('batterie envoyée');
 k = T5.v('Thomas après Hélène');
-assert(k.nav.afaire.aBadge && k.notifs.length === 1 && k.notifs[0].nouveau && /^Hélène a envoyé le planning aux volontaires\. Batterie : /.test(k.notifs[0].texte) && k.notifs[0].titre === 'Planning · Dimanche 29 novembre · Saint-Maurice', 'Thomas prévenu : ' + (k.notifs[0] || {}).texte);
-const avantVu = k.nav.afaire.badge;
-k.notifs[0].vu(); k = T5.v('vu');
-assert(!k.notifs[0].nouveau && k.notifs[0].tag === 'Changement vu' && Number(k.nav.afaire.badge || 0) === Number(avantVu) - 1, 'Vu : la pastille baisse');
+const nk = N('Thomas').filter(n => n.date === '29/11');
+assert(nk.length === 1 && /^Hélène a envoyé le planning aux volontaires\. Batterie : /.test(nk[0].resume), 'Thomas prévenu : ' + (nk[0] || {}).resume);
+assert(k.notifs.length === 0 && k.moisAValider.length === 0, 'pas de bouton « Vu » : un changement n’est pas une tâche');
 
 // 14. Calendrier du mois (bouton « Mois »)
 k = T5.v('avant mois');
@@ -406,7 +411,8 @@ a.envoyerPlanning(); a = T6.v('auto envoyé');
 assert(/Planning envoyé : 1 volontaire reçoit la demande/.test(a.toast) && a.lignes.find(l => l.label === 'Piano').sous === 'Demande envoyée', 'pianiste demandé');
 const H6 = ouvrir(fichierHelene);
 let h6 = H6.v('Hélène auto');
-assert(h6.notifs.some(n => /22 novembre/.test(n.titre) && n.texte.indexOf('Piano : ' + pianiste) >= 0), 'Hélène prévenue du pianiste');
+assert(N('Hélène').some(n => n.date === '22/11' && n.resume.indexOf('Piano : ' + pianiste) >= 0), 'Hélène prévenue du pianiste');
+assert(h6.accueilCultes[0].aModif && h6.accueilCultes[0].modif.indexOf('Modifié par Thomas') === 0 && h6.accueilCultes[0].modif.indexOf('Piano : ' + pianiste) >= 0 && !h6.accueilCultes[1].aModif, 'Accueil de Hélène, ce dimanche : « Modifié par Thomas » sous Saint-Maurice : ' + h6.accueilCultes[0].modif);
 h6.cartes[0].ouvrir(); h6 = H6.v('stm');
 assert(h6.lignes.find(l => l.label === 'Piano').nom === pianiste, 'le pianiste est sur le planning');
 // Lucas en pause : Auto ne le propose plus

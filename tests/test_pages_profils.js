@@ -9,9 +9,9 @@ const assert = (c, m) => { if (c) ok++; else { ko++; console.log('  ÉCHEC : ' +
 const tick = (ms) => new Promise(r => setTimeout(r, ms || 0));
 
 const PAGES = [
-  { fichier: 'responsable.html', titre: 'Prototype responsable', bonjour: 'Responsable louange', initiale: 'H' },
-  { fichier: 'coordinateur.html', titre: 'Prototype coordinateur', bonjour: 'Coordinateur louange · Saint-Maurice', initiale: 'T' },
-  { fichier: 'serviteur.html', titre: 'Prototype serviteur', bonjour: 'Mes dimanches', initiale: 'L' },
+  { fichier: 'responsable.html', titre: 'Prototype responsable', bonjour: 'Emma ne peut pas', initiale: 'H' },
+  { fichier: 'coordinateur.html', titre: 'Prototype coordinateur', bonjour: 'Compte rendu du dimanche 15 novembre', initiale: 'T' },
+  { fichier: 'serviteur.html', titre: 'Prototype serviteur', bonjour: "Demande d'échange", initiale: 'L' },
 ];
 
 (async () => {
@@ -25,7 +25,7 @@ const PAGES = [
     await tick(50);
     const txt = doc.querySelector('#app').textContent.replace(/\s+/g, ' ');
     assert(doc.title === p.titre, p.fichier + ' : titre de l’onglet « ' + doc.title + ' »');
-    assert(txt.indexOf(p.bonjour) >= 0 && txt.indexOf('Bonjour') < 0, p.fichier + ' : s’ouvre directement sur ' + p.bonjour + ', sans « Bonjour »');
+    assert(/Installe KERYGMA sur ton téléphone/.test(txt) && txt.indexOf(p.bonjour) >= 0 && txt.indexOf('Bonjour') < 0, p.fichier + ' : s’ouvre sur l’Accueil du bon profil (' + p.bonjour + '), sans « Bonjour »');
     const bulle = doc.querySelector('button[aria-label="Mon profil"]');
     assert(bulle && bulle.textContent.trim() === p.initiale && !doc.querySelector('nav[aria-label="Navigation principale"]').textContent.includes('Moi'), p.fichier + ' : bulle de profil, plus de « Moi » en bas');
     assert(doc.querySelector('[data-prototype]') && doc.querySelector('[data-prototype]').textContent === p.titre, p.fichier + ' : étiquette en haut');

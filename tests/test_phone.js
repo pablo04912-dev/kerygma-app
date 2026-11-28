@@ -71,18 +71,20 @@ function propre(label) {
   const lien = Array.from($$('[role=dialog] a')).find(a => /Se connecter/.test(a.textContent));
   assert(!!lien && $('#email').value === '' , 'bouton Se connecter direct, champs vides');
   await click(lien, 'Se connecter');
-  const surAccueil = () => /Ancienne · Saint-Maurice/.test(txt()) && /Compte rendu de dimanche dernier/.test(txt()) && !txt().includes('Bonjour');
-  assert(surAccueil(), 'connecté sur le profil de Hélène, sans « Bonjour »');
+  const surAccueil = () => !!$('section[aria-label="Ce dimanche"]') && /Compte rendu de dimanche dernier/.test(txt()) && !txt().includes('Bonjour');
+  const sur3Lieux = () => $$('main > button').length === 3 && !$('section[aria-label="Postes"]');
+  assert(surAccueil() && /Emma ne peut pas/.test(txt()), 'connecté sur l’Accueil de Hélène, sans « Bonjour »');
   assert($('[data-prototype]') && $('[data-prototype]').textContent === 'Prototype responsable', 'étiquette Prototype responsable en haut');
   propre('espace Hélène');
   const nav = (nom) => $$('nav[aria-label="Navigation principale"] button').find(x => x.textContent.replace(/\s+/g, ' ').trim().replace(/ ?\d+$/, '') === nom);
-  assert($$('nav[aria-label="Navigation principale"] button').map(b => b.textContent.replace(/\s+/g, ' ').trim().replace(/ ?\d+$/, '')).join() === 'Planning,À faire,Actus,Équipe' && !nav('Moi'), '4 boutons en bas, dans l’ordre Planning, À faire, Actus, Équipe');
+  assert($$('nav[aria-label="Navigation principale"] button').map(b => b.textContent.replace(/\s+/g, ' ').trim().replace(/ ?\d+$/, '')).join() === 'Accueil,Planning,Équipe' && !nav('Moi'), '3 boutons en bas, dans l’ordre Accueil, Planning, Équipe');
   assert(!!$('nav[aria-label="Navigation principale"] [data-glisse="onglet"]'), 'bulle grise sous l’onglet actif');
   assert(/Ce dimanche 22 novembre/.test(txt()) && !/Dimanches suivants/.test(txt()) && txt().indexOf('Ce dimanche 22 novembre') < txt().indexOf('Compte rendu de dimanche dernier'), 'accueil : ce dimanche, puis le compte rendu ; plus de dimanches suivants');
   assert($$('section[aria-label="Comptes rendus"] button[aria-label^="Ajouter un commentaire pour"]').length === 3, 'bulle « Ajouter un commentaire » sur les 3 lieux');
   assert(!/Modifiable/.test(txt()) && !/postes vides/.test(txt()), 'plus de « Modifiable » ni de postes vides');
-  assert(/^À faire\s*1$/.test(nav('À faire').textContent.replace(/\s+/g, ' ').trim()) && nav('À faire').getAttribute('aria-label') === 'À faire, 1 chose à faire', 'pastille rouge : 1 chose à faire');
-  assert(!$('section[aria-label="À valider"]') && !!$('section[aria-label="Comptes rendus"]'), 'la validation n’est plus sur la page d’accueil');
+  assert(/^Accueil\s*2$/.test(nav('Accueil').textContent.replace(/\s+/g, ' ').trim()) && nav('Accueil').getAttribute('aria-label') === 'Accueil, 2 choses à faire', 'pastille rouge sur Accueil : 2 choses à faire');
+  assert(!!$('section[aria-label="Planning à valider"]') && !!$('section[aria-label="Pas dispo"]') && !!$('section[aria-label="Comptes rendus"]'), 'À faire et compte rendu sur l’Accueil');
+  await click(nav('Planning'), 'planning Hélène');
 
   // Dates, lieux, détail
   const dates = () => $$('nav[aria-label="Dates"] button:not([aria-label="Voir le mois"]):not([data-marqueur]):not([data-fleche])');
@@ -151,7 +153,7 @@ function propre(label) {
   assert(!!q && !!btn('Oui, envoyer', q) && !!btn('Non, plus tard', q) && /aucun volontaire ne reçoit de demande/.test(q.textContent), 'question « Envoyer les invitations ? »');
   propre('question avant de quitter');
   await click(btn('Oui, envoyer', q), 'oui, envoyer');
-  assert(surAccueil() && /Planning envoyé : 2 volontaires reçoivent la demande\. Thomas est prévenu\./.test(txt()), 'envoyé en partant, retour aux 3 lieux');
+  assert(sur3Lieux() && /Planning envoyé : 2 volontaires reçoivent la demande\. Thomas est prévenu\./.test(txt()), 'envoyé en partant, retour aux 3 lieux');
 
   // Programme du culte et Sainte Cène
   await click(btn('Programme culte'), 'programme');
@@ -174,32 +176,34 @@ function propre(label) {
 
   // Réunion de prière
   await click($('button[aria-label="Retour aux 3 lieux"]'), 'retour');
-  await click(btn('Réunion de prière'), 'prière');
+  await click(btn('Prière'), 'prière');
   assert(/resp\. Paula/.test(txt()) && dates()[0].textContent.indexOf('jeu.') >= 0, 'prière : jeudis, responsable Paula');
   await click(cartes()[0], 'prière Saint-Maurice');
   assert(/Projection/.test(txt()) && /Orateur/.test(txt()), 'postes de prière');
   propre('prière');
 
   // Barre du bas, partout
-  for (const nom of ['Équipe', 'Actus', 'À faire', 'Planning']) {
+  for (const nom of ['Équipe', 'Accueil', 'Planning']) {
     await click(nav(nom), 'onglet ' + nom);
     assert(nav(nom) && nav(nom).getAttribute('aria-current') === 'page', 'onglet actif : ' + nom);
     propre('onglet ' + nom);
   }
   await click(nav('Équipe'), 'équipe');
-  await click(btn("Toute l'équipe"), 'toute l’équipe');
-  assert(/personnes ont déjà servi/.test(txt()), 'toute l’équipe');
+  assert(!btn("Toute l'équipe") && /personnes ont déjà servi/.test(txt()), 'Équipe : directement la liste des volontaires');
   await click($('button[aria-label="Mon profil"]'), 'bulle H');
   assert(/Mes données/.test(txt()) && $('button[aria-label="Mon profil"]').getAttribute('aria-current') === 'page', 'la bulle H ouvre « Moi »');
   await click(btn('Se déconnecter'), 'déconnexion');
   assert(/Bienvenue chez Kerygma/.test(txt()), 'retour à l’accueil après déconnexion');
 
   // Les 3 profils test : Thomas propose, Hélène valide, Lucas reçoit la demande
-  async function entrer(profil) {
+  async function entrer(profil, resterAccueil) {
     if (!$('[role=dialog]')) await click(btn('Espace membre'), 'Espace membre');
     const a = $('[role=dialog] a[data-profil="' + profil + '"]');
     assert(!!a, 'lien du profil test ' + profil);
     await click(a, 'profil ' + profil);
+    // Chaque profil arrive sur l'Accueil ; sauf demande contraire, on passe au Planning
+    assert(!!$('section[aria-label="Ce dimanche"]') && nav('Accueil').getAttribute('aria-current') === 'page', profil + ' arrive sur l’Accueil');
+    if (!resterAccueil) await click(nav('Planning'), 'planning ' + profil);
   }
   async function sortir() {
     await click($('button[aria-label="Mon profil"]'), 'Moi');
@@ -239,12 +243,9 @@ function propre(label) {
   await click($('button[aria-label="Réduire le calendrier"]'), 'réduire');
   assert(!$('section[aria-label="Calendrier du mois"]') && dates().length === 9, 'retour à la bande des dates');
   // Compte rendu du dernier dimanche
-  await click(nav('À faire'), 'À faire Thomas');
-  const changements = $$('section[aria-label="Changement du planning"]');
-  assert(/^À faire\s*3$/.test(nav('À faire').textContent.replace(/\s+/g, ' ').trim()) && changements.length === 1 && /Changement par Hélène/.test(changements[0].textContent) && /Dimanche 29 novembre · Saint-Maurice/.test(changements[0].textContent) && /Hélène a envoyé le planning aux volontaires/.test(changements[0].textContent), 'pastille 3 : compte rendu, échange, et l’envoi d’Hélène');
-  propre('À faire Thomas');
-  await click(btn('Vu', changements[0]), 'vu');
-  assert(/^À faire\s*2$/.test(nav('À faire').textContent.replace(/\s+/g, ' ').trim()) && /Changement vu/.test(txt()), '« Vu » fait baisser la pastille');
+  await click(nav('Accueil'), 'Accueil Thomas');
+  assert(/^Accueil\s*2$/.test(nav('Accueil').textContent.replace(/\s+/g, ' ').trim()) && !$('section[aria-label="Changement du planning"]') && !btn('Vu'), 'pastille 2 : compte rendu et échange ; un changement n’est pas une tâche, plus de « Vu »');
+  propre('Accueil Thomas');
   await click(btn('Remplir le compte rendu'), 'remplir le compte rendu');
   assert(/Qui était là/.test(txt()) && $$('[role=checkbox]').length === 6, 'formulaire du compte rendu, 6 personnes prévues');
   propre('compte rendu');
@@ -275,21 +276,18 @@ function propre(label) {
   await tick();
   assert(doc.activeElement.id === 'crMsgT', 'on écrit la suite, le focus reste');
   await click(btn('Envoyer le compte rendu à Hélène'), 'envoyer compte rendu');
-  assert(/Compte rendu envoyé à Hélène/.test(txt()) && /Compte rendu envoyé/.test($('section[aria-label="Compte rendu à remplir"]').textContent) && /^À faire\s*1$/.test(nav('À faire').textContent.replace(/\s+/g, ' ').trim()), 'compte rendu envoyé, retour à « À faire »');
+  assert(/Compte rendu envoyé à Hélène/.test(txt()) && /Compte rendu envoyé/.test($('section[aria-label="Compte rendu à remplir"]').textContent) && /^Accueil\s*1$/.test(nav('Accueil').textContent.replace(/\s+/g, ' ').trim()), 'compte rendu envoyé, retour à l’Accueil');
   propre('après compte rendu');
   await sortir();
 
-  await entrer('responsable');
+  await entrer('responsable', true);
   assert(surAccueil(), 'retour chez Hélène');
-  await click(nav('À faire'), 'À faire Hélène');
-  const envoi20 = $$('section[aria-label="Changement du planning"]').find(d => /Dimanche 20 décembre · Saint-Maurice/.test(d.textContent));
-  assert(!!envoi20 && /Thomas a envoyé le planning aux volontaires\. Batterie : Lucas\./.test(envoi20.textContent), 'Hélène est prévenue de l’envoi de Thomas');
+  assert(!$('section[aria-label="Changement du planning"]'), 'l’envoi de Thomas (20 déc) n’est pas une tâche pour Hélène');
   const moisB = $('section[aria-label="Planning à valider"]');
   assert(!!moisB && /Tout est rempli/.test(moisB.textContent) && /Planning de novembre · Boulogne/.test(moisB.textContent), 'carte « Tout est rempli » pour Boulogne');
   propre('À faire Hélène');
   await click(btn('Valider', moisB), 'valider le mois');
   assert(/Planning de novembre validé à Boulogne/.test(txt()) && !$('section[aria-label="Planning à valider"]'), 'Hélène valide le mois de Boulogne');
-  await click(nav('Planning'), 'planning Hélène');
   const blocCR = $('section[aria-label="Comptes rendus"]');
   assert(!!blocCR && /Saint-Maurice · 10h30\s*Thomas · 1 absent\s*Ajouter un commentaire/.test(blocCR.textContent.replace(/\s+/g, ' ')), 'Hélène reçoit le compte rendu de Thomas');
   await click($('button[aria-label="Ajouter un commentaire pour Saint-Maurice"]'), 'ajouter un commentaire');
@@ -314,8 +312,8 @@ function propre(label) {
   assert(/Message envoyé à Lucas/.test(txt()) && /Envoyé à Lucas : « Merci Lucas, très belle guitare dimanche ! »/.test(txt()), 'message personnalisé envoyé à Lucas');
   propre('message d’Hélène');
   assert(/Envoyé à Lucas :\s*« Merci Lucas/.test(txt()) && !/Un merci pour un très bon service/.test(txt()), 'confirmation sur deux lignes, plus de texte gris');
-  await click($('button[aria-label="Retour aux 3 lieux"]'), 'retour 3 lieux');
-  assert(surAccueil(), 'retour aux 3 lieux après le compte rendu');
+  await click($('button[aria-label="Retour à l’accueil"]'), 'retour accueil');
+  assert(surAccueil(), 'retour à l’Accueil après le compte rendu');
   assert(!!$('button[aria-label^="Commentaire envoyé pour Saint-Maurice"]') && /Commenté ✓/.test($('section[aria-label="Comptes rendus"]').textContent), 'Saint-Maurice : « Commenté ✓ »');
   await sortir();
 
@@ -326,7 +324,7 @@ function propre(label) {
   await click(btn('Tout'), 'onglet tout');
   assert($('[data-prototype]').textContent === 'Prototype serviteur', 'étiquette Prototype serviteur en haut');
   propre('espace Lucas');
-  await click(nav('À faire'), 'À faire Lucas');
+  await click(nav('Accueil'), 'À faire Lucas');
   const demande0 = $('[data-demande="20/12|stm|batterie"]');
   assert(!!demande0 && /Dimanche 20 décembre/.test(demande0.textContent) && /Présence 9h · fin vers 13h/.test(demande0.textContent), 'Lucas reçoit la demande envoyée par Thomas dans « À faire »');
   propre('À faire Lucas');
@@ -347,7 +345,7 @@ function propre(label) {
   await click($('button[aria-label="Réduire le calendrier"]'), 'réduire Lucas');
   const mercisL = $$('section[aria-label="Merci"]').map(x => x.textContent.replace(/\s+/g, ' '));
   assert(mercisL.length === 3 && /Message de Thomas « Super guitare dimanche, merci Lucas ! »/.test(mercisL[0]) && /Message de Thomas à toute l’équipe « Quel beau service dimanche ! Vous avez porté l’assemblée. »/.test(mercisL[1]) && /Message d’Hélène.*Merci Lucas, très belle guitare dimanche !/.test(mercisL[2]), 'Lucas reçoit les messages de Thomas et d’Hélène : ' + mercisL.join(' | '));
-  await click(nav('À faire'), 'À faire Lucas 2');
+  await click(nav('Accueil'), 'À faire Lucas 2');
   const demande = $('[data-demande="20/12|stm|batterie"]');
   await click(btn('Dispo', demande), 'Lucas dispo');
   assert(!$('[data-demande="20/12|stm|batterie"]') && /C’est confirmé/.test(txt()), 'Lucas confirme');
@@ -364,7 +362,7 @@ function propre(label) {
   await click(btn("Je n'ai pas d'indispo"), 'aucune indispo');
   await click(btn('Envoyer'), 'envoyer dispos');
   assert(/Thomas voit tes dispos/.test(txt()), 'dispos envoyées');
-  for (const nom of ['Équipe', 'Actus', 'Planning', 'À faire']) { await click(nav(nom), 'Lucas ' + nom); propre('Lucas ' + nom); }
+  for (const nom of ['Équipe', 'Planning', 'Accueil']) { await click(nav(nom), 'Lucas ' + nom); propre('Lucas ' + nom); }
   // Échange : Adrien demande à Lucas de prendre sa place, Lucas accepte, Thomas valide
   const demEch = $('article[aria-label="Demande d\'échange"]');
   assert(!!demEch && /Adrien n’est pas dispo/.test(demEch.textContent), 'Lucas reçoit la demande d’échange d’Adrien');
@@ -372,8 +370,7 @@ function propre(label) {
   assert(/Thomas doit valider/.test(txt()) && !btn("J'accepte"), 'échange accepté, en attente de Thomas');
   propre('échange accepté');
   await sortir();
-  await entrer('coordinateur');
-  await click(nav('À faire'), 'À faire Thomas 2');
+  await entrer('coordinateur', true);
   assert(/Hélène a commenté le service : « Belle louange, bravo pour la préparation »/.test($('section[aria-label="Compte rendu à remplir"]').textContent), 'Thomas voit le commentaire d’Hélène');
   const exAdrien = $$('section[aria-label="Échange à valider"]').find(x => /Adrien/.test(x.textContent));
   assert(!!exAdrien && /Lucas a accepté/.test(exAdrien.textContent), 'Thomas voit l’échange à valider');

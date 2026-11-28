@@ -240,9 +240,25 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </sc-for>
 </sc-if>
 <sc-if value="{{showAFaire}}" hint-placeholder-val="{{false}}">
-<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">À faire</h1>
-<sc-if value="{{aFaireVide}}" hint-placeholder-val="{{false}}">
-<p style="margin: 0; padding: 14px 16px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E7E3DA; font-size: 15px; line-height: 1.45; color: #3D4049">Rien à faire pour le moment.</p>
+<sc-if value="{{aInstall}}" hint-placeholder-val="{{true}}">
+<section aria-label="Installer l'appli" style="background: #16181D; color: #FFFFFF; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 17px; font-weight: 700">Installe KERYGMA sur ton téléphone</span>
+<span style="font-size: 15px; line-height: 1.45; color: #D9DAE0">Une icône sur l'écran d'accueil, et les rappels arrivent comme des messages. Sur iPhone, c'est obligatoire pour les notifications.</span>
+<sc-if value="{{installVoir}}" hint-placeholder-val="{{false}}">
+<ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.45">
+<li><strong>iPhone</strong> : dans Safari, touche le bouton Partager (le carré avec une flèche), puis « Sur l'écran d'accueil », puis « Ajouter ».</li>
+<li><strong>Android</strong> : dans Chrome, touche les trois points en haut à droite, puis « Installer l'application ».</li>
+<li>Ouvre KERYGMA depuis la nouvelle icône et accepte les notifications.</li>
+</ol>
+</sc-if>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button type="button" onClick="{{installToggle}}" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{installBouton}}</button>
+<button type="button" onClick="{{installPlusTard}}" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #5B5F6B; background: transparent; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Plus tard</button>
+</div>
+</section>
+</sc-if>
+<sc-if value="{{aAFaire}}" hint-placeholder-val="{{true}}">
+<h2 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 21px; line-height: 1.2; font-weight: 700">{{aFaireTitre}}</h2>
 </sc-if>
 <sc-for list="{{demandesEchange}}" as="de" hint-placeholder-count="1">
 <article aria-label="Demande d'échange" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
@@ -284,12 +300,47 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </article>
 </sc-for>
 </sc-if>
+<h2 style="margin: 12px 0 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 21px; line-height: 1.2; font-weight: 700">{{accueilTitre}}</h2>
+<section aria-label="Ce dimanche" style="flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; overflow: hidden">
+<sc-for list="{{accueilServices}}" as="ac" hint-placeholder-count="1">
+<button type="button" onClick="{{ac.ouvrir}}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 64px; width: 100%; padding: 10px 16px; border: 0; border-bottom: 1px solid {{ac.sep}}; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-size: 16px; font-weight: 700">{{ac.titre}}</span>
+<span style="font-size: 14px; color: #3D4049">{{ac.sous}}</span>
+</span>
+<span style="flex: 0 0 auto; font-size: 13px; font-weight: 700; padding: 4px 9px; border-radius: 8px; background: {{ac.bg}}; color: {{ac.fg}}">{{ac.statut}}</span>
+</button>
+</sc-for>
+</section>
+<h2 style="margin: 12px 0 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 21px; line-height: 1.2; font-weight: 700">Annonces</h2>
+<sc-for list="{{annonces}}" as="a" hint-placeholder-count="2">
+<article style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 13px; font-weight: 600; color: {{accent}}">{{a.tag}}</span>
+<span style="font-size: 16px; font-weight: 700">{{a.titre}}</span>
+<span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{a.texte}}</span>
+</article>
+</sc-for>
+<sc-if value="{{aPlusAnnonces}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{toggleAnnonces}}" style="align-self: flex-start; min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: {{accent}}; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{annoncesBouton}}</button>
+</sc-if>
 </sc-if>
 <sc-if value="{{showMoi}}" hint-placeholder-val="{{false}}">
 <div style="display: flex; flex-direction: column; gap: 4px">
 <h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">Lucas</h1>
 <p style="margin: 0; font-size: 15px; color: #5B5F6B">{{moiPostes}}</p>
 </div>
+<section aria-label="Ton année" style="background: #EEF0FF; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 10px">
+<span style="font-size: 17px; font-weight: 700; color: #1E1B4B">{{bilanTitre}}</span>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{bilanChiffres}}" as="bc" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 0; padding: 10px 12px; border-radius: 14px; background: #FFFFFF">
+<span style="font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; font-weight: 700; color: {{accent}}">{{bc.n}}</span>
+<span style="font-size: 14px; color: #3D4049">{{bc.l}}</span>
+</div>
+</sc-for>
+</div>
+<span style="font-size: 14px; line-height: 1.45; color: #3D4049">{{bilanTexte}}</span>
+</section>
 <section aria-label="Fréquence maximale" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 16px; font-weight: 600">Fréquence maximale</span>
 <span style="font-size: 14px; line-height: 1.4; color: #5B5F6B">Ton coordinateur est averti s'il te demande plus souvent.</span>
@@ -375,7 +426,7 @@ class Component extends DCLogic {
     var DEMO = DATA.serviteurDemo || {};
     var NOM = DEMO.nom || 'Lucas';
 
-    var tab = s.tab || 'planning';
+    var tab = s.tab || 'afaire'; // on arrive sur l'Accueil
     var vue = s.vue || 'accueil';
     var rep = s.rep || {};
     var garder = s.garder || {};
@@ -593,6 +644,12 @@ class Component extends DCLogic {
       out.push({ titre: 'Louange', items: items, vide: items.length === 0, videTexte: 'Personne de prévu pour le moment' });
       var proj = ((DATA.projection || {})[sv.date] || {})[sv.lieu.id] || [];
       if (proj.length) out.push({ titre: 'Projection', items: [{ label: 'Projection', nom: proj.join(', '), color: proj.indexOf(NOM) >= 0 ? accent : '#16181D' }], vide: false, videTexte: '' });
+      // Les autres ministères du même culte (sono, accueil, enfants…)
+      (DATA.ministeres || []).forEach(function (m) {
+        var pl = ((m.planning || {})[sv.date] || {})[sv.lieu.id] || {};
+        var itemsM = Object.keys(pl).filter(function (k) { return pl[k].length; }).map(function (k) { return { label: k, nom: pl[k].join(', '), color: pl[k].indexOf(NOM) >= 0 ? accent : '#16181D' }; });
+        if (itemsM.length) out.push({ titre: m.nom, items: itemsM, vide: false, videTexte: '' });
+      });
       if (sv.lieu.id === 'stm') {
         var pr = DATA.programme[sv.date] || {};
         var itemsP = PR.filter(function (r) { return pr[r.id]; }).map(function (r) { return { label: r.label, nom: pr[r.id], color: '#16181D' }; });
@@ -687,10 +744,44 @@ class Component extends DCLogic {
     // Onglet « À faire » : demandes de service et d'échange qui attendent une réponse de Lucas
     var nbEchAttente = demandesEchange.filter(function (de) { return de.enAttente; }).length;
     var nbAFaire = demandes.length + nbEchAttente;
+
+    // ----- Accueil = ce dimanche, à faire, annonces -----
+    var aInstall = !s.installCache;
+    var annoncesToutes = !!s.annoncesToutes;
+    var accueilVals = {
+      aInstall: aInstall, installVoir: !!s.installVoir, installBouton: s.installVoir ? 'Masquer' : 'Comment faire',
+      installToggle: function () { self.setState({ installVoir: !s.installVoir }); },
+      installPlusTard: function () { self.setState({ installCache: true }); },
+      toggleAnnonces: function () { self.setState({ annoncesToutes: !annoncesToutes }); }
+    };
+    accueilVals.accueilTitre = 'Ce dimanche ' + long(CE_DIMANCHE);
+    var ceDim = tous.filter(function (sv) { return sv.date === CE_DIMANCHE && !sv.remplacePar; });
+    var prochain = tous.filter(function (sv) { return dateNum(sv.date) > dateNum(CE_DIMANCHE) && actif(sv); })[0];
+    accueilVals.accueilServices = ceDim.length ? ceDim.map(function (sv, i) {
+      var st = statut(sv);
+      return { titre: sv.lieu.nom + ' · ' + sv.poste.label.toLowerCase(), sous: horaire(sv), statut: st.texte, bg: st.c.bg, fg: st.c.fg,
+        sep: i === ceDim.length - 1 ? 'transparent' : '#EFEBE3', ouvrir: function () { self.setState({ tab: 'planning', vue: 'service', svc: sv.cle }); } };
+    }) : [{ titre: 'Pas de service ce dimanche', sous: prochain ? 'Prochain : dimanche ' + long(prochain.date) + ' · ' + prochain.lieu.nom : 'Aucun service prévu', statut: '', bg: 'transparent', fg: '#5B5F6B', sep: 'transparent',
+      ouvrir: function () { self.setState(prochain ? { tab: 'planning', vue: 'service', svc: prochain.cle } : { tab: 'planning', vue: 'accueil' }); } }];
+    accueilVals.aFaireTitre = 'À faire' + (nbAFaire ? ' · ' + nbAFaire : '');
+    accueilVals.aAFaire = nbAFaire > 0;
+    // Bilan de l'année : sans classement, juste ce qu'on a vécu
+    var HIST = DATA.historique || {}, an26 = [];
+    Object.keys(HIST).forEach(function (d) { Object.keys(HIST[d]).forEach(function (l) { Object.keys(HIST[d][l]).forEach(function (pid) { if ((HIST[d][l][pid] || []).indexOf(NOM) >= 0) an26.push({ d: d, l: l, p: pid }); }); }); });
+    tous.forEach(function (sv) { if (anneeDe(sv.date) === 2026 && actif(sv)) an26.push({ d: sv.date, l: sv.lieu.id, p: sv.poste.label }); });
+    var lieuxAn = uniquesS(an26.map(function (x) { return x.l; })), mercisAn = (S.mercis || []).filter(function (m) { return (m.a || []).indexOf(NOM) >= 0 || m.equipe; }).length;
+    function uniquesS(a) { return a.filter(function (x, i) { return a.indexOf(x) === i; }); }
+    accueilVals.bilanTitre = 'Ton année 2026';
+    accueilVals.bilanChiffres = [
+      { n: String(an26.length), l: an26.length > 1 ? 'services' : 'service' },
+      { n: String(lieuxAn.length), l: lieuxAn.length > 1 ? 'lieux' : 'lieu' },
+      { n: String(uniquesS(an26.map(function (x) { return x.d; })).length), l: 'dimanches' }
+    ];
+    accueilVals.bilanTexte = 'Merci pour chacun de ces services. Pas de classement ici : seulement ce que tu as donné cette année.';
     var navAFaire = navItem('afaire');
     navAFaire.badge = String(nbAFaire);
     navAFaire.aBadge = nbAFaire > 0;
-    navAFaire.aria = 'À faire' + (nbAFaire ? ', ' + nbAFaire + (nbAFaire > 1 ? ' choses' : ' chose') + ' à faire' : '');
+    navAFaire.aria = 'Accueil' + (nbAFaire ? ', ' + nbAFaire + (nbAFaire > 1 ? ' choses' : ' chose') + ' à faire' : '');
     var actus = [
       { tag: 'Ce dimanche', titre: 'Cultes du dimanche', texte: 'Saint-Maurice et Champigny à 10h30, Boulogne à 15h30. En direct sur YouTube.' },
       { tag: 'Vendredi 27 novembre', titre: 'Veillée générale', texte: 'À partir de 22h à Saint-Maurice, pour toute l’église.' },
@@ -698,10 +789,13 @@ class Component extends DCLogic {
       { tag: 'Chaque semaine', titre: 'Prière générale', texte: 'Jeudi à 20h à Saint-Maurice, mercredi à 20h à Boulogne et Champigny.' },
       { tag: 'Chaque samedi', titre: 'Ados et Jeunes', texte: 'Ados à 15h, Jeunes à 18h, à Saint-Maurice.' }
     ];
+    accueilVals.annonces = annoncesToutes ? actus : actus.slice(0, 2);
+    accueilVals.aPlusAnnonces = actus.length > 2;
+    accueilVals.annoncesBouton = annoncesToutes ? 'Moins d’annonces' : 'Toutes les annonces (' + actus.length + ')';
     var agendaEtat = agenda === 'google' ? 'Connecté à Google Agenda : tes services confirmés s’y ajoutent tout seuls et se mettent à jour.'
       : (agenda === 'iphone' ? 'Ajouté à l’agenda de l’iPhone : mise à jour toute seule, toutes les 15 minutes.' : 'Pas encore connecté.');
 
-    return {
+    return Object.assign(accueilVals, {
       accent: accent,
       showAccueil: tab === 'planning' && vue === 'accueil',
       showService: tab === 'planning' && vue === 'service' && !!svc,
@@ -773,7 +867,7 @@ class Component extends DCLogic {
       connecterGoogle: function () { self.flash({ agenda: 'google' }, 'Prototype : dans la vraie appli, tu choisis ton compte Google, puis tes services arrivent tout seuls dans ton agenda.'); },
       connecterIphone: function () { self.flash({ agenda: 'iphone' }, 'Prototype : dans la vraie appli, l’iPhone te propose de t’abonner à l’agenda KERYGMA.'); },
       servChips: servChips,
-      nav: { planning: navItem('planning'), equipe: navItem('equipe'), actus: navItem('actus'), afaire: navAFaire, aIndic: tab !== 'moi', indicPos: ({ planning: '0', afaire: '0.25', actus: '0.5', equipe: '0.75' })[tab] || '0' },
+      nav: { planning: navItem('planning'), equipe: navItem('equipe'), actus: navItem('actus'), afaire: navAFaire, aIndic: tab !== 'moi', indicPos: ({ afaire: '0', planning: '0.3333', equipe: '0.6667' })[tab] || '0' },
       showAFaire: tab === 'afaire',
       aFaireVide: demandes.length === 0 && demandesEchange.length === 0,
       ouvrirMoi: function () { self.setState({ tab: 'moi', vue: 'accueil', sheet: null }); },
@@ -804,7 +898,7 @@ class Component extends DCLogic {
       aErreur: !!s.erreur,
       erreur: s.erreur || '',
       fermer: function () { self.setState({ sheet: null, texte: '', erreur: '' }); }
-    };
+    });
   }
   repondre(k, r) {
     var S = partage();

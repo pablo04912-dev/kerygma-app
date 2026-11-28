@@ -28,20 +28,9 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </div>
 <main style="flex: 1; overflow-y: auto; padding: 8px 20px 104px; display: flex; flex-direction: column; gap: 12px">
 <sc-if value="{{showLieux}}" hint-placeholder-val="{{true}}">
-<div style="display: flex; flex-direction: column; gap: 8px">
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 6px">
-<span style="font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">Ancienne · Saint-Maurice</span>
-<span style="font-size: 13px; font-weight: 600; padding: 5px 10px; border-radius: 999px; background: #ECE8DF; color: #3D4049">Responsable louange</span>
-</div>
-</div>
-<div role="group" aria-label="Type de réunion" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-bottom: 1px solid #E2DDD2">
-<sc-for list="{{types}}" as="t" hint-placeholder-count="2">
-<button type="button" aria-pressed="{{t.on}}" onClick="{{t.pick}}" style="min-height: 44px; padding: 6px 4px; border: 0; border-bottom: 3px solid {{t.ligne}}; margin-bottom: -1px; background: transparent; color: {{t.fg}}; font-family: inherit; font-size: 15px; font-weight: {{t.poids}}; cursor: pointer">{{t.label}}</button>
-</sc-for>
-</div>
 <sc-if value="{{showMinChips}}" hint-placeholder-val="{{true}}">
 <div role="group" aria-label="Ministère" style="display: flex; flex-wrap: wrap; gap: 8px">
-<sc-for list="{{mins}}" as="m" hint-placeholder-count="2">
+<sc-for list="{{minsHaut}}" as="m" hint-placeholder-count="2">
 <button type="button" aria-pressed="{{m.on}}" onClick="{{m.pick}}" style="min-height: 44px; padding: 0 16px; border-radius: 999px; border: 1px solid {{m.border}}; background: {{m.bg}}; color: {{m.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{m.label}}</button>
 </sc-for>
 </div>
@@ -117,6 +106,9 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </span>
 </sc-if>
 <span style="font-size: 15px; line-height: 1.4; color: {{c.manqueColor}}">{{c.manque}}</span>
+<sc-if value="{{c.aModif}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 13px; color: {{accent}}">{{c.modif}}</span>
+</sc-if>
 <sc-if value="{{c.aInfos}}" hint-placeholder-val="{{false}}">
 <span style="display: flex; flex-wrap: wrap; gap: 6px">
 <sc-if value="{{c.aTaches}}" hint-placeholder-val="{{false}}">
@@ -133,22 +125,6 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </span>
 </button>
 </sc-for>
-<sc-if value="{{aCRs}}" hint-placeholder-val="{{true}}">
-<h2 style="margin: 10px 0 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 20px; font-weight: 700">{{crListeTitre}}</h2>
-<section aria-label="Comptes rendus" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 4px 0; display: flex; flex-direction: column">
-<sc-for list="{{crListe}}" as="cr" hint-placeholder-count="3">
-<div data-cr style="display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; padding: 0 10px 0 16px; border-bottom: 1px solid {{cr.sep}}">
-<button type="button" onClick="{{cr.ouvrir}}" style="flex: 1 1 8.5rem; display: flex; flex-direction: column; justify-content: center; gap: 2px; min-width: min(8.5rem, 100%); min-height: 60px; padding: 8px 0; border: 0; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
-<span style="font-size: 16px; font-weight: 600">{{cr.lieu}}</span>
-<span style="font-size: 14px; color: {{cr.detailColor}}">{{cr.detail}}</span>
-</button>
-<button type="button" aria-label="{{cr.comAria}}" onClick="{{cr.commenter}}" style="flex: 0 1 auto; min-height: 44px; max-width: 100%; padding: 0; border: 0; background: transparent; font-family: inherit; display: flex; align-items: center; cursor: pointer">
-<span style="display: block; max-width: 7.2em; padding: 6px 12px; border-radius: 14px; background: {{cr.comBg}}; color: {{cr.comFg}}; font-size: 13px; line-height: 1.25; font-weight: 700; text-align: center">{{cr.comTexte}}</span>
-</button>
-</div>
-</sc-for>
-</section>
-</sc-if>
 </sc-if>
 <sc-if value="{{showDetail}}" hint-placeholder-val="{{false}}">
 <div style="display: flex; flex-direction: column; gap: 4px">
@@ -288,6 +264,31 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 <sc-if value="{{aValiderMois}}" hint-placeholder-val="{{true}}">
 <button type="button" onClick="{{validerMois}}" style="align-self: flex-start; min-height: 44px; padding: 0 18px; border-radius: 12px; border: 1px solid {{accent}}; background: #FFFFFF; color: {{accent}}; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{validerMoisLabel}}</button>
 </sc-if>
+</section>
+</sc-if>
+<sc-if value="{{aFeuille}}" hint-placeholder-val="{{false}}">
+<section aria-label="Toutes les équipes de ce culte" style="flex-shrink: 0; display: flex; flex-direction: column; gap: 10px; margin-top: 12px">
+<h2 style="margin: 0; font-size: 16px; font-weight: 800; letter-spacing: 1.6px; text-transform: uppercase; color: #3D4049">{{feuilleTitre}}</h2>
+<p style="margin: 0; font-size: 14px; line-height: 1.45; color: #5B5F6B">{{feuilleNote}}</p>
+<sc-for list="{{feuille}}" as="fm" hint-placeholder-count="3">
+<div style="flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 6px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<span style="font-size: 16px; font-weight: 700">{{fm.nom}}</span>
+<span style="flex: 0 0 auto; font-size: 13px; font-weight: 700; padding: 3px 9px; border-radius: 8px; background: {{fm.bg}}; color: {{fm.fg}}">{{fm.etat}}</span>
+</div>
+<sc-if value="{{fm.aCoord}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 13px; color: #5B5F6B">{{fm.coord}}</span>
+</sc-if>
+<sc-for list="{{fm.lignes}}" as="fl" hint-placeholder-count="2">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="display: flex; justify-content: space-between; gap: 12px; font-size: 15px"><span style="color: #5B5F6B">{{fl.label}}</span><span style="font-weight: 600; text-align: right">{{fl.nom}}</span></div>
+<sc-if value="{{fl.aAlerte}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 13px; font-weight: 600; color: #A12626">{{fl.alerte}}</span>
+</sc-if>
+</div>
+</sc-for>
+</div>
+</sc-for>
 </section>
 </sc-if>
 <sc-if value="{{aEnvoi}}" hint-placeholder-val="{{false}}">
@@ -506,11 +507,6 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </sc-for>
 </div>
 </sc-if>
-<div role="group" aria-label="Affichage" style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px; padding: 4px; border-radius: 14px; background: #ECE8DF">
-<sc-for list="{{vues}}" as="v" hint-placeholder-count="2">
-<button type="button" aria-pressed="{{v.on}}" onClick="{{v.pick}}" style="min-height: 44px; border-radius: 11px; border: 0; background: {{v.bg}}; color: {{v.fg}}; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{v.label}}</button>
-</sc-for>
-</div>
 <p style="margin: 0; font-size: 14px; font-weight: 600; color: #5B5F6B">{{eqLegende}}</p>
 <sc-if value="{{eqDimanche}}" hint-placeholder-val="{{true}}">
 <sc-for list="{{groupes}}" as="g" hint-placeholder-count="3">
@@ -550,10 +546,34 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 </sc-for>
 </sc-if>
 <sc-if value="{{showAFaire}}" hint-placeholder-val="{{false}}">
-<h1 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 28px; line-height: 1.15; font-weight: 700; letter-spacing: -0.5px">À faire</h1>
-<sc-if value="{{aFaireVide}}" hint-placeholder-val="{{false}}">
-<p style="margin: 0; padding: 14px 16px; border-radius: 18px; background: #FFFFFF; border: 1px solid #E7E3DA; font-size: 15px; line-height: 1.45; color: #3D4049">Rien à faire pour le moment.</p>
+<sc-if value="{{aInstall}}" hint-placeholder-val="{{true}}">
+<section aria-label="Installer l'appli" style="background: #16181D; color: #FFFFFF; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 17px; font-weight: 700">Installe KERYGMA sur ton téléphone</span>
+<span style="font-size: 15px; line-height: 1.45; color: #D9DAE0">Une icône sur l'écran d'accueil, et les rappels arrivent comme des messages. Sur iPhone, c'est obligatoire pour les notifications.</span>
+<sc-if value="{{installVoir}}" hint-placeholder-val="{{false}}">
+<ol style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.45">
+<li><strong>iPhone</strong> : dans Safari, touche le bouton Partager (le carré avec une flèche), puis « Sur l'écran d'accueil », puis « Ajouter ».</li>
+<li><strong>Android</strong> : dans Chrome, touche les trois points en haut à droite, puis « Installer l'application ».</li>
+<li>Ouvre KERYGMA depuis la nouvelle icône et accepte les notifications.</li>
+</ol>
 </sc-if>
+<div style="display: flex; gap: 8px; flex-wrap: wrap">
+<button type="button" onClick="{{installToggle}}" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: #FFFFFF; color: #16181D; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{installBouton}}</button>
+<button type="button" onClick="{{installPlusTard}}" style="min-height: 44px; padding: 0 16px; border-radius: 12px; border: 1px solid #5B5F6B; background: transparent; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Plus tard</button>
+</div>
+</section>
+</sc-if>
+<sc-if value="{{aAFaire}}" hint-placeholder-val="{{true}}">
+<h2 style="margin: 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 21px; line-height: 1.2; font-weight: 700">{{aFaireTitre}}</h2>
+</sc-if>
+<sc-for list="{{refus}}" as="rf" hint-placeholder-count="1">
+<section aria-label="Pas dispo" style="flex-shrink: 0; background: #FFFFFF; border: 1px solid #F2C9C9; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 6px">
+<span style="font-size: 13px; font-weight: 700; color: #A12626">Pas dispo</span>
+<span style="font-size: 17px; font-weight: 700">{{rf.titre}}</span>
+<span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{rf.texte}}</span>
+<button type="button" onClick="{{rf.ouvrir}}" style="align-self: flex-start; min-height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: {{accent}}; color: #FFFFFF; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">Trouver quelqu’un</button>
+</section>
+</sc-for>
 <sc-for list="{{moisAValider}}" as="mv" hint-placeholder-count="1">
 <section aria-label="Planning à valider" style="background: #FFFFFF; border: 1px solid #9FD3B1; border-radius: 18px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px">
 <span style="font-size: 13px; font-weight: 700; color: #146C3A">Tout est rempli</span>
@@ -601,6 +621,49 @@ button:active:not([aria-disabled=true]),a:active{box-shadow:inset 0 0 0 999px rg
 <sc-for list="{{echangesAttente}}" as="ea" hint-placeholder-count="1">
 <p role="status" style="margin: 0; padding: 10px 14px; border-radius: 14px; background: #F1EFEA; color: #3D4049; font-size: 14px; line-height: 1.45">{{ea.texte}}</p>
 </sc-for>
+<h2 style="margin: 12px 0 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 21px; line-height: 1.2; font-weight: 700">{{accueilTitre}}</h2>
+<section aria-label="Ce dimanche" style="flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; overflow: hidden">
+<sc-for list="{{accueilCultes}}" as="ac" hint-placeholder-count="3">
+<button type="button" onClick="{{ac.ouvrir}}" style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 64px; width: 100%; padding: 10px 16px; border: 0; border-bottom: 1px solid {{ac.sep}}; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<span style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-size: 16px; font-weight: 700">{{ac.lieu}}</span>
+<span style="font-size: 14px; color: #3D4049">{{ac.equipe}}</span>
+<span style="font-size: 13px; font-weight: 600; color: {{ac.etatColor}}">{{ac.etat}}</span>
+<sc-if value="{{ac.aModif}}" hint-placeholder-val="{{false}}">
+<span style="font-size: 13px; color: {{accent}}">{{ac.modif}}</span>
+</sc-if>
+</span>
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: 0 0 auto; color: {{accent}}"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+</button>
+</sc-for>
+</section>
+<sc-if value="{{aCRs}}" hint-placeholder-val="{{true}}">
+<h2 style="margin: 12px 0 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 20px; font-weight: 700">{{crListeTitre}}</h2>
+<section aria-label="Comptes rendus" style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 4px 0; display: flex; flex-direction: column">
+<sc-for list="{{crListe}}" as="cr" hint-placeholder-count="3">
+<div data-cr style="display: flex; flex-wrap: wrap; align-items: center; column-gap: 8px; padding: 0 10px 0 16px; border-bottom: 1px solid {{cr.sep}}">
+<button type="button" onClick="{{cr.ouvrir}}" style="flex: 1 1 8.5rem; display: flex; flex-direction: column; justify-content: center; gap: 2px; min-width: min(8.5rem, 100%); min-height: 60px; padding: 8px 0; border: 0; background: transparent; text-align: left; font-family: inherit; color: #16181D; cursor: pointer">
+<span style="font-size: 16px; font-weight: 600">{{cr.lieu}}</span>
+<span style="font-size: 14px; color: {{cr.detailColor}}">{{cr.detail}}</span>
+</button>
+<button type="button" aria-label="{{cr.comAria}}" onClick="{{cr.commenter}}" style="flex: 0 1 auto; min-height: 44px; max-width: 100%; padding: 0; border: 0; background: transparent; font-family: inherit; display: flex; align-items: center; cursor: pointer">
+<span style="display: block; max-width: 7.2em; padding: 6px 12px; border-radius: 14px; background: {{cr.comBg}}; color: {{cr.comFg}}; font-size: 13px; line-height: 1.25; font-weight: 700; text-align: center">{{cr.comTexte}}</span>
+</button>
+</div>
+</sc-for>
+</section>
+</sc-if>
+<h2 style="margin: 12px 0 0; font-family: 'Space Grotesk', Inter, sans-serif; font-size: 21px; line-height: 1.2; font-weight: 700">Annonces</h2>
+<sc-for list="{{annonces}}" as="a" hint-placeholder-count="2">
+<article style="background: #FFFFFF; border: 1px solid #E7E3DA; border-radius: 18px; padding: 12px 16px; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 13px; font-weight: 600; color: {{accent}}">{{a.tag}}</span>
+<span style="font-size: 16px; font-weight: 700">{{a.titre}}</span>
+<span style="font-size: 15px; line-height: 1.45; color: #3D4049">{{a.texte}}</span>
+</article>
+</sc-for>
+<sc-if value="{{aPlusAnnonces}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{toggleAnnonces}}" style="align-self: flex-start; min-height: 44px; padding: 0 4px; border: 0; background: transparent; color: {{accent}}; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{annoncesBouton}}</button>
+</sc-if>
 </sc-if>
 <sc-if value="{{showMoi}}" hint-placeholder-val="{{false}}">
 <div style="display: flex; flex-direction: column; gap: 4px">
@@ -769,7 +832,7 @@ class Component extends DCLogic {
     this._coord = coord;
     var S = partage(DATA);
 
-    var tab = s.tab || 'planning';
+    var tab = s.tab || 'afaire'; // on arrive sur l'Accueil
     var type = coord ? 'dimanche' : (s.type || 'dimanche');
     var min = coord ? 'louange' : (s.min || 'louange');
     var ecran = coord ? (s.ecran === 'cr' ? 'cr' : 'detail') : (s.ecran || 'lieux');
@@ -777,7 +840,7 @@ class Component extends DCLogic {
     var sheet = s.sheet || null;
     var picks = s.picks || {};
     var toast = s.toast || '';
-    var vue = s.vue || 'dimanche';
+    var vue = 'tous'; // « Ce dimanche » n'est plus dans Équipe
     var dateDim = s.dateDim || '22/11';
     var datePri = s.datePri || '26/11';
     var ceneEtat = s.cene || {};
@@ -851,6 +914,7 @@ class Component extends DCLogic {
     // Réponse du serviteur : dispo (vert), pasdispo (rouge) ou rien (en attente)
     function reponseNom(n, d, l, pid) {
       var k0 = d + '|' + l + '|' + pid;
+      if ((DATA.pasDispo || []).some(function (x) { return x.date === d && x.lieu === l && x.poste === pid && x.nom === n; })) return 'pasdispo';
       if (n === DEMO.nom) return S.reponses[k0] || (DEMO.reponses || {})[k0] || '';
       return (CONFIRMES[k0] || []).indexOf(n) >= 0 ? 'dispo' : '';
     }
@@ -1036,6 +1100,16 @@ class Component extends DCLogic {
       var on = t.id === type;
       return { label: t.label, on: on, ligne: on ? accent : 'transparent', poids: on ? '700' : '600', fg: on ? '#16181D' : '#5B5F6B', pick: function () { self.setState({ type: t.id, ecran: 'lieux', sheet: null }); } };
     });
+    // Un seul sélecteur en haut du planning (Programme culte, Louange, Prière)
+    var minsHaut = [
+      { id: 'programme', label: 'Programme culte', t: 'dimanche' },
+      { id: 'louange', label: 'Louange', t: 'dimanche' },
+      { id: 'priere', label: 'Prière', t: 'priere' }
+    ].filter(function (m) { return !coord || m.id !== 'programme'; }).map(function (m) {
+      var on = m.t === 'priere' ? type === 'priere' : (type === 'dimanche' && m.id === min);
+      return { label: m.label, on: on, bg: on ? accent : '#FFFFFF', fg: on ? '#FFFFFF' : '#16181D', border: on ? accent : '#D6D1C6',
+        pick: function () { self.setState(m.t === 'priere' ? { type: 'priere', ecran: 'lieux', sheet: null } : { type: 'dimanche', min: m.id, ecran: 'lieux', sheet: null }); } };
+    });
     var mins = [
       { id: 'programme', label: 'Programme culte' },
       { id: 'louange', label: 'Louange' }
@@ -1077,6 +1151,7 @@ class Component extends DCLogic {
         sous: sous,
         edit: edit,
         lecture: !edit && !(type === 'dimanche' && passe(dateDim)),
+        aModif: type === 'dimanche' && min === 'louange' && !!derniereModif(dateDim, L.id), modif: derniereModif(dateDim, L.id),
         aCompte: r.aCompte,
         compte: r.n + '/' + r.total,
         pct: r.total ? Math.round(r.n / r.total * 100) + '%' : '0%',
@@ -1195,7 +1270,7 @@ class Component extends DCLogic {
     var crListe = LIEUX.map(function (L2, i) {
       var cr = crDe(L2.id);
       var aCommente = (S.commentaires[CR_DATE + '|' + L2.id + '|louange'] || []).some(function (c) { return c.de === MOI; });
-      function ouvrir(focus) { return function () { self.setState({ ecran: 'cr', crLieu: L2.id, sheet: null, crCom: '', erreurCom: '', msgChoisis: {}, erreurMsg: '', crFocus: focus }); }; }
+      function ouvrir(focus) { return function () { self.setState({ tab: 'planning', ecran: 'cr', crLieu: L2.id, sheet: null, crCom: '', erreurCom: '', msgChoisis: {}, erreurMsg: '', crFocus: focus }); }; }
       return {
         lieu: L2.nom + ' · ' + L2.heure,
         detail: cr ? cr.par + (nbAbs(cr) ? ' · ' + nbAbs(cr) + (nbAbs(cr) > 1 ? ' absents' : ' absent') : ' · tout le monde était là') : 'En attente de ' + L2.coord,
@@ -1649,8 +1724,25 @@ class Component extends DCLogic {
       };
     });
     var nbNotifs = notifs.filter(function (n) { return n.nouveau; }).length;
-    var nbAFaire = coord ? (crVu ? 0 : 1) + echangesAValider.length + nbNotifs : moisAValider.length + nbNotifs;
-    var aFaireVide = !(moisAValider.length || coord || echangesAValider.length || notifs.length || echangesAttente.length);
+    // Les changements ne sont plus des tâches (pas de « Vu ») ; un « pas dispo » en est une
+    var refus = [];
+    DIMS.filter(function (d) { return !passe(d); }).forEach(function (d) {
+      LIEUX.filter(function (L2) { return !coord || L2.id === lieuId; }).forEach(function (L2) {
+        postesDe(d, L2.id).forEach(function (p) {
+          listeEnvoyee(d, L2.id, p.id).forEach(function (n) {
+            if (reponseNom(n, d, L2.id, p.id) !== 'pasdispo' || S.echanges[d + '|' + L2.id + '|' + p.id]) return; // un échange en cours règle déjà la question
+            refus.push({ titre: n + ' ne peut pas', texte: titreDimanche(d) + ' · ' + L2.nom + ' · ' + p.label.toLowerCase(),
+              ouvrir: function () { quitter({ tab: 'planning', ecran: 'detail', lieu: L2.id, dateDim: d, type: 'dimanche', min: 'louange', sheet: null }); } });
+          });
+        });
+      });
+    });
+    var nbAFaire = refus.length + (coord ? (crVu ? 0 : 1) + echangesAValider.length : moisAValider.length);
+    var aFaireVide = !(moisAValider.length || refus.length || (coord && !crVu) || echangesAValider.length || echangesAttente.length);
+    function derniereModif(d, l) {
+      var n = S.notifs.filter(function (x) { return x.pour === MOI && x.date === d && x.lieu === l && !x.mois; }).pop();
+      return n ? 'Modifié par ' + n.par + (n.resume ? ' : ' + n.resume : '') : '';
+    }
     // Quitter le planning d'un lieu avec des choix pas envoyés : « Envoyer les invitations ? »
     function quitter(cible) {
       var part = (cible.tab && cible.tab !== 'planning') || (cible.ecran && cible.ecran !== 'detail') || (cible.lieu && cible.lieu !== lieuId);
@@ -1661,12 +1753,82 @@ class Component extends DCLogic {
       var on = tab === id;
       return { current: on ? 'page' : 'false', color: on ? accent : GRIS, pick: function () { quitter({ tab: id, sheet: null, tache: null }); } };
     }
+
+    // ----- Accueil = ce dimanche, à faire, annonces -----
+    var aInstall = !s.installCache;
+    var annoncesToutes = !!s.annoncesToutes;
+    var accueilVals = {
+      aInstall: aInstall, installVoir: !!s.installVoir, installBouton: s.installVoir ? 'Masquer' : 'Comment faire',
+      installToggle: function () { self.setState({ installVoir: !s.installVoir }); },
+      installPlusTard: function () { self.setState({ installCache: true }); },
+      annonces: annoncesToutes ? actus : actus.slice(0, 2),
+      aPlusAnnonces: actus.length > 2,
+      annoncesBouton: annoncesToutes ? 'Moins d’annonces' : 'Toutes les annonces (' + actus.length + ')',
+      toggleAnnonces: function () { self.setState({ annoncesToutes: !annoncesToutes }); }
+    };
+    function resumeDimanche(d, l) {
+      var n = 0, ok = 0;
+      postesDe(d, l).forEach(function (p) { listeEnvoyee(d, l, p.id).forEach(function (x) { n++; if (reponseNom(x, d, l, p.id) === 'dispo') ok++; }); });
+      return { n: n, ok: ok };
+    }
+    var lieuxAccueil = LIEUX.filter(function (L2) { return !coord || L2.id === lieuId; });
+    accueilVals.accueilTitre = titreDimanche(CE_DIMANCHE);
+    accueilVals.accueilCultes = lieuxAccueil.map(function (L2, i) {
+      var noms = equipeNoms(CE_DIMANCHE, L2.id), r = resumeDimanche(CE_DIMANCHE, L2.id);
+      return {
+        lieu: L2.nom + ' · ' + L2.heure + ' · louange',
+        equipe: noms.length ? noms.join(', ') : 'Personne pour l’instant',
+        etat: r.n ? (r.ok === r.n ? 'Tout le monde a confirmé ✓' : r.ok + ' sur ' + r.n + ' ont confirmé') : '',
+        etatColor: r.n && r.ok === r.n ? VERT : GRIS,
+        aModif: !!derniereModif(CE_DIMANCHE, L2.id), modif: derniereModif(CE_DIMANCHE, L2.id),
+        sep: i === lieuxAccueil.length - 1 ? 'transparent' : '#EFEBE3',
+        ouvrir: function () { quitter({ tab: 'planning', ecran: 'detail', lieu: L2.id, dateDim: CE_DIMANCHE, type: 'dimanche', min: 'louange', sheet: null }); }
+      };
+    });
+    accueilVals.aFaireTitre = 'À faire' + (nbAFaire ? ' · ' + nbAFaire : '');
+    // ----- les autres équipes du même culte (lecture seule), pour se coordonner entre ministères -----
+    var aFeuille = tab === 'planning' && ecran === 'detail' && type === 'dimanche';
+    var feuille = [];
+    if (aFeuille) {
+      var LF = LIEUX.filter(function (L2) { return L2.id === lieuId; })[0] || LIEUX[0];
+      var louangeF = { nom: 'Louange', coord: LF.coord, valide: !!S.validations[LF.id + '|' + moisCle(dateDim)],
+        lignes: postesDe(dateDim, LF.id).map(function (p) { return { label: p.label, noms: listeEnvoyee(dateDim, LF.id, p.id) }; }) };
+      var pj = ((DATA.projection || {})[dateDim] || {})[LF.id] || [];
+      var autresMin = [{ nom: 'Projection', coord: '', lignes: pj.length ? [{ label: 'Projection', noms: pj }] : [] }];
+      (DATA.ministeres || []).forEach(function (m) {
+        var pl = ((m.planning || {})[dateDim] || {})[LF.id] || {};
+        autresMin.push({ nom: m.nom, coord: (m.coord || {})[LF.id] || '', lignes: Object.keys(pl).map(function (k) { return { label: k, noms: pl[k] }; }) });
+      });
+      function aLa(nom) { var n = nom.toLowerCase(); return /s$/.test(n) ? 'aux ' + n : (/^[aeiouéèh]/.test(n) ? 'à l’' + n : 'à la ' + n); }
+      // Qui sert dans plusieurs ministères à ce culte : on le signale en rouge
+      var parNom = {};
+      [louangeF].concat(autresMin).forEach(function (m) { m.lignes.forEach(function (li) { li.noms.forEach(function (n) { parNom[n] = parNom[n] || []; if (parNom[n].indexOf(m.nom) < 0) parNom[n].push(m.nom); }); }); });
+      feuille = (min === 'louange' ? autresMin : [louangeF].concat(autresMin)).map(function (m) {
+        var n = m.lignes.reduce(function (a, li) { return a + li.noms.length; }, 0);
+        return {
+          nom: m.nom, aCoord: !!m.coord, coord: 'Coord. : ' + m.coord,
+          etat: m.valide ? 'Validé' : (n ? 'Envoyé' : 'Pas encore fait'),
+          bg: m.valide ? '#E7F5EC' : (n ? '#EEF0FF' : '#F1EFEA'), fg: m.valide ? VERT : (n ? accent : GRIS),
+          lignes: n ? m.lignes.filter(function (li) { return li.noms.length; }).map(function (li) {
+            var alertes = [];
+            li.noms.forEach(function (x) { (parNom[x] || []).forEach(function (o) { if (o !== m.nom) alertes.push(x + ' sert aussi ' + aLa(o)); }); });
+            return { label: li.label, nom: li.noms.join(', '), aAlerte: alertes.length > 0, alerte: alertes.join(' ; ') };
+          }) : [{ label: 'Personne pour l’instant', nom: '', aAlerte: false, alerte: '' }]
+        };
+      });
+    }
+    accueilVals.aFeuille = aFeuille && feuille.length > 0;
+    accueilVals.feuille = feuille;
+    accueilVals.feuilleTitre = min === 'louange' ? 'Les autres équipes' : 'Toutes les équipes';
+    accueilVals.feuilleNote = min === 'louange'
+      ? 'Ce que les autres ministères ont prévu pour ce culte, pour éviter les doublons. Seul leur coordinateur le modifie.'
+      : 'Toutes les équipes de ce culte, ministère par ministère. Seul le coordinateur de chaque ministère le modifie.';
     var navAFaire = navItem('afaire');
     navAFaire.badge = String(nbAFaire);
     navAFaire.aBadge = nbAFaire > 0;
-    navAFaire.aria = 'À faire' + (nbAFaire ? ', ' + nbAFaire + (nbAFaire > 1 ? ' choses' : ' chose') + ' à faire' : '');
+    navAFaire.aria = 'Accueil' + (nbAFaire ? ', ' + nbAFaire + (nbAFaire > 1 ? ' choses' : ' chose') + ' à faire' : '');
 
-    return {
+    return Object.assign(accueilVals, {
       accent: accent,
       showLieux: tab === 'planning' && ecran === 'lieux',
       showDetail: tab === 'planning' && ecran === 'detail',
@@ -1686,7 +1848,8 @@ class Component extends DCLogic {
       fermerTache: function () { self.setState({ tache: null }); },
       showAFaire: tab === 'afaire',
       aFaireVide: aFaireVide,
-      notifs: notifs,
+      notifs: [],
+      refus: refus, aAFaire: !aFaireVide,
       ouvrirMoi: function () { quitter({ tab: 'moi', sheet: null, tache: null }); },
       profilCurrent: tab === 'moi' ? 'page' : 'false',
       profilBord: tab === 'moi' ? '3px solid ' + accent : '0',
@@ -1707,7 +1870,7 @@ class Component extends DCLogic {
       colRelanceBouton: 'Relancer les ' + manquants + ' sans réponse',
       relancer: function () { self.relancer(manquants); },
       colPersonnes: colPersonnes,
-      aCRs: !coord && type === 'dimanche' && min === 'louange',
+      aCRs: !coord,
       crListeTitre: 'Compte rendu de dimanche dernier',
       aSecTitre: type === 'dimanche',
       secTitre: titreDimanche(dateDim),
@@ -1772,8 +1935,8 @@ class Component extends DCLogic {
       crCarteBtnFg: crVu ? '#16181D' : '#FFFFFF',
       crCarteBtnBorder: crVu ? '1px solid #D6D1C6' : '0',
       ouvrirCR: function () { self.setState({ tab: 'planning', ecran: 'cr', sheet: null }); },
-      retourCR: function () { self.setState(coord ? { tab: 'afaire', ecran: 'detail' } : { ecran: 'lieux' }); },
-      crRetourLabel: coord ? 'Retour à À faire' : 'Retour aux 3 lieux',
+      retourCR: function () { self.setState({ tab: 'afaire', ecran: coord ? 'detail' : 'lieux' }); },
+      crRetourLabel: 'Retour à l’accueil',
       crTitre: LC.nom,
       crHaut: s.ecran === 'cr' && !coord ? 'Compte rendu · ' + (crVu ? crVu.par : LC.coord) : 'Compte rendu',
       crSous: nomDimanche(CR_DATE) + ' · Louange · ' + LC.heure,
@@ -1839,6 +2002,7 @@ class Component extends DCLogic {
       showMoi: tab === 'moi',
       types: types,
       mins: mins,
+      minsHaut: minsHaut,
       showMinChips: type === 'dimanche',
       dates: dates,
       bande: bande,
@@ -1878,7 +2042,7 @@ class Component extends DCLogic {
       personnes: personnes,
       actus: actus,
       roles: roles,
-      nav: { planning: navItem('planning'), equipe: navItem('equipe'), actus: navItem('actus'), afaire: navAFaire, aIndic: tab !== 'moi', indicPos: ({ planning: '0', afaire: '0.25', actus: '0.5', equipe: '0.75' })[tab] || '0' },
+      nav: { planning: navItem('planning'), equipe: navItem('equipe'), actus: navItem('actus'), afaire: navAFaire, aIndic: tab !== 'moi', indicPos: ({ afaire: '0', planning: '0.3333', equipe: '0.6667' })[tab] || '0' },
       aToast: !!toast,
       toast: toast,
       sheetOuvert: sheetOuvert,
@@ -1907,7 +2071,7 @@ class Component extends DCLogic {
       candBloques: candBloques,
       aBloques: candBloques.length > 0,
       fermer: function () { self.setState({ sheet: null, texte: '', erreur: '' }); }
-    };
+    });
   }
   choisir(nom, raison) {
     var s = this.state || {};

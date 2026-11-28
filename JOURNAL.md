@@ -2,6 +2,22 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-28 (suite) · Pablo (avec Claude Code) · nouvel Accueil, 3 onglets, autres équipes du culte
+
+**Décisions** (détail dans `docs/decisions.md`)
+- Barre du bas : Accueil, Planning, Équipe. On arrive sur l'Accueil : installer l'appli, À faire (seulement s'il y a quelque chose), ce dimanche (qui sert, combien ont confirmé, « Modifié par … »), compte rendu de dimanche dernier, 2 annonces.
+- À faire = vraies tâches : un « pas dispo » devient « Emma ne peut pas » avec « Trouver quelqu'un ». Plus de bouton « Vu » sur les changements.
+- Planning : un seul sélecteur Programme culte / Louange / Prière.
+- Sous le planning d'un lieu : les autres équipes du culte (projection, sono, accueil, enfants), avec les noms, en lecture seule ; doublons en rouge.
+- Équipe : directement la liste des volontaires. Moi de Lucas : « Ton année 2026 ».
+
+**Fait**
+- Tout ce qui précède, avec les tests mis à jour et de nouveaux tests (Accueil, sélecteur, autres équipes, Ton année). Données d'exemple : ministères sono, accueil, enfants (prénoms inventés), un « pas dispo » d'Emma.
+- Corrigé au passage : toucher un compte rendu sur l'Accueil l'ouvre bien, et « Retour à l'accueil » y ramène.
+
+**À faire / à vérifier**
+- Un changement sur un autre dimanche que celui de la semaine n'apparaît plus nulle part pour l'autre personne (seulement dans la vraie appli, par notification) : à confirmer.
+
 ## 2026-11-28 · Pablo (avec Claude Code) · règles plus économes en tokens
 
 **Décisions**

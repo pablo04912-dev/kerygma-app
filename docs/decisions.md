@@ -29,15 +29,19 @@ Rangées par écran. Avant de toucher un écran, lis seulement la partie qui le 
 ## En-tête et barre du bas
 
 - En-tête : KERYGMA au centre, en grand ; la bulle avec l'initiale (en haut à droite) ouvre « Moi » (profil). Pas de « Bonjour … » : on garde les puces de rôle (« Ancienne · Saint-Maurice », « Responsable louange »).
-- Barre du bas, dans cet ordre : Planning, **À faire**, Actus, Équipe, sur tous les écrans connectés ; barre flottante façon Instagram (capsule blanche translucide, fond flouté visible derrière, bulle grise qui glisse sous l'onglet touché ; on garde les noms sous les icônes et le violet), avec une pastille rouge qui compte ce qu'il reste à faire.
-- À faire : responsable = plannings du mois à valider (« Tout est rempli ») et envois du coordinateur (« Vu ») ; coordinateur = compte rendu à remplir, échanges à valider, envois et validations du responsable (« Vu ») ; serviteur = demandes de service et d'échange.
+- Barre du bas (28/11), dans cet ordre : **Accueil, Planning, Équipe**, sur tous les écrans connectés ; plus d'onglets Actus ni À faire, tout est sur l'Accueil ; on arrive sur l'Accueil ; barre flottante façon Instagram (capsule blanche translucide, fond flouté visible derrière, bulle grise qui glisse sous l'onglet touché ; on garde les noms sous les icônes et le violet), avec une pastille rouge sur Accueil qui compte ce qu'il reste à faire.
+- À faire (28/11) : seulement de **vraies tâches**. Responsable = plannings du mois à valider (« Tout est rempli ») et volontaires qui ont répondu « pas dispo » (« Emma ne peut pas », bouton « Trouver quelqu'un » qui ouvre le bon planning) ; coordinateur = compte rendu à remplir, échanges à valider, « pas dispo » de son lieu ; serviteur = demandes de service et d'échange. Un changement fait par un autre n'est plus une tâche : plus de bouton « Vu » ; il s'affiche en « Modifié par Thomas : … » sous le culte concerné de « Ce dimanche ».
 - Notifications sur iPhone : priorité (il faut ajouter l'appli à l'écran d'accueil ; prévoir un pas-à-pas).
 
-## Accueil du responsable (onglet Planning)
+## Accueil (28/11)
 
-- Onglets soulignés « Culte du dimanche / Réunion de prière », puces « Programme culte » (en premier) et « Louange », bande des dates.
-- Puis **le dimanche choisi** dans la bande (« Ce dimanche 22 novembre » par défaut ; les 3 cultes : qui sert, tâches, choix pas encore envoyés).
-- Puis, quel que soit le dimanche choisi, **Compte rendu de dimanche dernier** (les 3 cultes, avec tout à droite une bulle « Ajouter un commentaire » qui ouvre le compte rendu, curseur dans le commentaire ; « Commenté ✓ » une fois fait). Plus de « Dimanches suivants » (22/11).
+- Dans l'ordre : carte « Installe KERYGMA sur ton téléphone » (« Comment faire », « Plus tard ») ; **À faire**, seulement s'il y a quelque chose ; **Ce dimanche** (les cultes du périmètre : qui sert, combien ont confirmé, « Modifié par … » ; toucher un culte ouvre son planning) ; **Compte rendu de dimanche dernier** (les 3 cultes, avec tout à droite une bulle « Ajouter un commentaire » qui ouvre le compte rendu, curseur dans le commentaire ; « Commenté ✓ » une fois fait ; le retour ramène à l'Accueil) ; 2 annonces, puis « Toutes les annonces ».
+
+## Planning du responsable
+
+- En haut, **un seul sélecteur** : Programme culte, Louange, Prière (le coordinateur louange n'a pas Programme culte). Plus de puces de rôle ni de gros onglets Culte / Prière. Puis la bande des dates et les 3 lieux du dimanche choisi.
+- **Les autres équipes du culte** (projection, sono, accueil, enfants…) sous le planning d'un lieu, en lecture seule, avec les noms (coordinateurs compris) et l'état (Pas encore fait, Envoyé, Validé). Quelqu'un qui sert dans deux ministères au même culte est signalé en rouge (« Bérénice sert aussi à la louange »). Sur le programme du culte : toutes les équipes, louange comprise.
+- **Équipe** : directement la liste des volontaires.
 - Sainte Cène une fois sur deux : bouton Oui/Non. Le rôle "Louange" du programme est repris de la direction du planning louange.
 - "À traiter" (postes vides, absences, conflits) : visible par le coordinateur du ministère concerné et par les responsables au-dessus de lui.
 
@@ -81,7 +85,7 @@ Rangées par écran. Avant de toucher un écran, lis seulement la partie qui le 
 - Échange : le serviteur demande à un autre de le remplacer ; si l'autre accepte, le coordinateur valide (Oui/Non) ; le planning change et le coordinateur voit "X remplacé par Y (X pas dispo)".
 - Fréquence maximale par serviteur (par mois, par trimestre, en pause), avec avertissement si elle est dépassée.
 - Servir ensemble ou séparément : réglage pour couples, familles, frères et sœurs qui vivent ensemble (même culte ou même jour, ou au contraire jamais le même jour).
-- Bilan de l'année pour chaque serviteur, sans classement.
+- Bilan de l'année pour chaque serviteur, sans classement : « Ton année 2026 » dans Moi (services, lieux, dimanches, et un merci).
 
 ## Création de compte (vraie appli)
 

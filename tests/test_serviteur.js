@@ -3,8 +3,10 @@
 const { load, checkHoles, checkTags, assert, report, timers } = require('./dc_harness.js');
 const file = process.argv[2];
 let steps = 0;
-function ouvrir() {
+// On arrive sur l'Accueil ; sauf demande contraire, on passe tout de suite au Planning
+function ouvrir(resterAccueil) {
   const r = load(file, {});
+  if (!resterAccueil) r.c.renderVals().nav.planning.pick();
   return {
     r,
     v(label) {
@@ -18,13 +20,13 @@ function ouvrir() {
 }
 
 globalThis.__kerygmaPartage = undefined;
-let L = ouvrir();
+let L = ouvrir(true);
 assert(checkTags(L.r.src).length === 0, 'balises : ' + checkTags(L.r.src).join(' | '));
 
 // 1. Arrivée
 let x = L.v('arrivée Lucas');
 assert(/data-prototype[^>]*>Prototype serviteur</.test(L.r.src) && /<title>Kerygma, prototype serviteur<\/title>/.test(L.r.src), 'étiquette Prototype serviteur en haut');
-assert(x.showAccueil && x.aRepondre && x.repondreTitre === 'À répondre (3)', 'trois demandes : ' + x.repondreTitre);
+assert(x.showAFaire && x.nav.afaire.current === 'page' && x.aRepondre && x.repondreTitre === 'À répondre (3)', 'Lucas arrive sur l’Accueil, trois demandes : ' + x.repondreTitre);
 assert(x.nav.afaire.badge === '4' && x.nav.afaire.aBadge, 'pastille À faire : 3 demandes + 1 demande d’échange : ' + x.nav.afaire.badge);
 x.nav.afaire.pick(); x = L.v('À faire Lucas');
 assert(x.showAFaire && !x.showAccueil && !x.aFaireVide && x.demandesEchange.length === 1, 'demandes et échange dans « À faire »');
@@ -92,7 +94,7 @@ x.servChips.find(c => c.label === 'Louange').pick(); x = L.v('louange 6');
 x.services[0].ouvrir(); x = L.v('détail 29 nov');
 assert(x.showService && !x.showAccueil && x.svTitre === 'Dimanche 29 novembre', 'détail du service');
 assert(/Saint-Maurice · culte 10h30 · présence 9h · fin vers 13h/.test(x.svSous), 'horaires : ' + x.svSous);
-assert(x.equipeCulte.length === 2 && x.equipeCulte[0].titre === 'Louange' && x.equipeCulte[1].titre === 'Programme du culte', 'louange et programme du culte');
+assert(x.equipeCulte.map(g => g.titre).join() === 'Louange,Sono,Accueil,Programme du culte', 'louange, les autres équipes du culte, puis le programme : ' + x.equipeCulte.map(g => g.titre));
 assert(x.equipeCulte[0].items.some(i => i.nom === 'Lucas' && i.color === '#4338CA'), 'Lucas repéré dans l’équipe');
 x.retour(); x = L.v('retour');
 assert(x.showAccueil, 'retour aux services');
@@ -281,6 +283,16 @@ assert(x.showService && x.svTitre === 'Dimanche 13 décembre' && !x.aMesTaches, 
 globalThis.__kerygmaPartage.taches.push({ id: 'tx', date: '13/12', lieu: 'stm', poste: 'gac', nom: 'Lucas', titre: 'Faire la balance son', message: '', par: 'Hélène', fait: false });
 x = L.v('nouvelle tâche');
 assert(x.aMesTaches && x.mesTaches[0].titre === 'Faire la balance son' && !x.mesTaches[0].aMessage && x.mesTaches[0].de === 'Demandée par Hélène', 'nouvelle tâche reçue');
+
+// Moi de Lucas : « Ton année 2026 », sans classement
+{
+  globalThis.__kerygmaPartage = undefined;
+  const A = ouvrir(true);
+  let y = A.v('accueil Lucas');
+  y.ouvrirMoi(); y = A.v('Moi de Lucas');
+  assert(y.showMoi && y.bilanTitre === 'Ton année 2026' && y.bilanChiffres.map(b => b.n + ' ' + b.l).join(', ') === '9 services, 3 lieux, 8 dimanches', 'Ton année 2026 : ' + y.bilanChiffres.map(b => b.n + ' ' + b.l).join(', '));
+  assert(/Pas de classement/.test(y.bilanTexte), 'pas de classement, seulement un merci');
+}
 
 console.log(steps + ' états vérifiés');
 process.exit(report('Serviteur') ? 1 : 0);

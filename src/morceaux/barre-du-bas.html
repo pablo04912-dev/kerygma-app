@@ -1,22 +1,18 @@
-<!-- Barre du bas, commune aux écrans connectés (Planning, À faire, Actus, Équipe) -->
-<nav aria-label="Navigation principale" style="position: absolute; left: 12px; right: 12px; bottom: 14px; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); padding: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.72); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%); border: 1px solid rgba(22, 24, 29, 0.08); box-shadow: 0 10px 30px rgba(22, 24, 29, 0.14)">
+<!-- Barre du bas, commune aux écrans connectés (Accueil, Planning, Équipe) -->
+<nav aria-label="Navigation principale" style="position: absolute; left: 12px; right: 12px; bottom: 14px; z-index: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); padding: 6px; border-radius: 999px; background: rgba(255, 255, 255, 0.72); -webkit-backdrop-filter: blur(18px) saturate(180%); backdrop-filter: blur(18px) saturate(180%); border: 1px solid rgba(22, 24, 29, 0.08); box-shadow: 0 10px 30px rgba(22, 24, 29, 0.14)">
 <sc-if value="{{nav.aIndic}}" hint-placeholder-val="{{true}}">
-<span aria-hidden="true" data-glisse="onglet" style="position: absolute; top: 6px; bottom: 6px; left: calc(6px + (100% - 12px) * {{nav.indicPos}}); width: calc((100% - 12px) / 4); border-radius: 999px; background: rgba(22, 24, 29, 0.07)"></span>
+<span aria-hidden="true" data-glisse="onglet" style="position: absolute; top: 6px; bottom: 6px; left: calc(6px + (100% - 12px) * {{nav.indicPos}}); width: calc((100% - 12px) / 3); border-radius: 999px; background: rgba(22, 24, 29, 0.07)"></span>
 </sc-if>
-<button type="button" data-taille-fixe aria-current="{{nav.planning.current}}" onClick="{{nav.planning.pick}}" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 54px; border: 0; border-radius: 999px; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.planning.color}}; cursor: pointer">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
-<span>Planning</span>
-</button>
 <button type="button" data-taille-fixe aria-current="{{nav.afaire.current}}" aria-label="{{nav.afaire.aria}}" onClick="{{nav.afaire.pick}}" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 54px; border: 0; border-radius: 999px; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.afaire.color}}; cursor: pointer">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="4" width="15" height="17" rx="2.5"></rect><path d="M9 4V2.8h6V4M8.5 12l2.2 2.2 4.8-4.8"></path></svg>
-<span>À faire</span>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 10.5 12 3.5l8.5 7"></path><path d="M5.5 9v11h13V9"></path><path d="M10 20v-5.5h4V20"></path></svg>
+<span>Accueil</span>
 <sc-if value="{{nav.afaire.aBadge}}" hint-placeholder-val="{{true}}">
 <span aria-hidden="true" data-taille-fixe style="position: absolute; top: 0; left: 50%; margin-left: 6px; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 10px; background: #D92D20; color: #FFFFFF; font-size: 12px; font-weight: 700; line-height: 20px; text-align: center; box-sizing: border-box">{{nav.afaire.badge}}</span>
 </sc-if>
 </button>
-<button type="button" data-taille-fixe aria-current="{{nav.actus.current}}" onClick="{{nav.actus.pick}}" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 54px; border: 0; border-radius: 999px; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.actus.color}}; cursor: pointer">
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="4" width="17" height="16" rx="2.5"></rect><path d="M7.5 8.5h9M7.5 12h9M7.5 15.5h5"></path></svg>
-<span>Actus</span>
+<button type="button" data-taille-fixe aria-current="{{nav.planning.current}}" onClick="{{nav.planning.pick}}" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 54px; border: 0; border-radius: 999px; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.planning.color}}; cursor: pointer">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2.5"></rect><path d="M3.5 10h17M8 3v4M16 3v4"></path></svg>
+<span>Planning</span>
 </button>
 <button type="button" data-taille-fixe aria-current="{{nav.equipe.current}}" onClick="{{nav.equipe.pick}}" style="position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 54px; border: 0; border-radius: 999px; background: transparent; font-family: inherit; font-size: 12px; font-weight: 600; color: {{nav.equipe.color}}; cursor: pointer">
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"></circle><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"></path><path d="M16 4.6a3.5 3.5 0 0 1 0 6.8M18 14.3c2.1.7 3.5 2.8 3.5 5.7"></path></svg>

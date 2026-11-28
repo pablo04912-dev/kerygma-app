@@ -16,7 +16,9 @@ function check(label) {
 assert(checkTags(src).length === 0, 'balises : ' + checkTags(src).join(' | '));
 
 // 1. Accueil de Hélène : louange, dimanche 22 nov, 3 lieux
-let x = check('état initial');
+let x = check('arrivée sur l’Accueil');
+assert(x.nav.afaire.current === 'page', 'on arrive sur l’Accueil');
+x.nav.planning.pick(); x = check('état initial');
 assert(x.moisAValider.length === 1 && x.moisAValider[0].titre === 'Planning de novembre · Boulogne' && /Tu peux valider si c’est bon pour toi/.test(x.moisAValider[0].texte), 'À faire : Boulogne novembre est rempli, à valider');
 assert(x.aValider === undefined && x.aPropAttente === undefined, 'plus de propositions une par une');
 assert(x.protoLabel === 'Prototype responsable', 'étiquette en haut : ' + x.protoLabel);
@@ -28,11 +30,11 @@ assert(x.cartes.every(k => k.edit), 'Hélène modifie les 3 lieux en louange');
 assert(jour(x, '22 nov').on && jour(x, '22 nov').label === '22 nov', 'date par défaut 22 nov');
 assert(x.aSecTitre && x.secTitre === 'Ce dimanche 22 novembre' && !x.aTraiterVisible, 'titre « Ce dimanche 22 novembre », plus de postes vides : ' + x.secTitre);
 assert(x.nav.planning.current === 'page' && x.nav.equipe.current === 'false', 'nav planning active');
-assert(x.nav.afaire.aBadge && x.nav.afaire.badge === '1' && /1 chose à faire/.test(x.nav.afaire.aria), 'pastille À faire : 1 (le planning de Boulogne à valider)');
+assert(x.nav.afaire.aBadge && x.nav.afaire.badge === '2' && /2 choses à faire/.test(x.nav.afaire.aria), 'pastille sur Accueil : 2 (Emma pas dispo, Boulogne à valider) : ' + x.nav.afaire.badge);
 assert(x.crListeTitre === 'Compte rendu de dimanche dernier', 'comptes rendus : ' + x.crListeTitre);
 assert(x.mins.map(m => m.label).join() === 'Programme culte,Louange' && x.mins[1].on, 'Programme culte en premier, Louange choisi');
 assert(x.aSuivants === undefined && x.suivants === undefined && !/Dimanches suivants/.test(src), 'plus de « Dimanches suivants » sur l’accueil');
-assert(x.nav.aIndic && x.nav.indicPos === '0', 'bulle grise sous Planning');
+assert(x.nav.aIndic && x.nav.indicPos === '0.3333', 'bulle grise sous Planning');
 assert(x.types[0].ligne === x.accent && x.types[1].ligne === 'transparent', 'onglets Culte / Prière soulignés');
 
 // 2. Changer de date sur l'accueil
@@ -246,6 +248,7 @@ if (vide) { vide.ouvrir(); x = check('feuille'); assert(x.sheetOuvert, 'feuille 
   globalThis.__kerygmaPartage = undefined;
   const r = load(file, {});
   let y = r.c.renderVals();
+  y.nav.planning.pick(); y = r.c.renderVals();
   jour(y, '29 nov').pick(); y = r.c.renderVals();
   y.cartes[0].ouvrir(); y = r.c.renderVals();
   y.lignes.find(l => l.label === 'Voix').ouvrir(); y = r.c.renderVals();
@@ -275,6 +278,7 @@ assert(alt.accent === '#0F766E' && alt.mins[1].bg === '#0F766E', 'tweak couleur'
   const r = load(file, {});
   const V = l => { const y = r.c.renderVals(); const e = checkHoles(tpl, y); assert(e.length === 0, l + ' : ' + e.join(' | ')); steps++; return y; };
   let y = V('départ 14');
+  y.nav.planning.pick(); y = V('planning 14');
   y.cartes[0].ouvrir(); y = V('Saint-Maurice 22/11');
   const dir = y.lignes.find(l => l.label === 'Direction');
   assert(dir.etat === 'ok' && dir.iconeOk && dir.nomTexte === 'Inès' && dir.nomFond === '#E7F5EC', 'Inès a confirmé : bulle verte avec coche');
@@ -387,7 +391,7 @@ assert(alt.accent === '#0F766E' && alt.mins[1].bg === '#0F766E', 'tweak couleur'
   y.nav.afaire.pick(); y = V('à faire');
   assert(y.showAFaire && y.moisAValider.length === 1 && /Planning de novembre · Boulogne/.test(y.moisAValider[0].titre), 'onglet À faire : Boulogne à valider');
   y.moisAValider[0].valider(); y = V('Boulogne validé');
-  assert(!y.nav.afaire.aBadge && y.aFaireVide && S.validations['bou|2026-11'] && S.notifs.some(n => n.pour === 'Marco' && n.mois === '2026-11'), 'plus rien à faire, Marco prévenu');
+  assert(y.nav.afaire.badge === '1' && y.moisAValider.length === 0 && S.validations['bou|2026-11'] && S.notifs.some(n => n.pour === 'Marco' && n.mois === '2026-11'), 'Boulogne validé (reste Emma à remplacer), Marco prévenu');
 }
 
 // 15. Bande des dates : 2 mois à la fois, flèches avant / après, « Mois » fixe, dimanches passés en lecture
@@ -396,6 +400,7 @@ assert(alt.accent === '#0F766E' && alt.mins[1].bg === '#0F766E', 'tweak couleur'
   const r = load(file, {});
   const V = l => { const y = r.c.renderVals(); const e = checkHoles(tpl, y); assert(e.length === 0, l + ' : ' + e.join(' | ')); steps++; return y; };
   let y = V('départ 15');
+  y.nav.planning.pick(); y = V('planning 15');
   const libs = v => v.bande.map(b => b.marqueur ? '[' + (b.haut ? b.haut + ' ' : '') + b.bas + ']' : b.label).join(' ');
   assert(libs(y) === '[Novembre] 1 nov 8 nov 15 nov 22 nov 29 nov [Décembre] 6 déc 13 déc 20 déc 27 déc', 'novembre et décembre : ' + libs(y));
   assert(y.aFenPrec && y.aFenSuiv && y.fenSuivAria === 'Deux mois après : janvier et février 2027' && y.fenPrecAria === 'Deux mois avant : septembre et octobre', 'flèches : ' + y.fenPrecAria + ' / ' + y.fenSuivAria);
@@ -440,5 +445,63 @@ assert(alt.accent === '#0F766E' && alt.mins[1].bg === '#0F766E', 'tweak couleur'
   const r = load(file, {}); let y = r.c.renderVals(); y.ouvrirMoi(); y = r.c.renderVals();
   assert(y.roles.some(ro => /valide le planning de chaque mois/.test(ro.detail)) && !y.roles.some(ro => /propositions/.test(ro.detail)), 'Moi : plus de « propositions » dans le rôle d’Hélène');
 }
+
+// 16. Accueil de Hélène (3 onglets : Accueil, Planning, Équipe)
+{
+  globalThis.__kerygmaPartage = undefined;
+  const r = load(file, {});
+  const V = l => { const y = r.c.renderVals(); const e = checkHoles(tpl, y); assert(e.length === 0, l + ' : ' + e.join(' | ')); steps++; return y; };
+  let y = V('accueil 16');
+  assert(y.showAFaire && y.nav.afaire.current === 'page' && y.nav.indicPos === '0', 'on arrive sur l’Accueil, bulle grise sous Accueil');
+  assert(y.nav.actus === undefined || !/Actus/.test(src.match(/<nav aria-label="Navigation principale"[\s\S]*?<\/nav>/)[0]), 'plus d’onglet Actus dans la barre du bas');
+  // Carte « Installe KERYGMA »
+  assert(y.aInstall && !y.installVoir && y.installBouton === 'Comment faire', 'carte « Installe KERYGMA sur ton téléphone »');
+  y.installToggle(); y = V('comment faire');
+  assert(y.installVoir && y.installBouton === 'Masquer', '« Comment faire » déplie les explications');
+  y.installPlusTard(); y = V('plus tard');
+  assert(!y.aInstall, '« Plus tard » cache la carte');
+  // À faire : de vraies tâches
+  assert(y.aAFaire && y.aFaireTitre === 'À faire · 2', 'À faire · 2 : ' + y.aFaireTitre);
+  assert(y.refus.length === 1 && y.refus[0].titre === 'Emma ne peut pas' && y.refus[0].texte === 'Dimanche 13 décembre · Boulogne · voix', 'Emma ne peut pas, le 13 décembre à Boulogne');
+  // Ce dimanche : les 3 cultes, qui sert, combien ont confirmé
+  assert(y.accueilTitre === 'Ce dimanche 22 novembre' && y.accueilCultes.length === 3, 'ce dimanche : 3 cultes');
+  assert(y.accueilCultes.map(c => c.etat).join(' | ') === '3 sur 4 ont confirmé | 2 sur 6 ont confirmé | Tout le monde a confirmé ✓' && y.accueilCultes[2].etatColor !== y.accueilCultes[0].etatColor, 'confirmations par culte : ' + y.accueilCultes.map(c => c.etat).join(' | '));
+  assert(y.accueilCultes[0].equipe === 'Inès, Adrien, Bérénice' && !y.accueilCultes.some(c => c.aModif), 'qui sert, pas encore de changement');
+  // Annonces : 2, puis toutes
+  assert(y.annonces.length === 2 && y.aPlusAnnonces && y.annoncesBouton === 'Toutes les annonces (5)', '2 annonces sur l’Accueil');
+  y.toggleAnnonces(); y = V('toutes les annonces');
+  assert(y.annonces.length === 5 && y.annoncesBouton === 'Moins d’annonces', 'toutes les annonces');
+  // Toucher un culte ouvre son planning
+  y.accueilCultes[1].ouvrir(); y = V('culte de Champigny');
+  assert(y.showDetail && y.nav.planning.current === 'page' && y.dTitre === 'Champigny' && /^Ce dimanche 22 novembre · Louange/.test(y.dSous), 'toucher Champigny ouvre son planning du 22 : ' + y.dSous);
+  // « Trouver quelqu'un » ouvre le bon planning
+  y.nav.afaire.pick(); y = V('retour accueil');
+  y.refus[0].ouvrir(); y = V('trouver quelqu’un');
+  assert(y.showDetail && y.dTitre === 'Boulogne' && /^Dimanche 13 décembre · Louange · 15h30/.test(y.dSous), '« Trouver quelqu’un » ouvre Boulogne le 13 décembre : ' + y.dSous);
+}
+
+// 17. Planning : un seul sélecteur Programme culte / Louange / Prière, et les autres équipes du culte
+{
+  globalThis.__kerygmaPartage = undefined;
+  const r = load(file, {});
+  const V = l => { const y = r.c.renderVals(); const e = checkHoles(tpl, y); assert(e.length === 0, l + ' : ' + e.join(' | ')); steps++; return y; };
+  let y = V('départ 17');
+  y.nav.planning.pick(); y = V('planning 17');
+  assert(y.minsHaut.map(m => m.label + (m.on ? '*' : '')).join() === 'Programme culte,Louange*,Prière', 'sélecteur : Programme culte, Louange (choisi), Prière');
+  y.minsHaut[2].pick(); y = V('prière');
+  assert(y.minsHaut[2].on && y.showLieux && y.dates.some(d => d.label === '26 nov'), 'Prière choisie : la bande passe aux jeudis de prière');
+  y.minsHaut[1].pick(); y = V('louange');
+  y.cartes[0].ouvrir(); y = V('Saint-Maurice 22');
+  assert(y.aFeuille && y.feuilleTitre === 'Les autres équipes' && y.feuille.map(m => m.nom).join() === 'Projection,Sono,Accueil,Enfants', 'sous le planning : les autres équipes du culte : ' + y.feuille.map(m => m.nom));
+  const acc = y.feuille.find(m => m.nom === 'Accueil');
+  const porte = acc.lignes.find(l => l.label === 'Porte');
+  assert(acc.coord === 'Coord. : Nadia' && porte.nom === 'Nadia, Bérénice', 'les noms des autres équipes sont visibles');
+  assert(porte.aAlerte && porte.alerte === 'Bérénice sert aussi à la louange', 'doublon signalé : Bérénice à l’accueil et à la louange');
+  assert(y.feuille.find(m => m.nom === 'Projection').etat === 'Pas encore fait' && y.feuille.find(m => m.nom === 'Sono').etat === 'Envoyé', 'état de chaque équipe');
+  y.minsHaut[0].pick(); y = V('programme');
+  y.cartes[0].ouvrir(); y = V('programme Saint-Maurice');
+  assert(!y.aFeuille || (y.feuilleTitre === 'Toutes les équipes' && y.feuille[0].nom === 'Louange'), 'sur le programme du culte : toutes les équipes, louange comprise');
+}
+
 console.log(steps + ' états vérifiés');
 process.exit(report('Planning') ? 1 : 0);

@@ -703,5 +703,119 @@
     "Lucas"
    ]
   }
- }
+ },
+ "ministeres": [
+  {
+   "id": "sono",
+   "nom": "Sono",
+   "coord": {
+    "stm": "Yanis",
+    "cha": "Kevin",
+    "bou": "Rudy"
+   },
+   "planning": {
+    "22/11": {
+     "stm": {
+      "Console": [
+       "Yanis"
+      ],
+      "Retours": [
+       "Paul"
+      ]
+     },
+     "cha": {
+      "Console": [
+       "Kevin"
+      ]
+     },
+     "bou": {
+      "Console": [
+       "Rudy"
+      ]
+     }
+    },
+    "29/11": {
+     "stm": {
+      "Console": [
+       "Paul"
+      ],
+      "Retours": [
+       "Yanis"
+      ]
+     },
+     "cha": {
+      "Console": [
+       "Kevin"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "accueil",
+   "nom": "Accueil",
+   "coord": {
+    "stm": "Nadia",
+    "cha": "Joëlle",
+    "bou": "Fanny"
+   },
+   "planning": {
+    "22/11": {
+     "stm": {
+      "Porte": [
+       "Nadia",
+       "Bérénice"
+      ],
+      "Nouveaux": [
+       "Sarah"
+      ]
+     },
+     "cha": {
+      "Porte": [
+       "Joëlle"
+      ]
+     }
+    },
+    "29/11": {
+     "stm": {
+      "Porte": [
+       "Sarah"
+      ]
+     }
+    }
+   }
+  },
+  {
+   "id": "enfants",
+   "nom": "Enfants",
+   "coord": {
+    "stm": "Claire",
+    "cha": "Mélanie",
+    "bou": "Fanny"
+   },
+   "planning": {
+    "22/11": {
+     "stm": {
+      "Moniteurs": [
+       "Claire",
+       "Léa"
+      ]
+     },
+     "bou": {
+      "Moniteurs": [
+       "Fanny"
+      ]
+     }
+    }
+   }
+  }
+ ],
+ "pasDispo": [
+  {
+   "date": "13/12",
+   "lieu": "bou",
+   "poste": "voix",
+   "nom": "Emma"
+  }
+ ]
 }
