@@ -61,7 +61,7 @@ Rangées par écran. Avant de toucher un écran, lis seulement la partie qui le 
 
 - **Brouillon puis envoi** (22/11) : choisir quelqu'un (ou « Aucun », ou Auto) ne prévient personne ; le nom est en brouillon (violet pointillé, « Pas encore envoyé »). Un bouton « Envoyer le planning aux volontaires », collé au-dessus de la barre du bas, envoie tous les changements du lieu : demandes aux volontaires (« Demande envoyée »), et l'autre (responsable ou coordinateur) est prévenu dans « À faire ». Si on quitte la page avec un brouillon : « Envoyer les invitations ? » Oui, envoyer / Non, plus tard (le brouillon reste). Le coordinateur envoie lui-même, sans validation poste par poste.
 - **Validation du mois dans l'appli** : le responsable valide le planning d'un mois et d'un lieu (bouton « Valider le planning de novembre » sous les postes), à tout moment, même si tout n'est pas rempli ; quand chaque volontaire du mois a répondu dispo, il reçoit dans « À faire » la carte « Tout est rempli … Tu peux valider si c'est bon pour toi ». Le coordinateur est prévenu (« Planning validé »). Après validation, responsable et coordinateur peuvent toujours modifier ; chaque changement est envoyé aux volontaires concernés. Pas d'e-mail de validation.
-- Hypothèse en attente de confirmation : c'est la validation du mois qui ajoute les services confirmés aux agendas.
+- Confirmé par Pablo (28/11) : c'est la validation du mois qui ajoute les services confirmés aux agendas (pas chaque réponse « dispo »).
 
 ## Agendas et heures
 

@@ -11,6 +11,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 
 **Fait**
 - `CLAUDE.md` (sections 1, 1 bis et 4) mis à jour ; message laissé à Manuel.
+- Agendas : Pablo confirme que les services entrent dans les agendas à la validation du mois (`docs/decisions.md`). Message à Manuel sur l'App Store et Google Play.
 
 ## 2026-11-23 (nuit) · Pablo (avec Claude, pendant que Pablo dort) · relecture complète, code et règles allégés
 
