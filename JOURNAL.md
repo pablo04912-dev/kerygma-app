@@ -15,8 +15,7 @@ Une entrée par séance, la plus récente en haut. Format : date · qui · ce qu
 - Tout ce qui précède, avec les tests mis à jour et de nouveaux tests (Accueil, sélecteur, autres équipes, Ton année). Données d'exemple : ministères sono, accueil, enfants (prénoms inventés), un « pas dispo » d'Emma.
 - Corrigé au passage : toucher un compte rendu sur l'Accueil l'ouvre bien, et « Retour à l'accueil » y ramène.
 
-**À faire / à vérifier**
-- Un changement sur un autre dimanche que celui de la semaine n'apparaît plus nulle part pour l'autre personne (seulement dans la vraie appli, par notification) : à confirmer.
+- Pablo confirme : un changement fait sur un autre dimanche se voit sur la carte du lieu dans Planning (« Modifié par Thomas : … »), en plus de la notification de la vraie appli. Test ajouté.
 
 ## 2026-11-28 · Pablo (avec Claude Code) · règles plus économes en tokens
 
