@@ -6,7 +6,7 @@ Rappel : le dépôt est public. Pas de vrais noms de l'église ni d'infos privé
 
 ## Pour Manuel
 
-(rien pour l'instant)
+- 2026-11-28 · Pablo : j'ai changé 3 règles de `CLAUDE.md` pour consommer moins de tokens. (1) `git pull` une seule fois en début de séance, plus avant chaque réponse (toujours `git pull --rebase` juste avant d'envoyer). (2) `npm run build` et `npm test` plus en début de séance : seulement avant chaque envoi et en fin de séance. (3) Aperçus gardés, mais ton Claude ne republie que la page qui a changé, pas les 4. Rien à faire de ton côté : ton Claude lira la nouvelle version au prochain début de séance.
 
 ## Pour Pablo
 

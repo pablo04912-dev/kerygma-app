@@ -4,17 +4,16 @@ Prototype de l'appli KERYGMA (plannings des ministères de l'église Kerygma, Pa
 
 ## 1. Début de séance (obligatoire, avant toute autre chose)
 
-1. `git pull`.
+1. `git pull` (le seul de la séance, en dehors de celui juste avant chaque envoi).
 2. `MESSAGES.md` : montre les messages adressés à ton interlocuteur, puis déplace-les dans "Déjà lus" (envoyé avec le commit de fin de séance).
 3. Lis les dernières entrées de `JOURNAL.md` et `git log --since="<date de la dernière entrée de ton interlocuteur>" --stat`.
 4. Résumé court, sans jargon, de ce que l'autre a fait sur l'appli depuis : écrans touchés, décisions, événements techniques, ce qui reste à faire.
-5. `npm install` (si besoin), `npm run build`, `npm test` : signale tout de suite ce qui est cassé.
-6. Montre l'aperçu (section 4), puis demande sur quoi on travaille.
+5. Donne les liens de l'aperçu (section 4), sans republier, puis demande sur quoi on travaille. Pas de build ni de tests ici : ils se font avant chaque envoi et en fin de séance.
 
 ## 1 bis. Pendant la séance
 
-- Avant chaque réponse qui touche au projet : `git pull`. Si l'autre a envoyé quelque chose, dis-le en une phrase.
-- Écran changé : `npm run build`, puis republie l'aperçu.
+- Pas de `git pull` avant chaque réponse : seulement en début de séance et juste avant chaque envoi (`git pull --rebase`). Si ce pull ramène quelque chose de l'autre, dis-le en une phrase.
+- Écran changé : `npm run build` (il produit la page d'aperçu), puis republie seulement la page qui a changé (section 4). Les tests attendent l'envoi.
 - **Envoie au fil de l'eau** : dès qu'une modification est finie et que `npm run build` et `npm test` sont verts, commit puis `git pull --rebase` et `git push`. Un travail pas fini ou des tests rouges ne s'envoient pas.
 - **On ne partage que ce qui concerne l'appli** (écrans, données, règles, décisions communes, événements techniques). Les recherches et idées de chacun restent privées, dans son propre projet Claude, jusqu'à ce qu'elles deviennent une décision ou que l'interlocuteur demande de les partager.
 - `MESSAGES.md` est le chat différé : "dis à Manu…" ou "dis à Pablo…" → message en haut de la partie de l'autre (date + prénom), commit et `git push` tout de suite.
@@ -35,7 +34,8 @@ Prototype de l'appli KERYGMA (plannings des ministères de l'église Kerygma, Pa
 
 ## 4. Aperçu
 
-- Après chaque modification : `npm run build`, puis publie `site/index.html` (page « Kerygma prototype ») et, en onglets, `site/responsable.html`, `site/coordinateur.html`, `site/serviteur.html` (« Prototype responsable », « Prototype coordinateur », « Prototype serviteur »). Crée-les s'ils n'existent pas dans ton compte, sinon republie-les.
+- 4 pages d'aperçu : `site/index.html` (« Kerygma prototype ») et `site/responsable.html`, `site/coordinateur.html`, `site/serviteur.html` (« Prototype responsable », « Prototype coordinateur », « Prototype serviteur »). Crée celles qui n'existent pas dans ton compte.
+- Après une modification : `npm run build`, puis republie **seulement les pages touchées**. Écran du serviteur → `serviteur.html` ; responsable ou coordinateur (`planning.template.html`) → la page du profil concerné ; accueil → `index.html`. `index.html` contient tous les profils : republie-la aussi quand on veut voir la chaîne complète. Un changement de `src/commun.js` ou `src/morceaux/` touche tout : republie les 4.
 - Le lien public (README) se met à jour quelques minutes après chaque `git push`. L'aperçu publié ne change que quand ton Claude le republie : pour voir le travail de l'autre tout de suite, utilise le lien public.
 
 ## 5. Comment le projet est construit

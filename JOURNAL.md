@@ -2,6 +2,16 @@
 
 Une entrée par séance, la plus récente en haut. Format : date · qui · ce qui a été fait · décisions · reste à faire.
 
+## 2026-11-28 · Pablo (avec Claude Code) · règles plus économes en tokens
+
+**Décisions**
+- `git pull` : une seule fois en début de séance, plus avant chaque réponse ; toujours `git pull --rebase` juste avant chaque envoi.
+- `npm run build` et `npm test` : plus en début de séance, seulement avant chaque envoi et en fin de séance (le build reste lancé quand un écran change, pour produire l'aperçu).
+- Aperçus gardés, mais on ne republie que la page qui a changé, pas les 4.
+
+**Fait**
+- `CLAUDE.md` (sections 1, 1 bis et 4) mis à jour ; message laissé à Manuel.
+
 ## 2026-11-23 (nuit) · Pablo (avec Claude, pendant que Pablo dort) · relecture complète, code et règles allégés
 
 **Fait**
